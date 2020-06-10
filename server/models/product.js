@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const ProductOwner = require('./users')
+const ProductOwner = require('./user')
 
 const productSchema = new mongoose.Schema({
     name: { type: String, required: true, minlength: 3 },
