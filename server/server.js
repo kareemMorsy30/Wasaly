@@ -8,24 +8,14 @@ const port= process.env.PORT
 const DB_HOST= process.env.DB_HOST
 const DB_PORT= process.env.DB_PORT
 const DB_DATABASE= process.env.DB_DATABASE
-<<<<<<< HEAD
+const {
+  serviceRouter
+} = require('./routes/allRoutes');
 const passport = require('passport');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const userRoutes = require('../server/routes/user.routes');
 
-// app.use(cors())
-// app.use(express.json())
-// app.use(express.urlencoded())
-=======
-const {
-  serviceRouter
-} = require('./routes/allRoutes');
-
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
->>>>>>> 5211a62eacfc2470b4857b812370353f3d6c9ab9
 app.get('/', (req, res) =>{ 
     console.log(`\n\nnew request, its method: ${req.method}`);
     console.log(`the url requested: ${req.url}\n`);
@@ -44,10 +34,10 @@ mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`, {
   else console.log(err);
 });
 
-<<<<<<< HEAD
 //__________________________________MiddleWares_______________________________________________________
 //For logging 
-app.use(cors({origin: true, credentials: true}));app.use(morgan('dev'));
+app.use(cors({origin: true, credentials: true}));
+app.use(morgan('dev'));
 
 //Passport
 app.use(passport.initialize());
@@ -64,6 +54,8 @@ app.use(express.static("./public"));
 //___________________________Routes_____________________
 
 app.use('/users',userRoutes);
+// Customer routes
+app.use('/services', serviceRouter);
 //___________________________ERRRORRS_____________________
 
 
@@ -81,12 +73,9 @@ app.use((err, req, res, next) => {
       error
   })
 });
-=======
 
-// Customer routes
-app.use('/services', serviceRouter);
 
->>>>>>> 5211a62eacfc2470b4857b812370353f3d6c9ab9
+
 app.listen(port, () => console.log(`Server is listening at http://localhost:${port}`))
 
 
