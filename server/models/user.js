@@ -13,13 +13,17 @@ const userSchema = new mongoose.Schema({
                 throw Error("Invalid Email Format");
         }
     },
-    status: { type: String, default: "offline" },
+    status: { type: String, enum: ['online', 'offline'], default: "offline" },
     role: { type: String, required: true, enum: ['customer', 'admin', 'serviceowner', 'productowner'] },
     phones: [{ type: String, required: true, mathc: '(01)[0-9]{9}' }],
     address:[{
         street: { type: String, required: true },
         city: { type: String, required: true },
-        area: { type: String, required: true }
+        area: { type: String, required: true },
+        location: {
+            latitude: {type: Number, required: true},
+            longitude: {type: Number, required: true}
+        }
     }],
     password: {
         type: String,
