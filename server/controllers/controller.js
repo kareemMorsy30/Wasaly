@@ -12,6 +12,12 @@ const getDistance = async (source, destination, location = null) => {
     return firstDistance + secondDistance;
 }
 
+async function asyncFilter(arr, callback) {
+    const fail = Symbol()
+    return (await Promise.all(arr.map(async item => (await callback(item)) ? item : fail))).filter(i=>i!==fail)
+}
+
 module.exports = {
-    getDistance
+    getDistance,
+    asyncFilter
 }
