@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const User = require('./users')
+const User = require('./user')
 
 const serviceOwnerSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref:"User"},
