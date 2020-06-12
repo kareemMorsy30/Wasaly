@@ -33,25 +33,11 @@ userController.regesiter = async (req, res, next) => {
         });
         console.log("\n  new USER :::     ", newUser.role);
         try {
-            //     console.log("\n  new USER :::     ",   newUser);
-            // // if (newUser.role=="customer"){
-            //     const user = await newUser.save();
-            //     console.log("\n USER ::    :      :    ".user);
-            //     return res.send({ user });
-
-            //     console.log("i'm in role");
-            //     console.log("\n  new Service OWenr :::     ",   newServiceOwner);
-            // // }
-            // if (user.role=="serviceowner"){
-
             const serviceOwner = await newServiceOwner.save();
             console.log("\n Service owner ::    :      :    ".serviceOwner);
             console.log("i'm in role");
-          
             return res.send({ serviceOwner, user });
         }
-
-
         catch (error) {
             if (error.name === "MongoError" && error.code === 11000) {
                 next(new Error("email must be unique"));
@@ -60,30 +46,19 @@ userController.regesiter = async (req, res, next) => {
             }
         }
     }
-
     else if(newUser.role==="productowner"){
-         
     const { user, marketName, ownerName, marketPhone } = req.body;
     const newProductOwner=new allModels.productOwner({
      user:newUser._id, marketName, ownerName, marketPhone        
     });
- 
- 
      console.log("\n  new  newProductOwner:::     ", newProductOwner.role);
      console.log("\n  new newProductOwner.user :::     ", newProductOwner.user);
- 
      try {
          console.log("\n  new newProductOwner :::     ", newProductOwner);
              const productOwner=await newProductOwner.save();
              console.log("\n pOwner ::    :      :    ".productowner);
              console.log("i'm in role");
              res.send({productOwner});
- 
-            //  console.log("it's not a PO");
-            //  return res.send({ msg: "NOT NOT PO" });
- 
-         
- 
      } catch (error) {
          if (error.name === "MongoError" && error.code === 11000) {
              next(new Error("email must be unique"));
@@ -92,126 +67,7 @@ userController.regesiter = async (req, res, next) => {
          }
      }
     }
-    //  else if(newUser.role==="serviceowner"){
-    // const { user,distance,region,transportation } = req.body;
-
-    // const newServiceOwner = new  allModels.ServiceOwner ({
-    //    user:newUser._id, distance,region,transportation
-    //      });
-    // console.log("\n  new USER :::     ",   newUser.role);
-    // try {
-    // //     console.log("\n  new USER :::     ",   newUser);
-    // // // if (newUser.role=="customer"){
-    // //     const user = await newUser.save();
-    // //     console.log("\n USER ::    :      :    ".user);
-    // //     return res.send({ user });
-
-    // //     console.log("i'm in role");
-    // //     console.log("\n  new Service OWenr :::     ",   newServiceOwner);
-    // // // }
-    //     // if (user.role=="serviceowner"){
-
-    //         const serviceOwner = await newServiceOwner.save();
-    //         console.log("\n Service owner ::    :      :    ".serviceOwner);
-    //         console.log("i'm in role");
-    //         if (serviceOwner.user===user._id) {
-    //             console.log("ss");
-
-    //         }
-    //         return res.send({ serviceOwner,user });
-
-    //     // return res.send({ user });
-    // // }
-    // // else{
-    // //     console.log("it's not a customer");
-    // //     return res.send({ msg:"NOT CUSTOMER" });
-    // // }
-    // }
-    //  catch (error) {
-    //     if (error.name === "MongoError" && error.code === 11000) {
-    //         next(new Error("email must be unique"));
-    //     } else {
-    //         next(error);
-    //     }
-
-
 };
-
-
-// userController.regesiterSO = async (req, res, next) => {
-//     const { user, distance, region, transportation } = req.body;
-//     user.role = "serviceowner";
-//     const newServiceOwner = new allModels.ServiceOwner({
-//         user, distance, region, transportation
-//     });
-
-
-//     console.log("\n  new Service Owner :::     ", user.role);
-//     console.log("\n  new Service Owner.user :::     ", newServiceOwner.user);
-
-//     try {
-//         console.log("\n  new Service OWenr :::     ", newServiceOwner);
-//         if (user.role == "serviceowner") {
-
-//             const serviceOwner = await newServiceOwner.save();
-//             console.log("\n Service owner ::    :      :    ".serviceOwner);
-//             console.log("i'm in role");
-
-//             return res.send({ serviceOwner });
-
-//         } else {
-//             console.log("it's not a Servi");
-//             return res.send({ msg: "NOT CUSTOMER" });
-
-//         }
-
-//     } catch (error) {
-//         if (error.name === "MongoError" && error.code === 11000) {
-//             next(new Error("email must be unique"));
-//         } else {
-//             next(error);
-//         }
-//     }
-// };
-
-
-
-
-userController.regesiterPO = async (req, res, next) => {
-   
-    const { user, marketName, ownerName, marketPhone } = req.body;
-   const newProductOwner=new allModels.productOwner({
-    user:newUser._id, marketName, ownerName, marketPhone        
-   });
-
-
-    console.log("\n  new  newProductOwner:::     ", newProductOwner.role);
-    console.log("\n  new newProductOwner.user :::     ", newProductOwner.user);
-
-    try {
-        console.log("\n  new newProductOwner :::     ", newProductOwner);
-        if (user.role == "productowner") {
-            const productOwner=await newProductOwner.save();
-            console.log("\n pOwner ::    :      :    ".productowner);
-            console.log("i'm in role");
-            res.send({productOwner});
-
-        } else {
-            console.log("it's not a PO");
-            return res.send({ msg: "NOT NOT PO" });
-
-        }
-
-    } catch (error) {
-        if (error.name === "MongoError" && error.code === 11000) {
-            next(new Error("email must be unique"));
-        } else {
-            next(error);
-        }
-    }
-};
-
-
 
 userController.login = async (request, response, next) => {
     const { email, password } = request.body;
