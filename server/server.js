@@ -6,12 +6,14 @@ const port= process.env.PORT
 const DB_HOST= process.env.DB_HOST
 const DB_PORT= process.env.DB_PORT
 const DB_DATABASE= process.env.DB_DATABASE
+
 const {
   serviceRouter
 } = require('./routes/allRoutes');
 
 app.use(cors())
 app.use(express.json())
+app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }))
 app.get('/', (req, res) =>{ 
     console.log(`\n\nnew request, its method: ${req.method}`);
@@ -28,7 +30,6 @@ mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`, {
   }
   else console.log(err);
 });
-
 
 // Customer routes
 app.use('/services', serviceRouter);
