@@ -38,7 +38,8 @@ exports.createProduct = async (req, res, next) => {
 }
 
 exports.listProducts = async (req, res, next) => {
-    const { id } = "5ee027333b9d0e3fd1fe4e27" || req.user._id
+   
+    const  id  =  req.user._id
     try {
         const products = await Product.find({ owner: id }).exec()
         res.json(products)
