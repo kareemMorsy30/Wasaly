@@ -50,6 +50,8 @@ userController.regesiter = async (req, res, next) => {
           
             return res.send({ serviceOwner, user });
         }
+
+
         catch (error) {
             if (error.name === "MongoError" && error.code === 11000) {
                 next(new Error("email must be unique"));
@@ -57,6 +59,38 @@ userController.regesiter = async (req, res, next) => {
                 next(error);
             }
         }
+    }
+
+    else if(newUser.role==="productowner"){
+         
+    const { user, marketName, ownerName, marketPhone } = req.body;
+    const newProductOwner=new allModels.productOwner({
+     user:newUser._id, marketName, ownerName, marketPhone        
+    });
+ 
+ 
+     console.log("\n  new  newProductOwner:::     ", newProductOwner.role);
+     console.log("\n  new newProductOwner.user :::     ", newProductOwner.user);
+ 
+     try {
+         console.log("\n  new newProductOwner :::     ", newProductOwner);
+             const productOwner=await newProductOwner.save();
+             console.log("\n pOwner ::    :      :    ".productowner);
+             console.log("i'm in role");
+             res.send({productOwner});
+ 
+            //  console.log("it's not a PO");
+            //  return res.send({ msg: "NOT NOT PO" });
+ 
+         
+ 
+     } catch (error) {
+         if (error.name === "MongoError" && error.code === 11000) {
+             next(new Error("email must be unique"));
+         } else {
+             next(error);
+         }
+     }
     }
     //  else if(newUser.role==="serviceowner"){
     // const { user,distance,region,transportation } = req.body;
@@ -104,30 +138,67 @@ userController.regesiter = async (req, res, next) => {
 };
 
 
-userController.regesiterSO = async (req, res, next) => {
-    const { user, distance, region, transportation } = req.body;
-    user.role = "serviceowner";
-    const newServiceOwner = new allModels.ServiceOwner({
-        user, distance, region, transportation
-    });
+// userController.regesiterSO = async (req, res, next) => {
+//     const { user, distance, region, transportation } = req.body;
+//     user.role = "serviceowner";
+//     const newServiceOwner = new allModels.ServiceOwner({
+//         user, distance, region, transportation
+//     });
 
 
-    console.log("\n  new Service Owner :::     ", user.role);
-    console.log("\n  new Service Owner.user :::     ", newServiceOwner.user);
+//     console.log("\n  new Service Owner :::     ", user.role);
+//     console.log("\n  new Service Owner.user :::     ", newServiceOwner.user);
+
+//     try {
+//         console.log("\n  new Service OWenr :::     ", newServiceOwner);
+//         if (user.role == "serviceowner") {
+
+//             const serviceOwner = await newServiceOwner.save();
+//             console.log("\n Service owner ::    :      :    ".serviceOwner);
+//             console.log("i'm in role");
+
+//             return res.send({ serviceOwner });
+
+//         } else {
+//             console.log("it's not a Servi");
+//             return res.send({ msg: "NOT CUSTOMER" });
+
+//         }
+
+//     } catch (error) {
+//         if (error.name === "MongoError" && error.code === 11000) {
+//             next(new Error("email must be unique"));
+//         } else {
+//             next(error);
+//         }
+//     }
+// };
+
+
+
+
+userController.regesiterPO = async (req, res, next) => {
+   
+    const { user, marketName, ownerName, marketPhone } = req.body;
+   const newProductOwner=new allModels.productOwner({
+    user:newUser._id, marketName, ownerName, marketPhone        
+   });
+
+
+    console.log("\n  new  newProductOwner:::     ", newProductOwner.role);
+    console.log("\n  new newProductOwner.user :::     ", newProductOwner.user);
 
     try {
-        console.log("\n  new Service OWenr :::     ", newServiceOwner);
-        if (user.role == "serviceowner") {
-
-            const serviceOwner = await newServiceOwner.save();
-            console.log("\n Service owner ::    :      :    ".serviceOwner);
+        console.log("\n  new newProductOwner :::     ", newProductOwner);
+        if (user.role == "productowner") {
+            const productOwner=await newProductOwner.save();
+            console.log("\n pOwner ::    :      :    ".productowner);
             console.log("i'm in role");
-
-            return res.send({ serviceOwner });
+            res.send({productOwner});
 
         } else {
-            console.log("it's not a Servi");
-            return res.send({ msg: "NOT CUSTOMER" });
+            console.log("it's not a PO");
+            return res.send({ msg: "NOT NOT PO" });
 
         }
 
@@ -139,7 +210,6 @@ userController.regesiterSO = async (req, res, next) => {
         }
     }
 };
-
 
 
 
@@ -182,3 +252,25 @@ userController.login = async (request, response, next) => {
 };
 
 module.exports = userController;
+/**
+ * 
+ * {
+
+    "phones": ["01097567990"],
+    "name": "SHaBAN",
+    "username": "SHaBAN",
+    "email": "shshshs@gmail.com",
+    "password": "12345678d",
+    "role": "customer",
+    "address": [{
+        
+        "street": "ss",
+        "city": "ooooo",
+        "area": "xsssx",
+		"location":{"latitude":220,"longitude":220}
+    }],
+    "image_path": "axxx.png",
+	"distance":2802,
+	"region":"66",
+	"transportation":"car"
+ */

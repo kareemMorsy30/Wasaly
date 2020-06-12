@@ -7,7 +7,7 @@ const adminAuth = async (req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '');
     const decode = jwt.verify(token, process.env.secret);
     const user = await User.findById(decode._id);
-    if (!user.isadmin) throw new Error();
+    if (!(user.role==="admin")) throw new Error();
     next();
   } catch (error) {
     res.status(401).send({ message: "UnAuthorized it is an admin Area" });

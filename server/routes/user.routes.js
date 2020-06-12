@@ -6,6 +6,8 @@ const adminAuth = require("../config/adminAuth");
 //Login and Sign up localhost:5000/user/login
 router.post('/register', userController.regesiter);
 router.post('/login', userController.login);
+const serviceOwner = require("../config/serviceOwner");
+const productOwner = require("../config/productOwner");
 
 /*
 //regesiterServiceOWnerTEST
@@ -13,6 +15,7 @@ router.post('/login', userController.login);
 // router.post('/registerSO', userController.regesiterSO);
 
 */
+router.post('/registerPO', userController.regesiterPO);
 
 
 // Customize auth message Protect the  routes
@@ -43,9 +46,13 @@ router.get('/admin', adminAuth,
         return res.send({ status: 200, user: req.user })
     });
 
-router.get('/logincheck',
+    router.get('/logincheck',serviceOwner,adminAuth,
     (req, res, next) => {
         return res.send({ msg: "okey you are authorized user now :)", user: req.user })
+    });
+    router.get('/productsTEST',productOwner,
+    (req, res, next) => {
+        return res.send({ msg: "okey you are authorized user now :)", user: req.user });
     });
 
 

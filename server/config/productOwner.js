@@ -2,18 +2,18 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 
-const serviceOwner = async (req, res, next) => {
+const productOwner = async (req, res, next) => {
   try {
     const token = req.header('Authorization').replace('Bearer ', '');
     const decode = jwt.verify(token, process.env.secret);
     const user = await User.findById(decode._id);
     console.log('====================================');
-    console.log(!user.role === "serviceowner");
+    console.log(!user.role === "productowner");
     console.log('====================================');
-    if (!(user.role==="serviceowner")) throw new Error();
+    if (!(user.role==="productowner")) throw new Error();
     next();
   } catch (error) {
-    res.status(401).send({ message: "UnAuthorized it is an serviceowner Area" });
+    res.status(401).send({ message: "UnAuthorized it is an productowner Area" });
   }
 };
 
