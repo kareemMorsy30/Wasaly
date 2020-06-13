@@ -6,6 +6,7 @@ const port= process.env.PORT
 const DB_HOST= process.env.DB_HOST
 const DB_PORT= process.env.DB_PORT
 const DB_DATABASE= process.env.DB_DATABASE
+const userRouter = require('./routes/user');
 const {
   serviceRouter
 } = require('./routes/allRoutes');
@@ -32,5 +33,5 @@ mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`, {
 
 // Customer routes
 app.use('/services', serviceRouter);
-
+app.use('/users',userRouter);
 app.listen(port, () => console.log(`Server is listening at http://localhost:${port}`))
