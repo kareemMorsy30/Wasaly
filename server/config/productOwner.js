@@ -17,4 +17,4 @@ const productOwner = async (req, res, next) => {
   }
 };
 
-module.exports = serviceOwner;
+module.exports = productOwner;
