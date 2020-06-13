@@ -4,11 +4,13 @@ const express = require('express')
 const mongoose= require('mongoose')
 const cors= require('cors')
 const app = express()
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+exports.io = io;
 const port= process.env.PORT
 const DB_HOST= process.env.DB_HOST
 const DB_PORT= process.env.DB_PORT
 const DB_DATABASE= process.env.DB_DATABASE
-
 const {
   serviceRouter
 } = require('./routes/allRoutes');
@@ -81,7 +83,7 @@ app.use((err, req, res, next) => {
 
 
 
-app.listen(port, () => console.log(`Server is listening at http://localhost:${port}`))
+server.listen(port, () => console.log(`Server is listening at http://localhost:${port}`))
 
 
 /** just in case some thing wrong happend in port
