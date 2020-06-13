@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     },
     status: { type: String, default: "offline" },
     role: { type: String, required: true, enum: ['customer', 'admin', 'serviceowner', 'productowner'] },
-    phones: [{ type: String, required: true, mathc: '(01)[0-9]{9}' }],
+    phones: [{ type: String, required: true, match: '(01)[0-9]{9}' }],
     address:[{
         street: { type: String, required: true },
         city: { type: String, required: true },

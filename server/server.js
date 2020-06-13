@@ -10,6 +10,10 @@ const port= process.env.PORT
 const DB_HOST= process.env.DB_HOST
 const DB_PORT= process.env.DB_PORT
 const DB_DATABASE= process.env.DB_DATABASE
+const userRouter = require('./routes/user');
+// const {
+//   serviceRouter
+// } = require('./routes/allRoutes');
 const searchRouter= require("./routes/search")
 const productRouter= require("./routes/product")
 const {serviceRouter} = require('./routes/allRoutes');
@@ -62,6 +66,7 @@ app.use(express.static("./public"));
 app.use('/users',userRoutes);
 // Customer routes
 app.use('/services', serviceRouter);
+// app.use('/users',userRouter);
 app.get('/', (req, res) =>{ 
   console.log(`\n\nnew request, its method: ${req.method}`);
   console.log(`the url requested: ${req.url}\n`);
