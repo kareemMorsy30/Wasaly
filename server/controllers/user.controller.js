@@ -4,10 +4,17 @@ const jwt = require("jsonwebtoken");
 let userController = {};
 userController.regesiter = async (req, res, next) => {
     const { name, username, email, password, role, phones, address, image_path } = req.body;
+    console.log(role)
     const newUser = new User({
         name, username, email, password, phones, role, address, image_path
     });
-    if (newUser._id != undefined&& newUser.role==="customer") {
+
+    if(newUser.role==="admin"){
+        console.log("Are you mad ??? ");
+
+        res.send({message:"You Are Not Allowrd to be an Admin "})
+    }
+    if (newUser._id != undefined && newUser.role === "customer") {
         try {
             console.log("\n  new USER :::     ", newUser);
             // if (newUser.role=="customer"){
@@ -25,8 +32,9 @@ userController.regesiter = async (req, res, next) => {
         }
     }
 
-        else if (newUser.role === "serviceowner") {
+    else if (newUser.role === "serviceowner") {
         const { user, distance, region, transportation } = req.body;
+        await newUser.save();
 
         const newServiceOwner = new allModels.ServiceOwner({
             user: newUser._id, distance, region, transportation
@@ -46,26 +54,28 @@ userController.regesiter = async (req, res, next) => {
             }
         }
     }
-    else if(newUser.role==="productowner"){
-    const { user, marketName, ownerName, marketPhone } = req.body;
-    const newProductOwner=new allModels.productOwner({
-     user:newUser._id, marketName, ownerName, marketPhone        
-    });
-     console.log("\n  new  newProductOwner:::     ", newProductOwner.role);
-     console.log("\n  new newProductOwner.user :::     ", newProductOwner.user);
-     try {
-         console.log("\n  new newProductOwner :::     ", newProductOwner);
-             const productOwner=await newProductOwner.save();
-             console.log("\n pOwner ::    :      :    ".productowner);
-             console.log("i'm in role");
-             res.send({productOwner});
-     } catch (error) {
-         if (error.name === "MongoError" && error.code === 11000) {
-             next(new Error("email must be unique"));
-         } else {
-             next(error);
-         }
-     }
+    else if (newUser.role === "productowner") {
+        const { user, marketName, ownerName, marketPhone } = req.body;
+        await newUser.save();
+
+        const newProductOwner = new allModels.productOwner({
+            user: newUser._id, marketName, ownerName, marketPhone
+        });
+        console.log("\n  new  newProductOwner:::     ", newProductOwner.role);
+        console.log("\n  new newProductOwner.user :::     ", newProductOwner.user);
+        try {
+            console.log("\n  new newProductOwner :::     ", newProductOwner);
+            const productOwner = await newProductOwner.save();
+            console.log("\n pOwner ::    :      :    ".productowner);
+            console.log("i'm in role");
+            res.send({ productOwner });
+        } catch (error) {
+            if (error.name === "MongoError" && error.code === 11000) {
+                next(new Error("email must be unique"));
+            } else {
+                next(error);
+            }
+        }
     }
 };
 
@@ -109,7 +119,7 @@ userController.login = async (request, response, next) => {
 
 module.exports = userController;
 /**
- * 
+ *
  * {
 
     "phones": ["01097567990"],
@@ -119,7 +129,7 @@ module.exports = userController;
     "password": "12345678d",
     "role": "customer",
     "address": [{
-        
+
         "street": "ss",
         "city": "ooooo",
         "area": "xsssx",
@@ -130,3 +140,24 @@ module.exports = userController;
 	"region":"66",
 	"transportation":"car"
  */
+
+
+// {
+
+//     "name":"adham",
+//     "username":"ssadham",
+//     "email": "adham@gmail.com",
+//     "password": "12345678d",
+//     "role": "customer",
+//     "address": [{
+
+//         "street": "ss",
+//         "city": "ooooo",
+//         "area": "xsssx",
+// 		"location":{"latitude":220,"longitude":220}
+//     }],
+//     "image_path": "axxx.png",
+// 	"marketName":"sports",
+//     "ownerName": "adham" ,
+//     "marketPhone": "01143632151"
+// }

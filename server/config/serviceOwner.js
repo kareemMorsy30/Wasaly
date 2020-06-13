@@ -11,6 +11,7 @@ const serviceOwner = async (req, res, next) => {
     console.log(!user.role === "serviceowner");
     console.log('====================================');
     if (!(user.role==="serviceowner")) throw new Error();
+    req.user=user
     next();
   } catch (error) {
     res.status(401).send({ message: "UnAuthorized it is an serviceowner Area" });

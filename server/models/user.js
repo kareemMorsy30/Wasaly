@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator');
-const bcrypt = require('bcrypt');
+const bcrypt= require('bcrypt')
+
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true, minlength: 3 },
     username: { type: String, required: true, minlength: 3, unique: true },
@@ -13,17 +14,13 @@ const userSchema = new mongoose.Schema({
                 throw Error("Invalid Email Format");
         }
     },
-    status: { type: String, enum: ['online', 'offline'], default: "offline" },
+    status: { type: String, default: "offline" },
     role: { type: String, required: true, enum: ['customer', 'admin', 'serviceowner', 'productowner'] },
     phones: [{ type: String, required: true, mathc: '(01)[0-9]{9}' }],
     address:[{
         street: { type: String, required: true },
         city: { type: String, required: true },
-        area: { type: String, required: true },
-        location: {
-            latitude: {type: Number, required: true},
-            longitude: {type: Number, required: true}
-        }
+        area: { type: String, required: true }
     }],
     password: {
         type: String,
@@ -34,7 +31,6 @@ const userSchema = new mongoose.Schema({
         type: String,
     },
 })
-
 userSchema.pre('save', async function (next) {
     console.log("this::", this);
     if (!this.isModified('password'))
@@ -49,14 +45,6 @@ userSchema.pre('save', async function (next) {
     }
 
 });
-
-/**
- * 
- * @param {*} password 
- * @param {*} hashed 
- * @param {*} callback 
- * Check password with hashed password  using it in  User-Controller 
- */
 userSchema.methods.isPasswordMatch = function (password, hashed, callback) {
     bcrypt.compare(password, hashed, (err, sucess) => {
         if (err) {
@@ -65,8 +53,6 @@ userSchema.methods.isPasswordMatch = function (password, hashed, callback) {
         return callback(null, sucess);
     });
 }
-
-
 
 /**
  * /// delete password and customize user 

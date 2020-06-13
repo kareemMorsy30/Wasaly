@@ -3,6 +3,8 @@ require('dotenv').config();
 const express = require('express')
 const mongoose= require('mongoose')
 const cors= require('cors')
+const bodyParser = require("body-parser");
+
 const app = express()
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
@@ -14,9 +16,15 @@ const DB_DATABASE= process.env.DB_DATABASE
 const {
   serviceRouter
 } = require('./routes/allRoutes');
+const userRouter = require('./routes/user');
+// const {
+//   serviceRouter
+// } = require('./routes/allRoutes');
+const searchRouter= require("./routes/search")
+const productRouter= require("./routes/product")
+const {serviceRouter} = require('./routes/allRoutes');
 const passport = require('passport');
 const morgan = require('morgan');
-const bodyParser = require('body-parser');
 const userRoutes = require('../server/routes/user.routes');
 
 app.use(cors())
@@ -32,7 +40,7 @@ app.get('/', (req, res) =>{
 mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true
-}, (err) => {
+}, async (err) => {
   if (!err) {
     console.log(`Started connection to mongo ::  ${DB_DATABASE}`);
     console.log(`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`);
@@ -40,6 +48,7 @@ mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`, {
   }
   else console.log(err);
 });
+
 
 //__________________________________MiddleWares_______________________________________________________
 //For logging 
@@ -63,8 +72,63 @@ app.use(express.static("./public"));
 app.use('/users',userRoutes);
 // Customer routes
 app.use('/services', serviceRouter);
+// app.use('/users',userRouter);
+app.get('/', (req, res) =>{ 
+  console.log(`\n\nnew request, its method: ${req.method}`);
+  console.log(`the url requested: ${req.url}\n`);
+  res.send('Server running!')
+})
+app.use('/search', searchRouter)
+app.use('/product', productRouter)
 //___________________________ERRRORRS_____________________
+app.use(function handleDatabaseError(error, request, response, next) {
+  console.log(error)
+  if (error.name==='MongoError') {
+    if (error.code === 11000) {
+      return response
+        .status(HttpStatus.CONFLICT)
+        .json({
+          httpStatus: HttpStatus.CONFLICT,
+          type: 'DatabaseError',
+          message: error.message
+        });
+    } else {
+      return response.status(503).json({
+        httpStatus: HttpStatus.SERVICE_UNAVAILABLE,
+        type: 'DatabaseError',
+        message: error.message
+      });
+    }
+  }
+  else if(error.name=="SyntaxError"){
+    return response.status(503).json({
+      httpStatus: 503,
+      type: 'Syntax Error',
+    });
+  }
+  else if(error.name=="CastError"){
+    return response.status(503).json({
+      httpStatus: 503,
+      type: 'Cast Error',
+    });
+  }
+  else if(error.name=="ValidationError"){
+    return response.status(503).json({
+      httpStatus: 503,
+      type: 'ValidationError',
+      message: error.message
+    });
+  }
+  else if(error=="Duplicate product"){
+    return response.status(503).json({
+      httpStatus: 503,
+      type: 'Duplicate Product',
+      message: "Duplicat Product"
+    });
+  }
 
+  next(error);
+});
 
 app.use((req, res, next) => { //404 Not Found
   const err = new Error('Not Found');
