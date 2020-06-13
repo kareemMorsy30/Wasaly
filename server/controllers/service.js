@@ -1,5 +1,6 @@
 const { getDistance, asyncFilter } = require('./controller');
-const { Order, ServiceOwner } = require('./../models/allModels');
+const { Order, ServiceOwner, User } = require('./../models/allModels');
+const { io } = require('../server');
 
 const availableServiceOwners = async ({ body }) => {
     const transportation = body.transportation;
@@ -20,17 +21,40 @@ const availableServiceOwners = async ({ body }) => {
     });
 };
 
-const order = (req, res) => {
+const filteredServiceOwners = (req, res) => {
     availableServiceOwners(req).then(owners => {
-        res.json(owners);
+        res.status(200).json(owners);
     });
 }
 
 const transportation = (req, res) => {
-    ServiceOwner.distinct('transportation').then(owners => res.json(owners));
+    ServiceOwner.distinct('transportation').then(owners => res.status(200).json(owners));
+}
+
+const order = (req, res) => {
+    const order = req.body;
+    const serviceOwnerId = order.id;
+
+    ServiceOwner.findById(serviceOwnerId).then(owner => {
+        let newOrder = new Order({
+            customer: req.user._id,
+            service: owner.user,
+            ...order,
+            cost: 0
+        });
+
+        newOrder.save().then(order => {
+            io.on('connection', (socket) => { 
+                socket.emit(`notify:${owner && owner.email}`, { success: true, msg: `A new request delivery from ${req.user ? req.user.username : 'Anonymous'}` });
+            });
+        }).catch(error => console.log(error));
+
+        res.status(200).json(owner);
+    })
 }
 
 module.exports = {
-    order,
-    transportation
+    filteredServiceOwners,
+    transportation,
+    order
 }
