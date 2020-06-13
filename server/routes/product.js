@@ -5,7 +5,7 @@ var multer = require('multer')
 const Product = require('../models/product')
 const { route } = require('./search')
 const productOwner= require('../config/productOwner')
-const passport = require('passport');
+const { Auth } = require('../middlewares/Auth');
 
 
 var storage = multer.diskStorage({
@@ -19,22 +19,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage }).array('file')
 
-router.all('*', (req, res, next) => {
-    console.log("ad body : ", req.body)
-    passport.authenticate('jwt', { session: false }, (err, user) => {
-        if (err || !user) {
-            const error = new Error('You are not authorized to access this area');
-            error.status = 401;
-            //in the middleware file  will catch it
-            throw error;
-        }
-
-        //
-        req.user = user;
-        //every loged in request we will get the user object
-        return next();
-    })(req, res, next); //miidleware of passport
-});
+Auth(router);
 
 router.get('/',productOwner, listProducts)
 router.get('/:id',productOwner, getProduct)
