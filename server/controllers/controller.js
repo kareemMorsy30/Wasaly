@@ -1,5 +1,8 @@
 const axios = require('axios');
 const userModel = require('../models/user');
+const { Order, ServiceOwner } = require('./../models/allModels');
+
+
 const getDistance = async (source, destination, location = null) => {
     const key = process.env.BING_KEY;
     let firstDistance = 0;
@@ -15,6 +18,14 @@ const getDistance = async (source, destination, location = null) => {
 async function asyncFilter(arr, callback) {
     const fail = Symbol()
     return (await Promise.all(arr.map(async item => (await callback(item)) ? item : fail))).filter(i=>i!==fail)
+}
+
+const changeOrderStatus = async (orderId, status) => {
+    return await Order.findByIdAndUpdate(orderId, {
+        status
+    }, {
+        new: true
+    })
 }
 
 const addUser = (req,res)=>{
@@ -80,5 +91,6 @@ module.exports = {
     getUser,
     getAllUsers,
     updateUser,
-    deleteUser
+    deleteUser,
+    changeOrderStatus
 }
