@@ -13,13 +13,16 @@ const port= process.env.PORT
 const DB_HOST= process.env.DB_HOST
 const DB_PORT= process.env.DB_PORT
 const DB_DATABASE= process.env.DB_DATABASE
-const {serviceRouter} = require('./routes/allRoutes');
-const userRouter = require('./routes/user');
-const searchRouter= require("./routes/search")
-const productRouter= require("./routes/product")
+const {
+  serviceRouter,
+  serviceOwnerRouter,
+  productRouter,
+  searchRouter,
+  userRouter,
+  userRoutes
+} = require('./routes/allRoutes');
 const passport = require('passport');
 const morgan = require('morgan');
-const userRoutes = require('../server/routes/user.routes');
 
 app.use(cors())
 app.use(express.json())
@@ -64,7 +67,7 @@ app.use(express.static("./public"));
 //___________________________Routes_____________________
 
 app.use('/users',userRoutes);
-// Customer routes
+/* --------------- Customer routes -------------------------*/
 app.use('/services', serviceRouter);
 // app.use('/users',userRouter);
 app.get('/', (req, res) =>{ 
@@ -74,6 +77,9 @@ app.get('/', (req, res) =>{
 })
 app.use('/search', searchRouter)
 app.use('/product', productRouter)
+
+/* --------------- Service owner routes -------------------------*/
+app.use('/service-owners', serviceOwnerRouter);
 //___________________________ERRRORRS_____________________
 app.use(function handleDatabaseError(error, request, response, next) {
   console.log(error)
