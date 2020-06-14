@@ -15,4 +15,13 @@ router.get('/orders/:id/accept', serviceController.accept);
 // Reject order request
 router.get('/orders/:id/reject', serviceController.reject);
 
+// Ship order for delivery
+router.get('/orders/:id/out-for-delivery', serviceController.outForDelivery);
+
+// Reject order request
+router.get('/orders/:id/delivered', serviceController.delivered);
+
+// Get service owner reviews
+router.get('/reviews', serviceOwnerController.reviews);
+
 module.exports = router;

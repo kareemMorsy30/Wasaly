@@ -1,11 +1,33 @@
 const mongoose = require('mongoose')
-const User = require('./user')
+
+const rate = new mongoose.Schema({
+    rating: {
+        type: Number,
+        required: [true, 'Rating is required!'],
+        min: [1, 'Minimum rating is 1'],
+        max: [5, 'Maximum rating is 5'],
+        default: 1
+    },
+    reviews: [{
+        type: String,
+        required: [true, 'Comment is required!'],
+        default: null
+    }],
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        unique: true,
+        ref: 'User'
+    }
+});
 
 const serviceOwnerSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref:"User"},
     distance: { type: Number, required: true },
     region: { type: Number, required: true },
-    transportation: { type: String, required: true}
+    transportation: { type: String, required: true},
+    rating: {type: Number, default: 0},
+    rates: [rate]
 })
 
 module.exports= mongoose.model('ServiceOwner', serviceOwnerSchema)
