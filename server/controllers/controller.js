@@ -25,7 +25,7 @@ const changeOrderStatus = async (orderId, status) => {
         status
     }, {
         new: true
-    })
+    }).populate('customer');
 }
 
 
