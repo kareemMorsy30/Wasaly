@@ -4,10 +4,10 @@ const { serviceOwnerController, serviceController } = require('./../controllers/
 const { Auth } = require('../middlewares/Auth');
 const serviceOwner = require('../config/serviceOwner');
 
-Auth(router);
+Auth(router, serviceOwner);
 
 // Check all incoming requests of customers
-router.get('/orders', serviceOwner, serviceOwnerController.allIncomingOrders);
+router.get('/orders', serviceOwnerController.allIncomingOrders);
 
 // Accept order request
 router.get('/orders/:id/accept', serviceController.accept);

@@ -19,11 +19,11 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage }).array('file')
 
-Auth(router);
+Auth(router, productOwner);
 
-router.get('/',productOwner, listProducts)
-router.get('/:id',productOwner, getProduct)
-router.post('/',productOwner,
+router.get('/', listProducts)
+router.get('/:id', getProduct)
+router.post('/',
     async function (req, res, next) {
 
         await upload(req, res, async function (err) {
@@ -43,7 +43,7 @@ router.post('/',productOwner,
     },
     createProduct
 )
-router.patch('/:id',productOwner,
+router.patch('/:id',
     async function (req, res, next) {
 
         await upload(req, res, function (err) {          
@@ -57,7 +57,7 @@ router.patch('/:id',productOwner,
         })
 
     }, updateProduct)
-router.delete('/:productID/images/:id',productOwner, deleteImage)
-router.delete('/:id',productOwner, deleteProduct)
-router.post('/:productID/images/',productOwner, saveImage)
+router.delete('/:productID/images/:id', deleteImage)
+router.delete('/:id', deleteProduct)
+router.post('/:productID/images/', saveImage)
 module.exports = router
