@@ -28,69 +28,10 @@ const changeOrderStatus = async (orderId, status) => {
     })
 }
 
-const addUser = (req,res)=>{
-    const {body : {name,role,username,email,password,address, phones}} = req;
-    const user = new userModel({
-        name,
-        role,
-        username,
-        email,
-        password,
-        address,
-        phones
-    })
-    user.save((err,user)=>{
-        if(err) return res.send(err);
-        res.json(user);
-    })
-}
-const getAllUsers = async(req,res)=>{
-    try{
-        let user =await userModel.find()
-        res.send(user)
-    }catch(err){
-        console.log(err);
-        res.send(err);
-    }
-}
-const getUser = async(req,res)=>{
-    try{
-    let user =await userModel.findById({_id: req.params.id})
-    res.send(user)
-    }
-    catch(err){
-        res.send(err);
-        console.log(err);
-    }
 
-}
-const updateUser = (req,res)=>{
-    try{
-    userModel.findOneAndUpdate({_id: req.params.id})
-    res.status(200).json({"data": user});
-    }catch(err){
-        console.log(err);
-        res.status(400).json({"error": err});
-    }
-}
-const deleteUser = (req,res)=>{
-    userModel.findById(req.params.id, function (err, user) {
-        if (err) {
-            next('cannot find the user');
-        }
-        user.deleteOne(function(err, user){
-            if(err) console.log(err)
-            else res.send(user)
-        })
-    });
-}
+
 module.exports = {
     getDistance,
     asyncFilter,
-    addUser,
-    getUser,
-    getAllUsers,
-    updateUser,
-    deleteUser,
     changeOrderStatus
 }

@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const allModels = require('../models/allModels');
+const userModel = require('../models/user');
 const jwt = require("jsonwebtoken");
 let userController = {};
 userController.regesiter = async (req, res, next) => {
@@ -116,6 +117,36 @@ userController.login = async (request, response, next) => {
         next(error);
     }
 };
+
+userController.getAllUsers = async(req,res)=>{
+    try{
+        let user =await userModel.find()
+        console.log(user);
+        res.send(user)
+    }catch(err){
+        console.log(err);
+        res.send(err);
+    }
+}
+userController.getUser = async(req,res)=>{
+    try{
+    let user =await userModel.findById({_id: req.params.id})
+    res.send(user)
+    }
+    catch(err){
+        res.send(err);
+        console.log(err);
+    }
+
+}
+userController.updateUser = (req,res)=>{
+    userModel.findOneAndUpdate({_id: req.params.id},req.body,{new: true},(error,user)=>{
+        res.status(200).json({"data": user});
+    }).catch((err) => {
+        console.log(err);
+        res.status(400).json({"error": err});
+    })
+}
 
 module.exports = userController;
 /**

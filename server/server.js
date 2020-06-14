@@ -18,7 +18,6 @@ const {
   serviceOwnerRouter,
   productRouter,
   searchRouter,
-  userRouter,
   userRoutes
 } = require('./routes/allRoutes');
 const passport = require('passport');
