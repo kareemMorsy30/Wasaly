@@ -16,6 +16,7 @@ const {serviceRouter} = require('./routes/allRoutes');
 const passport = require('passport');
 const morgan = require('morgan');
 const userRoutes = require('../server/routes/user.routes');
+const OrderRouter= require("./routes/orders")
 
 app.use(cors())
 app.use(express.json())
@@ -33,7 +34,6 @@ mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`, {
 }, async (err) => {
   if (!err) {
     console.log(`Started connection to mongo ::  ${DB_DATABASE}`);
-    console.log(`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`);
     
   }
   else console.log(err);
@@ -69,6 +69,8 @@ app.get('/', (req, res) =>{
 })
 app.use('/search', searchRouter)
 app.use('/product', productRouter)
+app.use('/orders', OrderRouter)
+
 //___________________________ERRRORRS_____________________
 app.use(function handleDatabaseError(error, request, response, next) {
   console.log(error)

@@ -7,9 +7,9 @@ const productOwner = async (req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '');
     const decode = jwt.verify(token, process.env.secret);
     const user = await User.findById(decode._id);
-    console.log('====================================');
-    console.log(!user.role === "productowner");
-    console.log('====================================');
+    // console.log('====================================');
+    // console.log(!user.role === "productowner");
+    // console.log('====================================');
     if (!(user.role==="productowner")) throw new Error();
     req.user=user
     next();

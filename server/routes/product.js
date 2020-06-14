@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const { createProduct, listProducts, updateProduct, deleteProduct, getProduct, deleteImage, saveImage } = require('../controllers/product')
+const {
+     createProduct, listProducts, updateProduct, deleteProduct, getProduct, deleteImage, saveImage, changeProductStatus
+ } = require('../controllers/product')
 var multer = require('multer')
 const Product = require('../models/product')
 const { route } = require('./search')
@@ -20,7 +22,6 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage }).array('file')
 
 router.all('*', (req, res, next) => {
-    console.log("ad body : ", req.body)
     passport.authenticate('jwt', { session: false }, (err, user) => {
         if (err || !user) {
             const error = new Error('You are not authorized to access this area');
@@ -75,4 +76,6 @@ router.patch('/:id',productOwner,
 router.delete('/:productID/images/:id',productOwner, deleteImage)
 router.delete('/:id',productOwner, deleteProduct)
 router.post('/:productID/images/',productOwner, saveImage)
+
+
 module.exports = router
