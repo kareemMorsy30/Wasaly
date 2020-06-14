@@ -58,4 +58,9 @@ router.get('/admin', adminAuth,
 
 
 
+    router.get("", userController.getAllUsers);
+    router.patch('/:id', userController.updateUser);
+    router.get('/:id/',userController.getUser);
+    
+
 module.exports = router;
