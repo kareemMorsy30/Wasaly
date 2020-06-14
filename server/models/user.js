@@ -53,4 +53,16 @@ userSchema.methods.isPasswordMatch = function (password, hashed, callback) {
         return callback(null, sucess);
     });
 }
+
+/**
+ * /// delete password and customize user 
+ * override toJSON
+ */
+userSchema.methods.toJSON = function () {
+    const userObject = this.toObject();
+    delete userObject.password;
+    delete userObject.token;
+    return userObject;
+}
+
 module.exports= mongoose.model('User', userSchema)

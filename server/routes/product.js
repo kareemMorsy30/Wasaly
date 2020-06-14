@@ -7,7 +7,7 @@ var multer = require('multer')
 const Product = require('../models/product')
 const { route } = require('./search')
 const productOwner= require('../config/productOwner')
-const passport = require('passport');
+const { Auth } = require('../middlewares/Auth');
 
 
 var storage = multer.diskStorage({
@@ -21,25 +21,12 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage }).array('file')
 
-router.all('*', (req, res, next) => {
-    passport.authenticate('jwt', { session: false }, (err, user) => {
-        if (err || !user) {
-            const error = new Error('You are not authorized to access this area');
-            error.status = 401;
-            //in the middleware file  will catch it
-            throw error;
-        }
 
-        //
-        req.user = user;
-        //every loged in request we will get the user object
-        return next();
-    })(req, res, next); //miidleware of passport
-});
+Auth(router, productOwner);
 
-router.get('/',productOwner, listProducts)
-router.get('/:id',productOwner, getProduct)
-router.post('/',productOwner,
+router.get('/', listProducts)
+router.get('/:id', getProduct)
+router.post('/',
     async function (req, res, next) {
 
         await upload(req, res, async function (err) {
@@ -59,7 +46,7 @@ router.post('/',productOwner,
     },
     createProduct
 )
-router.patch('/:id',productOwner,
+router.patch('/:id',
     async function (req, res, next) {
 
         await upload(req, res, function (err) {          
@@ -72,10 +59,13 @@ router.patch('/:id',productOwner,
             next()
         })
 
-    }, updateProduct)
-router.delete('/:productID/images/:id',productOwner, deleteImage)
-router.delete('/:id',productOwner, deleteProduct)
-router.post('/:productID/images/',productOwner, saveImage)
+    }, updateProduct
+    )
 
+
+
+router.delete('/:productID/images/:id', deleteImage)
+router.delete('/:id', deleteProduct)
+router.post('/:productID/images/', saveImage)
 
 module.exports = router
