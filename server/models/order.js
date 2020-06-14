@@ -4,10 +4,10 @@ const validator = require('validator');
 const orderSchema = new mongoose.Schema({
     products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     customer: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    service: { type: mongoose.Schema.Types.ObjectId, ref: "ServiceOwner" },
+    service: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // service owner is a user
     status: { 
         type: String, 
-        enum: ['Pending', 'canceled', 'Accepted', 'Rejected', 'Out for delivery', 'Delivered'], 
+        enum: ['Pending', 'Canceled', 'Accepted', 'Rejected', 'Out for delivery', 'Delivered'], 
         default: "Pending" 
     },
     from: {

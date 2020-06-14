@@ -9,12 +9,12 @@ Auth(router);
 router.post('/available/owners', serviceController.filteredServiceOwners);
 
 // Select one service owner
-router.post('/order', serviceController.order);
+router.post('/orders', serviceController.order);
 
 // Get all transportation methods
 router.get('/transportations', serviceController.transportation);
 
 // Cancel submitted request
-router.get('/order/:id/cancel', serviceController.cancel);
+router.get('/orders/:id/cancel', serviceController.cancel);
 
 module.exports = router;

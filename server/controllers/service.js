@@ -1,5 +1,5 @@
-const { getDistance, asyncFilter } = require('./controller');
-const { Order, ServiceOwner, User } = require('./../models/allModels');
+const { getDistance, asyncFilter, changeOrderStatus } = require('./controller');
+const { Order, ServiceOwner } = require('./../models/allModels');
 const { io } = require('../server');
 
 const availableServiceOwners = async ({ body }) => {
@@ -45,16 +45,47 @@ const order = (req, res) => {
 
         newOrder.save().then(order => {
             io.on('connection', (socket) => { 
-                socket.emit(`notify:${owner && owner.email}`, { success: true, msg: `A new request delivery from ${req.user ? req.user.username : 'Anonymous'}` });
+                socket.emit(`notify:${owner && owner.user.email}`, { success: true, msg: `A new request delivery from ${req.user ? req.user.username : 'Anonymous'}` });
             });
-        }).catch(error => console.log(error));
 
-        res.status(200).json(owner);
+            res.status(200).json(order);
+        }).catch(error => console.log(error));
     })
+}
+
+const cancel = (req, res) => {
+    changeOrderStatus(req.params.id, 'Canceled')
+    .then(order => res.status(200).json({status: order.status}))
+    .catch(err => res.status(500).end());
+}
+
+const accept = (req, res) => {
+    changeOrderStatus(req.params.id, 'Accepted')
+    .then(order => {
+        io.on('connection', (socket) => { 
+            socket.emit(`notify:${owner && owner.user.email}`, { success: true, msg: `Congratulations! Your order is accepted` });
+        });
+        res.status(200).json({status: order.status})
+    })
+    .catch(err => res.status(500).end());
+}
+
+const reject = (req, res) => {
+    changeOrderStatus(req.params.id, 'Rejected')
+    .then(order => {
+        io.on('connection', (socket) => { 
+            socket.emit(`notify:${owner && owner.user.email}`, { success: true, msg: `Sorry! Your order is rejected` });
+        });
+        res.status(200).json({status: order.status})
+    })
+    .catch(err => res.status(500).end());
 }
 
 module.exports = {
     filteredServiceOwners,
     transportation,
-    order
+    order,
+    cancel,
+    accept,
+    reject
 }
