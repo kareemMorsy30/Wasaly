@@ -6,20 +6,22 @@ const cors= require('cors')
 const bodyParser = require("body-parser");
 
 const app = express()
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+exports.io = io;
 const port= process.env.PORT
 const DB_HOST= process.env.DB_HOST
 const DB_PORT= process.env.DB_PORT
 const DB_DATABASE= process.env.DB_DATABASE
-// const userRouter = require('./routes/user');
-// const {
-//   serviceRouter
-// } = require('./routes/allRoutes');
-const searchRouter= require("./routes/search")
-const productRouter= require("./routes/product")
-const {serviceRouter} = require('./routes/allRoutes');
+const {
+  serviceRouter,
+  serviceOwnerRouter,
+  productRouter,
+  searchRouter,
+  userRoutes
+} = require('./routes/allRoutes');
 const passport = require('passport');
 const morgan = require('morgan');
-const userRoutes = require('../server/routes/user.routes');
 
 app.use(cors())
 app.use(express.json())
@@ -64,7 +66,7 @@ app.use(express.static("./public"));
 //___________________________Routes_____________________
 
 app.use('/users',userRoutes);
-// Customer routes
+/* --------------- Customer routes -------------------------*/
 app.use('/services', serviceRouter);
 // app.use('/users',userRouter);
 app.get('/', (req, res) =>{ 
@@ -74,6 +76,9 @@ app.get('/', (req, res) =>{
 })
 app.use('/search', searchRouter)
 app.use('/product', productRouter)
+
+/* --------------- Service owner routes -------------------------*/
+app.use('/service-owners', serviceOwnerRouter);
 //___________________________ERRRORRS_____________________
 app.use(function handleDatabaseError(error, request, response, next) {
   console.log(error)
@@ -141,7 +146,7 @@ app.use((err, req, res, next) => {
 
 
 
-app.listen(port, () => console.log(`Server is listening at http://localhost:${port}`))
+server.listen(port, () => console.log(`Server is listening at http://localhost:${port}`))
 
 
 /** just in case some thing wrong happend in port

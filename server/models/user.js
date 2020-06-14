@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     },
     status: { type: String, default: "offline" },
     role: { type: String, required: true, enum: ['customer', 'admin', 'serviceowner', 'productowner'] },
-    phones: [{ type: String, required: true, match: '(01)[0-9]{9}' }],
+    phones: [{ type: String, required: true, mathc: '(01)[0-9]{9}' }],
     address:[{
         street: { type: String, required: true },
         city: { type: String, required: true },
@@ -53,4 +53,16 @@ userSchema.methods.isPasswordMatch = function (password, hashed, callback) {
         return callback(null, sucess);
     });
 }
+
+/**
+ * /// delete password and customize user 
+ * override toJSON
+ */
+userSchema.methods.toJSON = function () {
+    const userObject = this.toObject();
+    delete userObject.password;
+    delete userObject.token;
+    return userObject;
+}
+
 module.exports= mongoose.model('User', userSchema)

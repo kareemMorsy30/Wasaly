@@ -15,7 +15,7 @@ const productOwner = require("../config/productOwner");
 // router.post('/registerSO', userController.regesiterSO);
 
 */
-// router.post('/registerPO', userController.regesiter);
+// router.post('/registerPO', userController.regesiterPO);
 
 
 // Customize auth message Protect the  routes

@@ -9,6 +9,12 @@ userController.regesiter = async (req, res, next) => {
     const newUser = new User({
         name, username, email, password, phones, role, address, image_path
     });
+
+    if(newUser.role==="admin"){
+        console.log("Are you mad ??? ");
+
+        res.send({message:"You Are Not Allowrd to be an Admin "})
+    }
     if (newUser._id != undefined && newUser.role === "customer") {
         try {
             console.log("\n  new USER :::     ", newUser);
