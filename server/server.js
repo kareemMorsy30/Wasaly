@@ -24,7 +24,7 @@ const {
 const passport = require('passport');
 const morgan = require('morgan');
 
-app.use(cors())
+app.use(cors({origin: true, credentials: true}));
 app.use(express.json())
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }))
