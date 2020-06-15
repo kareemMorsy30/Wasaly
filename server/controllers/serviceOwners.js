@@ -41,9 +41,7 @@ const updateServiceOwner = (req,res)=>{
         console.log(err);
         res.status(400).json({"error": err});
     })
-}
-
-   
+} 
 
 // Get service owner reviews
 const reviews = (req, res) => {
@@ -53,22 +51,24 @@ const reviews = (req, res) => {
     const page = perPage ? parseInt(req.query.page) : 0; // Check if there is a query string for page number
 
     ServiceOwner.findOne({ user: user._id }, null, { skip: perPage * (page-1), limit: perPage })
+    .populate('user')
+    .populate('rates.user')
     .then(owner => {
         
-        const count = owner.reviews ? owner.reviews.length : 0;
+        const count = owner.rates ? owner.rates.length : 0;
 
         const data = perPage ? {
             // return review data with current page number and all pages available
-            reviews: owner.reviews,
+            reviews: owner.rates,
             page,
             pages: parseInt(count/perPage)+1 // Count number of available pages
         } 
         : 
-        {reviews: owner.reviews};
+        {reviews: owner.rates};
 
         res.status(200).json(data);
     })
-    .catch(error => res.status(500).end());
+    .catch(error => console.log(error));
 }
 
 // Get all service owners
@@ -94,7 +94,7 @@ const all = (req, res) => {
 
         res.status(200).json(data);
     })
-    .catch();
+    .catch(error => res.status(500).end());
 }
 
 // Get all unconnected service owners
@@ -128,7 +128,7 @@ const updateConnection = (req, res) => {
     const { user } = req;
     
     ServiceOwner.findOneAndUpdate({user: user._id}, {
-        'productOwner.status': status === 'accept' ? 'Connected' : 'Rejected'
+        'productOwner.status': status === 'accept' ? 'Connected' : 'Not Connected'
     }, { new: true })
     .then(owner => res.status(200).json({status: owner.productOwner.status}))
     .catch(error => res.status(500).end());

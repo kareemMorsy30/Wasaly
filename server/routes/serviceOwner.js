@@ -15,6 +15,9 @@ router.get('/orders/:id/accept', serviceController.accept);
 // Reject order request
 router.get('/orders/:id/reject', serviceController.reject);
 
+// Get service owner reviews
+router.get('/reviews', serviceOwnerController.reviews);
+
 //get specific service owner by id
 router.get('/:id/',serviceOwnerController.getServiceOwner)
 
@@ -28,9 +31,6 @@ router.get('/orders/:id/out-for-delivery', serviceController.outForDelivery);
 
 // Reject order request
 router.get('/orders/:id/delivered', serviceController.delivered);
-
-// Get service owner reviews
-router.get('/reviews', serviceOwnerController.reviews);
 
 // Retrieve product owners request details
 router.get('/product-owner', productOwnerController.productOwnerDetails);

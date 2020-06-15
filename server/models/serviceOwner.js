@@ -38,7 +38,7 @@ const serviceOwnerSchema = new mongoose.Schema({
     productOwner: { 
         status: { 
             type: String,  
-            enum: ['Not connected', 'Pending', 'Connected', 'Rejected'], 
+            enum: ['Not connected', 'Pending', 'Connected'], 
             default: "Not connected"
         },
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null }
