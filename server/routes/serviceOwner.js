@@ -15,6 +15,14 @@ router.get('/orders/:id/accept', serviceController.accept);
 // Reject order request
 router.get('/orders/:id/reject', serviceController.reject);
 
+//get specific service owner by id
+router.get('/:id/',serviceOwnerController.getServiceOwner)
+
+//update service owner data
+router.patch('/:id', serviceOwnerController.updateServiceOwner);
+
+//change status of service owner
+router.get('/:id/status',serviceOwnerController.changeStatus)
 // Ship order for delivery
 router.get('/orders/:id/out-for-delivery', serviceController.outForDelivery);
 
