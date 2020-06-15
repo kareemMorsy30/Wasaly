@@ -175,20 +175,20 @@ module.exports = userController;
 
 // {
 
-//     "name":"adham",
-//     "username":"ssadham",
-//     "email": "adham@gmail.com",
-//     "password": "12345678d",
-//     "role": "customer",
-//     "address": [{
+    // "name":"adham",
+    // "username":"ssadham",
+    // "email": "adham@gmail.com",
+    // "password": "12345678d",
+    // "role": "customer",
+    // "address": [{
 
-//         "street": "ss",
-//         "city": "ooooo",
-//         "area": "xsssx",
-// 		"location":{"latitude":220,"longitude":220}
-//     }],
-//     "image_path": "axxx.png",
-// 	"marketName":"sports",
-//     "ownerName": "adham" ,
-//     "marketPhone": "01143632151"
+    //     "street": "ss",
+    //     "city": "ooooo",
+    //     "area": "xsssx",
+	// 	"location":{"latitude":220,"longitude":220}
+    // }],
+    // "image_path": "axxx.png",
+	// "marketName":"sports",
+    // "ownerName": "adham" ,
+    // "marketPhone": "01143632151"
 // }
