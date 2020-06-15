@@ -1,7 +1,7 @@
 const passport = require('passport');
 
-const Auth = router => {
-    router.all('*', (req, res, next) => {
+const Auth = (router, middleware = (req, res, next) => next()) => {
+    router.all('*', middleware, (req, res, next) => {
         passport.authenticate('jwt', { session: false }, (err, user) => {
             if (err || !user) {
                 const error = new Error('You are not authorized to access this area');

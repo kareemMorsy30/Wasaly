@@ -18,7 +18,10 @@ const {
   serviceOwnerRouter,
   productRouter,
   searchRouter,
-  userRoutes
+  userRoutes,
+  adminRouter,
+  productOwnerRouter,
+  OrderRouter
 } = require('./routes/allRoutes');
 const passport = require('passport');
 const morgan = require('morgan');
@@ -39,7 +42,6 @@ mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`, {
 }, async (err) => {
   if (!err) {
     console.log(`Started connection to mongo ::  ${DB_DATABASE}`);
-    console.log(`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`);
     
   }
   else console.log(err);
@@ -76,9 +78,17 @@ app.get('/', (req, res) =>{
 })
 app.use('/search', searchRouter)
 app.use('/product', productRouter)
+app.use('/orders', OrderRouter)
+
+
+/* --------------- Product owner routes -------------------------*/
+app.use('/product-owners', productOwnerRouter);
 
 /* --------------- Service owner routes -------------------------*/
 app.use('/service-owners', serviceOwnerRouter);
+
+/* --------------- Admin routes -------------------------*/
+app.use('/admin', adminRouter);
 //___________________________ERRRORRS_____________________
 app.use(function handleDatabaseError(error, request, response, next) {
   console.log(error)

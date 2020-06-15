@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const { createProduct, listProducts, updateProduct, deleteProduct, getProduct, deleteImage, saveImage } = require('../controllers/product')
+const {
+     createProduct, listProducts, updateProduct, deleteProduct, getProduct, deleteImage, saveImage, changeProductStatus
+ } = require('../controllers/product')
 var multer = require('multer')
 const Product = require('../models/product')
 const { route } = require('./search')
@@ -19,11 +21,12 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage }).array('file')
 
-Auth(router);
 
-router.get('/',productOwner, listProducts)
-router.get('/:id',productOwner, getProduct)
-router.post('/',productOwner,
+Auth(router, productOwner);
+
+router.get('/', listProducts)
+router.get('/:id', getProduct)
+router.post('/',
     async function (req, res, next) {
 
         await upload(req, res, async function (err) {
@@ -43,7 +46,7 @@ router.post('/',productOwner,
     },
     createProduct
 )
-router.patch('/:id',productOwner,
+router.patch('/:id',
     async function (req, res, next) {
 
         await upload(req, res, function (err) {          
@@ -56,8 +59,13 @@ router.patch('/:id',productOwner,
             next()
         })
 
-    }, updateProduct)
-router.delete('/:productID/images/:id',productOwner, deleteImage)
-router.delete('/:id',productOwner, deleteProduct)
-router.post('/:productID/images/',productOwner, saveImage)
+    }, updateProduct
+    )
+
+
+
+router.delete('/:productID/images/:id', deleteImage)
+router.delete('/:id', deleteProduct)
+router.post('/:productID/images/', saveImage)
+
 module.exports = router

@@ -3,6 +3,7 @@ const validator = require('validator');
 
 const orderSchema = new mongoose.Schema({
     products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    productOwner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     customer: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     service: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // service owner is a user
     status: { 
@@ -13,7 +14,7 @@ const orderSchema = new mongoose.Schema({
     from: {
         street: { type: String },
         city: { type: String },
-        area: { type: String },
+        area: { type: String, required: true },
         longitude: { type: Number, required: true },
         latitude: { type: Number,  required: true },
     },
