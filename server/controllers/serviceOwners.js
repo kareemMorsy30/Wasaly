@@ -1,4 +1,4 @@
-const { Order, ServiceOwner } = require('./../models/allModels');
+const { Order, ServiceOwner, User } = require('./../models/allModels');
 
 // Get all service owner orders
 const allIncomingOrders = (req, res) => {
@@ -100,10 +100,29 @@ const updateConnection = (req, res) => {
     .catch(error => res.status(500).end());
 }
 
+const remove = (req, res) => {
+    const { id } = req.params;
+
+    ServiceOwner.findOneAndDelete({user: id})
+    .then(owner => {
+        User.findByIdAndDelete(id)
+        .then(user => res.status(200).json(user))
+        .catch(error => {
+            console.log(error);
+            res.status(500).end()
+        });
+    })
+    .catch(error => res.status(500).end());
+}
+
+// Add new category
+
+
 module.exports = {
     allIncomingOrders,
     reviews,
     all,
     allIdle,
-    updateConnection
+    updateConnection,
+    remove
 }

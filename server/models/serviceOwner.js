@@ -10,8 +10,7 @@ const rate = new mongoose.Schema({
     },
     reviews: [{
         type: String,
-        required: [true, 'Comment is required!'],
-        default: null
+        required: [true, 'Comment is required!']
     }],
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -28,6 +27,14 @@ const serviceOwnerSchema = new mongoose.Schema({
     transportation: { type: String, required: true},
     rating: {type: Number, default: 0},
     rates: [rate],
+    reports: [{
+        message:  { type: String, required: [true, 'You have to add report message'] },
+        user: { 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: "User", 
+            required: [true, 'Provide User who submitted the report'] 
+        }
+    }],
     productOwner: { 
         status: { 
             type: String,  
