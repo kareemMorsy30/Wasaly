@@ -3,6 +3,7 @@ const validator = require('validator');
 
 const orderSchema = new mongoose.Schema({
     products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    productOwner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     customer: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     service: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // service owner is a user
     status: { 

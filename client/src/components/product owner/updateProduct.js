@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useForm } from "react-hook-form";
 import axios from 'axios'
-
+import {authHeader} from '../../config'
 
 const UpdateProduct = (props) => {
     const [images, setImages] = useState([])
@@ -18,8 +18,10 @@ const UpdateProduct = (props) => {
     const [quantity, setQuantity] = useState(0)
     const [deletingImage,setDeletingImage]= useState(false)
 
+
+    const {id}= props.match.params
     useEffect(() => {
-        axios.get('http://localhost:8000/product/5ee39d0707d185258b6b4699')
+        axios.get(`http://localhost:8000/product/${id}`,authHeader)
             .then(res => {
                 if (res.data.name) {
                     const { description, name, price, quantity, images_path } = res.data
@@ -45,7 +47,7 @@ const UpdateProduct = (props) => {
         data.set("price", price)
         data.set("quantity", quantity)
 
-        axios.patch(`http://localhost:8000/product/5ee39d0707d185258b6b4699`, data, {
+        axios.patch(`http://localhost:8000/product/${id}`, data, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -63,9 +65,11 @@ const UpdateProduct = (props) => {
             for (var x = 0; x < e.target.files.length; x++) {
                 data.append('file', e.target.files[x])
             }
-            axios.post('http://localhost:8000/product/5ee39d0707d185258b6b4699/images', data, {
+            axios.post(`http://localhost:8000/product/${id}/images`, data, {
                 headers: {
-                  'Content-Type': 'multipart/form-data'
+                  'Content-Type': 'multipart/form-data',
+                  'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWUzZWNkZmY1NTEzNTYwODI2MWY0YjciLCJpYXQiOjE1OTIwNDY4NjYsImV4cCI6MTU5MjA1ODk5N30.qyPuZ7wse45E8sJl8tEaVNnDBEJ17XarOcAOJAvDJ5Y`
+
                 }
             }).then((res) => {
                 setImages((prevImages)=>[...prevImages,...res.data])
@@ -142,13 +146,12 @@ const UpdateProduct = (props) => {
     }
 
     const handleImageDeleting=(e)=>{      
-        axios.delete(`http://localhost:8000/product/5ee39d0707d185258b6b4699/images/${e.target.id}`
+        axios.delete(`http://localhost:8000/product/${id}/images/${e.target.id}`, authHeader
         ).then((res, err) => {
             setDeletingImage((prevState)=>!prevState)
             toast.success('Deleted successfully')
         }).catch(err => {
-            console.log(err)
-            
+            console.log(err)            
             toast.error('Error Deleting the image')
         })
     }
@@ -204,7 +207,6 @@ const UpdateProduct = (props) => {
 
 
                     <Form.Control
-
                         name="price"
                         value={price}
                         type="number"

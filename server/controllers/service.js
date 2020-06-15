@@ -63,9 +63,9 @@ const accept = (req, res) => {
     changeOrderStatus(req.params.id, 'Accepted')
     .then(order => {
         io.on('connection', (socket) => { 
-            socket.emit(`notify:${owner && owner.user.email}`, { success: true, msg: `Congratulations! Your order is accepted` });
+            socket.emit(`notify:${order.customer.email && order.customer.email}`, { success: true, msg: `Congratulations! Your order is accepted` });
         });
-        res.status(200).json({status: order.status})
+        res.status(200).json(order);
     })
     .catch(err => res.status(500).end());
 }
@@ -74,7 +74,29 @@ const reject = (req, res) => {
     changeOrderStatus(req.params.id, 'Rejected')
     .then(order => {
         io.on('connection', (socket) => { 
-            socket.emit(`notify:${owner && owner.user.email}`, { success: true, msg: `Sorry! Your order is rejected` });
+            socket.emit(`notify:${order.customer.email && order.customer.email}`, { success: true, msg: `Sorry! Your order is rejected` });
+        });
+        res.status(200).json({status: order.status})
+    })
+    .catch(err => res.status(500).end());
+}
+
+const outForDelivery = (req, res) => {
+    changeOrderStatus(req.params.id, 'Out for delivery')
+    .then(order => {
+        io.on('connection', (socket) => { 
+            socket.emit(`notify:${order.customer.email && order.customer.email}`, { success: true, msg: `Your order is on his way to you` });
+        });
+        res.status(200).json({status: order.status})
+    })
+    .catch(err => res.status(500).end());
+}
+
+const delivered = (req, res) => {
+    changeOrderStatus(req.params.id, 'Delivered')
+    .then(order => {
+        io.on('connection', (socket) => { 
+            socket.emit(`notify:${order.customer.email && order.customer.email}`, { success: true, msg: `Order has been delivered! leave a rating on the service` });
         });
         res.status(200).json({status: order.status})
     })
@@ -87,5 +109,7 @@ module.exports = {
     order,
     cancel,
     accept,
-    reject
+    reject,
+    outForDelivery,
+    delivered
 }
