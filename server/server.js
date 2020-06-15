@@ -18,7 +18,9 @@ const {
   serviceOwnerRouter,
   productRouter,
   searchRouter,
-  userRoutes
+  userRoutes,
+  adminRouter,
+  productOwnerRouter
 } = require('./routes/allRoutes');
 const passport = require('passport');
 const morgan = require('morgan');
@@ -77,8 +79,14 @@ app.get('/', (req, res) =>{
 app.use('/search', searchRouter)
 app.use('/product', productRouter)
 
+/* --------------- Product owner routes -------------------------*/
+app.use('/product-owners', productOwnerRouter);
+
 /* --------------- Service owner routes -------------------------*/
 app.use('/service-owners', serviceOwnerRouter);
+
+/* --------------- Admin routes -------------------------*/
+app.use('/admin', adminRouter);
 //___________________________ERRRORRS_____________________
 app.use(function handleDatabaseError(error, request, response, next) {
   console.log(error)
