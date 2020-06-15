@@ -30,7 +30,8 @@ const CreateProduct = (props) => {
 
         axios.post('http://localhost:8000/product', data, {
             headers: {
-              'Content-Type': 'multipart/form-data'
+              'Content-Type': 'multipart/form-data',
+              'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWUzZWNkZmY1NTEzNTYwODI2MWY0YjciLCJpYXQiOjE1OTIwNDY4NjYsImV4cCI6MTU5MjA1ODk5N30.qyPuZ7wse45E8sJl8tEaVNnDBEJ17XarOcAOJAvDJ5Y`
             }
         }).then((res) => {
                     toast.success('upload success')

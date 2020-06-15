@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const { createProduct, listProducts, updateProduct, deleteProduct, getProduct, deleteImage, saveImage } = require('../controllers/product')
+const {
+     createProduct, listProducts, updateProduct, deleteProduct, getProduct, deleteImage, saveImage, changeProductStatus
+ } = require('../controllers/product')
 var multer = require('multer')
 const Product = require('../models/product')
 const { route } = require('./search')
@@ -18,6 +20,7 @@ var storage = multer.diskStorage({
 })
 
 var upload = multer({ storage: storage }).array('file')
+
 
 Auth(router, productOwner);
 
@@ -56,8 +59,13 @@ router.patch('/:id',
             next()
         })
 
-    }, updateProduct)
+    }, updateProduct
+    )
+
+
+
 router.delete('/:productID/images/:id', deleteImage)
 router.delete('/:id', deleteProduct)
 router.post('/:productID/images/', saveImage)
+
 module.exports = router

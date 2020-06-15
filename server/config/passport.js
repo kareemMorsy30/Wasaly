@@ -10,9 +10,7 @@ module.exports = (passport) => {
     //from jwtPayload we can reach the token it self as we did in controller :{ _id: user._id } this is the Payload
     passport.use(new jwtStrategy(config, async (jwtPayload, done) => { //done may ve like next but it pass the error 
         try {
-            console.log(
-                "JWTPAYLOAD ::: ", jwtPayload
-            );
+           
 
             const user = await User.findById(jwtPayload._id);
             
