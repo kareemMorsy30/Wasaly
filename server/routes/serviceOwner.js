@@ -38,4 +38,5 @@ router.get('/product-owner', productOwnerController.productOwnerDetails);
 // Accept or reject product owner connection request
 router.patch('/connection/:status', serviceOwnerController.updateConnection);
 
+
 module.exports = router;

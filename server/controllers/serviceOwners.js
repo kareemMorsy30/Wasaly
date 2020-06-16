@@ -45,12 +45,13 @@ const updateServiceOwner = (req,res)=>{
 
 // Get service owner reviews
 const reviews = (req, res) => {
-    const { user } = req;
-
+    let {id}= req.params
+  
+    !id ? id  = req.user._id:""
     const perPage = req.query.page ? 8 : null; // Reviews per page
     const page = perPage ? parseInt(req.query.page) : 0; // Check if there is a query string for page number
 
-    ServiceOwner.findOne({ user: user._id }, null, { skip: perPage * (page-1), limit: perPage })
+    ServiceOwner.findOne({ user: id }, null, { skip: perPage * (page-1), limit: perPage })
     .populate('user')
     .populate('rates.user')
     .then(owner => {
