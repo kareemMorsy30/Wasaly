@@ -13,4 +13,16 @@ router.get('/idle', serviceOwnerController.allIdle);
 // Product owner connect to one of service owners
 router.patch('/connect', productOwnerController.connect);
 
+// get all product owners
+router.get('', productOwnerController.getAllproductsOwner);
+
+//get specific product owner by id
+router.get('/:id', productOwnerController.getProductOwner);
+
+//changing status of product owners
+router.get('/:id/status',productOwnerController.changeStatus);
+
+//update data of product owner
+router.patch('/:id',productOwnerController.updateProducteOwner);
+
 module.exports = router;
