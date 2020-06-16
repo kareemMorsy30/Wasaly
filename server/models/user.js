@@ -20,7 +20,11 @@ const userSchema = new mongoose.Schema({
     address:[{
         street: { type: String, required: true },
         city: { type: String, required: true },
-        area: { type: String, required: true }
+        area: { type: String, required: true },
+        location: {
+            latitude: {type: Number, required: true},
+            longitude: {type: Number, required: true}
+        }
     }],
     password: {
         type: String,

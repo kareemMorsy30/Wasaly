@@ -7,6 +7,14 @@ import { Router, Switch, Route } from 'react-router-dom'
 import CreateProduct from './components/product owner/createProduct'
 import UpdateProduct from './components/product owner/updateProduct'
 import ListProducts  from './components/product owner/listProducts';
+import Register from "./components/auth/Register";
+import AdminLogin from "./components/admin/adminLogin";
+import UserNavBar from "./components/user/userNavBar";
+
+/**
+ * Admin NavBar Ya adham :)
+ */
+import NavBar from "./components/admin/adminNavBar";
 
 function App() {
   return (
@@ -15,11 +23,23 @@ function App() {
         {/* <NavBar/> */}
 
         <div className="container">
-    
+          
           <Switch>
             <Route exact path="/products" component={ListProducts} />
             <Route exact path="/products/create" component={CreateProduct} />
             <Route exact path="/products/:id/edit" component={UpdateProduct} />
+          <Route exact path="/admin">
+                    <NavBar />
+                    <AdminLogin />
+                </Route>
+                <Route exact path="/register" component={ Register } />
+
+                <Route exact path="/" >
+                    <UserNavBar />
+                    {/* <Home /> */}
+                </Route>
+            <Route exact path="/product/create" component={CreateProduct} />
+            <Route exact path="/product/edit" component={UpdateProduct} />
           </Switch>
         </div>
       </div>
