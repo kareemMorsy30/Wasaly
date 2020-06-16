@@ -19,6 +19,8 @@ const {
   productRouter,
   searchRouter,
   userRoutes,
+  adminRouter,
+  productOwnerRouter,
   OrderRouter
 } = require('./routes/allRoutes');
 const passport = require('passport');
@@ -79,8 +81,14 @@ app.use('/product', productRouter)
 app.use('/orders', OrderRouter)
 
 
+/* --------------- Product owner routes -------------------------*/
+app.use('/product-owners', productOwnerRouter);
+
 /* --------------- Service owner routes -------------------------*/
 app.use('/service-owners', serviceOwnerRouter);
+
+/* --------------- Admin routes -------------------------*/
+app.use('/admin', adminRouter);
 //___________________________ERRRORRS_____________________
 app.use(function handleDatabaseError(error, request, response, next) {
   console.log(error)

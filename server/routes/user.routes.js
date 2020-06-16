@@ -42,9 +42,13 @@ router.get('/admin', adminAuth,
 
 
 
-
+    //get all users
     router.get("", userController.getAllUsers);
+
+    //update users
     router.patch('/:id', userController.updateUser);
+
+    //get user by id
     router.get('/:id/',userController.getUser);
     
 

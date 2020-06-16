@@ -14,7 +14,7 @@ const orderSchema = new mongoose.Schema({
     from: {
         street: { type: String },
         city: { type: String },
-        area: { type: String },
+        area: { type: String, required: true },
         longitude: { type: Number, required: true },
         latitude: { type: Number,  required: true },
     },

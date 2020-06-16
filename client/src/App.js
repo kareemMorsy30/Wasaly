@@ -15,6 +15,7 @@ import UserNavBar from "./components/user/userNavBar";
  * Admin NavBar Ya adham :)
  */
 import NavBar from "./components/admin/adminNavBar";
+import ServiceOrderForm from './components/customer/serviceForm';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
                 </Route>
             <Route exact path="/product/create" component={CreateProduct} />
             <Route exact path="/product/edit" component={UpdateProduct} />
+            <Route exact path="/" component={ServiceOrderForm} />
           </Switch>
         </div>
       </div>
