@@ -1,4 +1,4 @@
-const { Order, ServiceOwner } = require('./../models/allModels');
+const { Order, ServiceOwner, User } = require('./../models/allModels');
 
 // Get all service owner orders
 const allIncomingOrders = (req, res) => {
@@ -10,6 +10,38 @@ const allIncomingOrders = (req, res) => {
     })
     .catch(error => res.status(500).end());
 }
+const changeStatus = async(req,res)=>{
+    try{
+        const serviceUser = await ServiceOwner.findOne({_id : req.params.id})
+        const user = await User.updateOne({_id:serviceUser.user._id},{$set:{"status":"online"}},{new:true})
+        console.log(user);
+        res.json({
+            user
+          });
+}catch(err){
+    console.error(err.message);
+}
+    
+}
+
+const getServiceOwner = async(req,res)=>{
+    try{
+        let user =await ServiceOwner.findById({_id: req.params.id})
+        res.send(user)
+        }
+        catch(err){
+            res.send(err);
+            console.log(err);
+        }
+}
+const updateServiceOwner = (req,res)=>{
+    ServiceOwner.findOneAndUpdate({_id: req.params.id},req.body,{new: true},(error,user)=>{
+        res.status(200).json({"data": user});
+    }).catch((err) => {
+        console.log(err);
+        res.status(400).json({"error": err});
+    })
+} 
 
 // Get service owner reviews
 const reviews = (req, res) => {
@@ -63,7 +95,7 @@ const all = (req, res) => {
 
         res.status(200).json(data);
     })
-    .catch();
+    .catch(error => res.status(500).end());
 }
 
 // Get all unconnected service owners
@@ -97,11 +129,29 @@ const updateConnection = (req, res) => {
     const { user } = req;
     
     ServiceOwner.findOneAndUpdate({user: user._id}, {
-        'productOwner.status': status === 'accept' ? 'Connected' : 'Rejected'
+        'productOwner.status': status === 'accept' ? 'Connected' : 'Not Connected'
     }, { new: true })
     .then(owner => res.status(200).json({status: owner.productOwner.status}))
     .catch(error => res.status(500).end());
 }
+
+const remove = (req, res) => {
+    const { id } = req.params;
+
+    ServiceOwner.findOneAndDelete({user: id})
+    .then(owner => {
+        User.findByIdAndDelete(id)
+        .then(user => res.status(200).json(user))
+        .catch(error => {
+            console.log(error);
+            res.status(500).end()
+        });
+    })
+    .catch(error => res.status(500).end());
+}
+
+// Add new category
+
 
 module.exports = {
     allIncomingOrders,
@@ -109,4 +159,8 @@ module.exports = {
     all,
     allIdle,
     updateConnection,
+    remove,
+    getServiceOwner,
+    updateServiceOwner,
+    changeStatus
 }

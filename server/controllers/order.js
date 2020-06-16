@@ -31,26 +31,6 @@ exports.changeOrderStatus = async (req, res, next) => {
 
 }
 
-exports.saveOrderForService = async (req, res, next) => {
-    try {
-        const orderID = req.params.id
-        const userID = req.user._id
-        const {
-            serviceOwnerID,
-            from,
-            to,
-            item,
-            amount,
-            cost,
-            description } = req.body
-        const status="Pending"
-        await new Order({to, from, item, amount, cost, description, service: serviceOwnerID, status})
-        res.send("Status Updated Successfully")
-
-    } catch (err) {
-        next(err)
-    }
-}
 exports.listCustomerOrders= async (req, res, next) => {
     try {
         const id = req.user._id
