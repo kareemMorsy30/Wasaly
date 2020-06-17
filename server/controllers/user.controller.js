@@ -1,6 +1,8 @@
 const User = require("../models/user");
 const allModels = require('../models/allModels');
 const userModel = require('../models/user');
+const Report = require('../models/report')
+
 const jwt = require("jsonwebtoken");
 let userController = {};
 userController.regesiter = async (req, res, next) => {
@@ -146,6 +148,18 @@ userController.updateUser = (req,res)=>{
         console.log(err);
         res.status(400).json({"error": err});
     })
+}
+userController.saveReport= async(req, res, next )=>{
+    try {
+        const {report} = req.body
+        const{user}= req.params
+        const customer = req.user._id       
+        await new Report({ report, user, customer }).save()
+        res.json("Reported Successfully")
+    }
+    catch (err) {
+        next(err)
+    }
 }
 
 module.exports = userController;

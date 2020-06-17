@@ -31,25 +31,28 @@ router.get('/admin', adminAuth,
         return res.send({ status: 200, user: req.user })
     });
 
-    router.get('/logincheck',serviceOwner,adminAuth,
+router.get('/logincheck', serviceOwner, adminAuth,
     (req, res, next) => {
         return res.send({ msg: "okey you are authorized user now :)", user: req.user })
     });
-    router.get('/productsTEST',productOwner,
+router.get('/productsTEST', productOwner,
     (req, res, next) => {
         return res.send({ msg: "okey you are authorized user now :)", user: req.user });
     });
 
 
 
-    //get all users
-    router.get("", userController.getAllUsers);
+//get all users
+router.get("", userController.getAllUsers);
 
-    //update users
-    router.patch('/:id', userController.updateUser);
+//update users
+router.patch('/:id', userController.updateUser);
 
-    //get user by id
-    router.get('/:id/',userController.getUser);
-    
+//get user by id
+router.get('/:id/', userController.getUser);
+
+//save report
+router.post('/:user/report', userController.saveReport)
+
 
 module.exports = router;
