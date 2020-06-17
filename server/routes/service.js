@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { serviceController } = require('./../controllers/allControllers');
+const { serviceController,serviceOwnerController } = require('./../controllers/allControllers');
 const { Auth } = require('../middlewares/Auth');
 
 Auth(router);
@@ -16,5 +16,14 @@ router.get('/transportations', serviceController.transportation);
 
 // Cancel submitted request
 router.get('/orders/:id/cancel', serviceController.cancel);
+
+//save review
+router.patch('/:serviceOwnerID/reviews', serviceController.saveReview);
+
+//save Rating
+router.patch('/:serviceOwnerID/rates', serviceController.saveRate);
+
+router.get('/:id/reviews', serviceOwnerController.reviews);
+
 
 module.exports = router;

@@ -10,7 +10,7 @@ exports.listOrders = async (req, res, next) => {
     }
 }
 
-exports.chaneOrderStatus = async (req, res, next) => {
+exports.changeOrderStatus = async (req, res, next) => {
     try {
         const orderID = req.params.id
         const userID = req.user._id
@@ -29,4 +29,14 @@ exports.chaneOrderStatus = async (req, res, next) => {
     }
 
 
+}
+
+exports.listCustomerOrders= async (req, res, next) => {
+    try {
+        const id = req.user._id
+        const orders = await Order.find({ custoemr: id }).select("service status description cost amount item products productOwner").exec()
+        res.json(orders)
+    } catch (err) {
+        next(err)
+    }
 }

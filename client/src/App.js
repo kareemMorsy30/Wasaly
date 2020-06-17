@@ -16,6 +16,7 @@ import UserNavBar from "./components/user/userNavBar";
  */
 import NavBar from "./components/admin/adminNavBar";
 import ServiceOrderForm from './components/customer/serviceForm';
+import Delivery from './components/customer/delivery';
 
 function App() {
   return (
@@ -37,11 +38,12 @@ function App() {
 
                 <Route exact path="/" >
                     <UserNavBar />
-                    {/* <Home /> */}
+                    {/* <ServiceOrderForm /> */}
                 </Route>
             <Route exact path="/product/create" component={CreateProduct} />
             <Route exact path="/product/edit" component={UpdateProduct} />
-            <Route exact path="/" component={ServiceOrderForm} />
+            {/* <Route exact path="/" component={ServiceOrderForm} /> */}
+            {/* <Route exact path="/" component={Delivery} /> */}
           </Switch>
         </div>
       </div>

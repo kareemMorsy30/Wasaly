@@ -68,7 +68,7 @@ const NavBar = (props) => {
     }, []);
     return (
         <Navbar color="light" light expand="md">
-            <NavbarBrand href="/">itiReads</NavbarBrand>
+            <NavbarBrand href="/">wasaly</NavbarBrand>
             <NavbarToggler onClick={toggle} />
             <Collapse isOpen={isOpen} navbar>
                 <Nav className="mr-auto" navbar>
@@ -76,13 +76,13 @@ const NavBar = (props) => {
                         <Link className="nav-link" to="/">Home</Link>
                     </NavItem>
                     <NavItem>
-                        <Link className="nav-link" to="/categories">Categories</Link>
+                        <Link className="nav-link" to="/products/list">Products</Link>
                     </NavItem>
                     <NavItem>
-                        <Link className="nav-link" to="/books">Books</Link>
+                        <Link className="nav-link" to="/services">Services</Link>
                     </NavItem>
                     <NavItem>
-                        <Link className="nav-link" to="/authors">Authors</Link>
+                        <Link className="nav-link" to="/users">users</Link>
                     </NavItem>
                     {
                         isLoggedIn == false ? (
@@ -96,7 +96,7 @@ const NavBar = (props) => {
 
             </Collapse>
             <Form inline onSubmit={handleClick}>
-                <FormControl type="text" value={searchInput} onChange={handleSearchInput} placeholder="Search for book " className="mr-sm-2" />
+                <FormControl type="text" value={searchInput} onChange={handleSearchInput} placeholder="Search for product " className="mr-sm-2" />
                 <Link to={`/search/${searchInput}`}>
                     <Button variant="outline-primary" onClick={handleClick}>Search</Button>
                 </Link>

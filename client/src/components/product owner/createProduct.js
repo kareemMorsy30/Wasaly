@@ -28,11 +28,15 @@ const CreateProduct = (props) => {
         data.set("price", price)
         data.set("quantity", quantity)
 
-        axios.post('http://localhost:8000/product', data, {
+        console.log('====================================');
+        console.log( localStorage.getItem("token"));
+        console.log('====================================');
+        axios.post('http://localhost:5000/product', data, {
             headers: {
-              'Content-Type': 'multipart/form-data',
-              'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWUzZWNkZmY1NTEzNTYwODI2MWY0YjciLCJpYXQiOjE1OTIwNDY4NjYsImV4cCI6MTU5MjA1ODk5N30.qyPuZ7wse45E8sJl8tEaVNnDBEJ17XarOcAOJAvDJ5Y`
-            }
+              'Authorization': 'Bearer ' + localStorage.getItem("token")
+            },
+            'Content-Type': 'multipart/form-data',
+
         }).then((res) => {
                     toast.success('upload success')
             }).catch(err=>{

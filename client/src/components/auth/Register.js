@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, Fragment } from 'react';
 import { useInput } from './hooks/input-hooks';
 import axios from 'axios';
@@ -21,8 +20,8 @@ const Authentication = (props) => {
     const { value: email, bind: bindEmail, reset: resetEmail } = useInput('');
     const { value: name, bind: bindname, reset: resetname } = useInput('');
     const { value: role, bind: bindrole, reset: resetrole } = useInput('');
-    const { value: image_path, bind: bindimage_path, reset: resetimage_path } = useInput('');
-   /**
+    // const { value: image_path, bind: bindimage_path, reset: resetimage_path } = useInput('');
+    /**
     * Product owner
     */
     const { value: marketName, bind: bindMn, reset: resetMn } = useInput('');
@@ -40,7 +39,7 @@ const Authentication = (props) => {
     const [latitude, setlatitude] = useState(0);
     const [longitude, setlongitude] = useState(0);
     
-    const [phone, setphone] = useState('')
+    const [phone, setphone] = useState('');
     const registerUrl = `http://localhost:5000/users/register`
     const [address, setInputFields] = useState([
         { street: '', city: '', area: '', location: { latitude, longitude } }
@@ -48,6 +47,18 @@ const Authentication = (props) => {
     const [phones, setphones] = useState([
         phone
     ]);
+
+// //    const [image_path, setimage_path] = useState();
+//     const [selectedFile, setselectedFile] = useState()
+const [errors, setErrors] = useState([]);
+
+const [avatarInput, setAvatarInput] = useState(null);
+const [isLoading, setIsLoading] = useState(false);
+
+const handleAvatarChange = e => {
+    setAvatarInput(e.target.files[0]);
+  };
+
 /**
  * Product Owner States 
 //  */
@@ -109,165 +120,200 @@ const Authentication = (props) => {
     };
 
 
-    const handleRegisterSubmit = (e) => {
-
+    const handleRegisterSubmit = async (e) => {
+        // const data = new FormData()
+        // data.append('file', selectedFile)
         e.preventDefault();
-
-        if (passwordRegister === passConfRegister && role==="customer" ) {
-
-            axios.post(registerUrl,
-
-                {
-
-                    username: usernameRegister,
-
-                    password: passwordRegister,
-
-                    email,
-
-                    name,
-
-                    phones,
-
-                    role,
-
-                    address,
-
-                    image_path,
-
-                }, {
-
-                withCredentials: true,
-
-            }).then(response => {
-
-                console.log(response);
-
-                if (response.status == 250) {
-
-                    setErrorsRegister(response.data.message)
-
-                } else if (response.status == 200) {
-
-                    console.log("good");
-
-                    //Should logged in first by history.push what is the route ?
-
-                    // history.push("/books");
-
-                    // window.location = "http://localhost:3000/home";
-
-                }
-
-            })
-
+        setIsLoading(true);
+        if (avatarInput) {
+          if (
+            !['image/gif', 'image/jpeg', 'image/png'].includes(avatarInput.type)
+          ) {
+            setErrors(['image is not valid ']);
+            return;
+          } else if (avatarInput.size > 3e6) {
+            setErrors(['image is too large']);
+            return;
+          }
         }
+        try {
+            if (passwordRegister === passConfRegister && role==="customer" ) {
 
-        else if(passwordRegister === passConfRegister && role==="productowner" ){
+                const registerResult = await axios.post(registerUrl,
+    
+                    {
+    
+                        username: usernameRegister,
+    
+                        password: passwordRegister,
+    
+                        email,
+    
+                        name,
+    
+                        phones,
+    
+                        role,
+    
+                        address,
+    
+                        // image_path:data
+    
+                    }, {
+    
+                    withCredentials: true,
+    
+                }).then(response => {
+    
+                    console.log(response);
+    
+                    if (response.status == 250) {
+    
+                        setErrorsRegister(response.data.message)
+    
+                    } else if (response.status == 200) {
+    
+                        console.log("good");
+    
+                        //Should logged in first by history.push what is the route ?
+    
+                        history.push("/products/list");
+    
+                        // window.location = "http://localhost:3000/home";
+    
+                    }
+    
+                })
+               
+            }
+    
+            if (passwordRegister === passConfRegister && role==="productowner" ) {
 
-            axios.post(registerUrl,
+                const registerResult = await axios.post(registerUrl,
+    
+                    {
+    
+                        username: usernameRegister,
+    
+                        password: passwordRegister,
+    
+                        email,
+    
+                        name,
+    
+                        phones,
+    
+                        role,
+    
+                        address,
+                        marketName,marketPhone,ownerName
+                        // image_path:data
+    
+                    }, {
+    
+                    withCredentials: true,
+    
+                }).then(response => {
+    
+                    console.log(response);
+    
+                    if (response.status == 250) {
+    
+                        setErrorsRegister(response.data.message)
+    
+                    } else if (response.status == 200) {
+    
+                        console.log("good");
+    
+                        //Should logged in first by history.push what is the route ?
+    
+                        history.push("/products/list");
+    
+                        // window.location = "http://localhost:3000/home";
+    
+                    }
+    
+                })
+               
+            }
+    
+    
+            if (passwordRegister === passConfRegister && role==="serviceowner" ) {
 
-                {
-
-                    username: usernameRegister,
-
-                    password: passwordRegister,
-
-                    email,
-
-                    name,
-
-                    phones,
-
-                    role,
-
-                    address,
-
-                    image_path,marketName,marketPhone,ownerName
-
-
-                }, {
-
-                withCredentials: true,
-
-            }).then(response => {
-
-                console.log(response);
-
-                if (response.status == 250) {
-
-                    setErrorsRegister(response.data.message)
-
-                } else if (response.status == 200) {
-
-                    console.log("good");
-
-                    //Should logged in first by history.push what is the route ?
-
-                    // history.push("/books");
-
-                    // window.location = "http://localhost:3000/home";
-
-                }
-
-            })
-
-
+                const registerResult = await axios.post(registerUrl,
+    
+                    {
+    
+                        username: usernameRegister,
+    
+                        password: passwordRegister,
+    
+                        email,
+    
+                        name,
+    
+                        phones,
+    
+                        role,
+    
+                        address,
+                        distance, region, transportation
+    
+                        // image_path:data
+    
+                    }, {
+    
+                    withCredentials: true,
+    
+                }).then(response => {
+    
+                    console.log(response);
+    
+                    if (response.status == 250) {
+    
+                        setErrorsRegister(response.data.message)
+    
+                    } else if (response.status == 200) {
+    
+                        console.log("good");
+    
+                        //Should logged in first by history.push what is the route ?
+    
+                        history.push("/products/list");
+    
+                        // window.location = "http://localhost:3000/home";
+    
+                    }
+    
+                })
+               
+            }
+    
+    
+    
+    }
+         catch (error) {
+            setIsLoading(false);
+            console.log(error);
+            
+            setErrors([error.response.message]);   
         }
-
-
-        else if(passwordRegister === passConfRegister && role==="serviceowner" ){
-
-            axios.post(registerUrl,
-
-                {
-
-                    username: usernameRegister,
-
-                    password: passwordRegister,
-
-                    email,
-
-                    name,
-
-                    phones,
-
-                    role,
-
-                    address,
-
-                    image_path,
- distance, region, transportation
-
-
-                }, {
-
-                withCredentials: true,
-
-            }).then(response => {
-
-                console.log(response);
-
-                if (response.status == 250) {
-
-                    setErrorsRegister(response.data.message)
-
-                } else if (response.status == 200) {
-
-                    console.log("good");
-
-                    //Should logged in first by history.push what is the route ?
-
-                    // history.push("/books");
-
-                    // window.location = "http://localhost:3000/home";
-
-                }
-
-            })
-
-
-        }
+      
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     }
 
 
@@ -329,9 +375,9 @@ const Authentication = (props) => {
 
                             >
 
+                                <option>serviceowner</option>
 
                                 <option>customer</option>
-                                <option>serviceowner</option>
 
 
                                 <option>productowner</option>
@@ -435,7 +481,9 @@ const Authentication = (props) => {
                     />
                 </FormGroup>
                 <FormGroup row>
-                    <Input type="file" name="file" id="exampleFile" {...bindimage_path} />
+                    <Input type="file" name="file" id="exampleFile" onChange={handleAvatarChange}
+      
+       />
                     <FormText color="muted">
                         Add Your Image :)
                     </FormText>

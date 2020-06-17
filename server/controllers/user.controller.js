@@ -1,8 +1,13 @@
 const User = require("../models/user");
 const allModels = require('../models/allModels');
 const userModel = require('../models/user');
+const Report = require('../models/report')
+
 const jwt = require("jsonwebtoken");
 let userController = {};
+
+
+  
 userController.regesiter = async (req, res, next) => {
     const { name, username, email, password, role, phones, address, image_path } = req.body;
     console.log(role)
@@ -118,6 +123,22 @@ userController.login = async (request, response, next) => {
     }
 };
 
+userController.uploadAvatar = async (req, res) => {
+    console.log('====================================');
+    console.log(req.user);
+    console.log('====================================');
+    // console.log(req.User);
+    console.log('====================================');
+    console.log('====================================');
+    console.log('====================================');
+    console.log(req);
+    console.log('====================================');
+    const user = req.user;
+    user.avatar = '/uploads/users/images/' + req.file.filename;
+    await user.save();
+    res.send();
+  };
+
 userController.getAllUsers = async(req,res)=>{
     try{
         let user =await userModel.find()
@@ -146,6 +167,18 @@ userController.updateUser = (req,res)=>{
         console.log(err);
         res.status(400).json({"error": err});
     })
+}
+userController.saveReport= async(req, res, next )=>{
+    try {
+        const {report} = req.body
+        const{user}= req.params
+        const customer = req.user._id       
+        await new Report({ report, user, customer }).save()
+        res.json("Reported Successfully")
+    }
+    catch (err) {
+        next(err)
+    }
 }
 
 module.exports = userController;

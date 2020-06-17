@@ -3,14 +3,13 @@ const mongoose = require('mongoose')
 const rate = new mongoose.Schema({
     rating: {
         type: Number,
-        required: [true, 'Rating is required!'],
         min: [1, 'Minimum rating is 1'],
         max: [5, 'Maximum rating is 5'],
         default: 1
     },
     reviews: [{
         type: String,
-        required: [true, 'Comment is required!']
+        default: null
     }],
     user: {
         type: mongoose.Schema.Types.ObjectId,
