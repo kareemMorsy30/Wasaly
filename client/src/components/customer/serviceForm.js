@@ -1,22 +1,31 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Progress } from 'reactstrap';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useForm } from "react-hook-form";
-import axios from 'axios'
+import '../../styles/form.scss';
+import { getAvailableTransportations } from '../../endpoints/order';
+import '../../styles/delivery-section.scss';
 
 const ServiceOrderForm = (props) => {
     const [item, setItem] = useState([])
     const [amount, setAmount] = useState()
     const { register, errors, handleSubmit } = useForm();
-    const [cost, setCost] = useState('')
     const [description, setDescription] = useState('')
-    const [district, setDistrict] = useState([])
-    const [street, setStreet] = useState([])
-    const [to, setTo] = useState([])
-    const [transportationWay, setTranportationWay] = useState('')
+    const [transportation, setTransportation] = useState('Transportation way');
+    const [from, setFrom] = useState({
+        area: ''
+    });
+    const [to, setTo] = useState({
+        area: ''
+    })
+    const [transportations, setTransportations] = useState([]);
+
+    useEffect(() => {
+        getAvailableTransportations().then(transportations => {
+            console.log(transportations);
+            setTransportations(transportations);
+        })
+    }, []);
 
     const districts = [
         "Abbassia",
@@ -54,178 +63,48 @@ const ServiceOrderForm = (props) => {
         "Zamalek",
         "Zeitoun, Cairo"
     ]
+
+    const insertFrom = event => {
+        setFrom({
+            ...from,
+            area: event.target.value
+        })
+    }
+
+    const insertTo = event => {
+        setTo({
+            ...from,
+            area: event.target.value
+        })
+    }
+
     return (
-        <>
-            <h2>Place Order</h2>
-            <Form onSubmit={handleSubmit()}>
-                <Form.Group controlId="name">
-                    <Form.Label>product name</Form.Label>
-                    <Form.Control
-                        name="name"
-                        type="text"
-                        value={item}
-                        onChange={(e) => setItem(e.target.value)}
-                        placeholder="name"
-                        ref={register({ required: true, minLength: 3 })} />
-                </Form.Group>
-
-                {
-                    errors.name ?
-                        <p className="alert alert-danger">
-                            {
-                                errors.name.type == "required" ?
-                                    "Product Name is required" :
-                                    errors.name.type == "minLength" ?
-                                        "Product name is too short" : ""
-                            }</p> : ""}
-
-                <Form.Group controlId="description">
-                    <Form.Label>product description</Form.Label>
-                    <Form.Control
-                        name="description"
-                        value={description}
-                        as="textarea"
-                        rows="4"
-                        placeholder="Description..."
-                        onChange={(e) => setDescription(e.target.value)}
-                        ref={register({ required: true, minLength: 10 })} />
-                </Form.Group>
-                {
-                    errors.description ?
-                        <p className="alert alert-danger">
-                            {
-                                errors.description.type == "required" ?
-                                    "Product description is required" :
-                                    errors.description.type == "minLength" ?
-                                        "Product description is too short" : ""
-                            }</p> : ''
-                }
-
-                <Form.Group controlId="cost">
-                    <Form.Label>Cost</Form.Label>
-                    <Form.Control
-                        name="cost"
-                        value={cost}
-                        type="number"
-                        onChange={(e) => setCost(e.target.value)}
-                        placeholder="cost of the product"
-                        ref={register({ required: true, min: 0 })} />
-                </Form.Group>
-                {
-                    errors.cost ?
-                        <p className="alert alert-danger">
-                            {
-                                errors.cost.type == "required" ?
-                                    "Product cost is required" :
-                                    errors.cost.type == "min" ?
-                                        "Product cost can not be negative" : ""}</p> : ""
-                }
-
-
-                <Form.Group controlId="amount">
-                    <Form.Label>Amount</Form.Label>
-                    <Form.Control
-                        name="amount"
-                        value={amount}
-                        type="number"
-                        placeholder="amount"
-                        onChange={(e) => setAmount(e.target.value)}
-                        ref={register({ required: true, min: 0 })} />
-                </Form.Group>
-                {errors.amount ?
-                    <p className="alert alert-danger">
+        <div className="delivery-form">
+            <form onSubmit={handleSubmit}>
+                <div className="form_container">
+                    <input type="text" placeholder="From" value={from.area} onChange={insertFrom} list="from-list"/>
+                    <datalist id="from-list">
+                        <option value="Boston"/>
+                    </datalist>
+                    <input type="text" placeholder="To" value={to.area} onChange={insertTo} list="to-list"/>
+                    <datalist id="to-list">
+                        <option value="Boston"/>
+                    </datalist>
+                    <input type="number" placeholder="Amount" value={amount} onChange={event => setAmount(event.target.value)} />
+                    <select name="author" id="author" value={transportation} onChange={event => setTransportation(event.target.value)} >
+                        <option disabled selected value="Transportation way">Transportation way</option>
                         {
-                            errors.amount.type === "required" ?
-                                "Product amount is required" :
-                                errors.amount.type == "min" ?
-                                    "Product amount can not be negative" : ""
+                            transportations.map(transportation => {
+                                return <option value={transportation}>{transportation}</option>;
+                            })
                         }
-                    </p> : ""
-                }
-                <Form.Group controlId="exampleForm.SelectCustom">
-                    <Form.Label>District</Form.Label>
-                    <Form.Control
-                        value={district}
-                        onChange={(e) => setDistrict(e.target.value)}
-                        as="select"
-                        type="number"
-                        name="district"
-                        custom
-                        ref={register({ required: true })}
-                    >
-                        <option></option>
-                        {districts.map(district => <option>{district}</option>)}
-
-                    </Form.Control>
-                </Form.Group>
-                {errors.district ?
-                    <p className="alert alert-danger">
-                        {
-                            errors.district.type === "required" ?
-                                "district is required" : ""
-                        }
-                    </p> : ""
-                }
-
-                <Form onSubmit={handleSubmit()}>
-                    <Form.Group controlId="street">
-                        <Form.Label>Street</Form.Label>
-                        <Form.Control
-                            name="street"
-                            type="text"
-                            value={item}
-                            onChange={(e) => setItem(e.target.value)}
-                            placeholder="street"
-                            ref={register({ required: true, minLength: 3 })} />
-                    </Form.Group>
-
-                    {
-                        errors.street ?
-                            <p className="alert alert-danger">
-                                {
-                                    errors.street.type == "required" ?
-                                        "Street name is required" :
-                                        errors.street.type == "minLength" ?
-                                            "Street name is too short" : ""
-                                }</p> : ""}
-                  
-
-                    <Form.Group controlId="exampleForm.SelectCustom">
-                        <Form.Label>Tranporation  way</Form.Label>
-                        <Form.Control
-                            value={transportationWay}
-                            onChange={(e) => setTranportationWay(e.target.value)}
-                            as="select"
-                            type="number"
-                            name="transportation"
-                            custom
-                            ref={register({ required: true })}
-                        >
-                            <option></option>
-                            <option>Bicycle</option>
-                            <option>Car</option>
-                        </Form.Control>
-                    </Form.Group>
-                    {errors.transportation ?
-                        <p className="alert alert-danger">
-                            {
-                                errors.transportation.type === "required" ?
-                                    "Preferred Transportation way is required" : ""
-                            }
-                        </p> : ""
-                    }
-
-
-                    <Button variant="primary" type="submit">
-                        Submit
-                </Button>
-                </Form>
-
-                <div className="form-group">
-                    <ToastContainer />
+                    </select>
+                    <input type="text" placeholder="Item to deliver" value={item} onChange={event => setItem(event.target.value)} />
+                    <textarea placeholder="More info" value={description} onChange={event => setDescription(event.target.value)}/>
+                    <button type="submit" className="submit-btn">Submit</button>
                 </div>
-                </Form>
-        </>
+            </form>
+        </div>
     )
 
 
