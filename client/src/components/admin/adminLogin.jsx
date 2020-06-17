@@ -48,9 +48,12 @@ const AdminLogin = (props) => {
         }).then((response) => {
             const { token } = response.data;
             console.log("response", response.data)
-            if (response.data.user.isadmin == true) {
+            if (response.data.user.role == 'admin') {
                 localStorage.setItem("token", token);
                 window.location.href = "http://localhost:3000/admin";
+                console.log('====================================');
+                console.log(response.data.user.role.admin );
+                console.log('====================================');
             }
             else {
                 setLoginMsg("You are not authorized to login to admin panel...");
