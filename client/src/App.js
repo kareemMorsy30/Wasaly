@@ -38,7 +38,7 @@ function App() {
 
                 <Route exact path="/" >
                     <UserNavBar />
-                    {/* <ServiceOrderForm /> */}
+                    <Route exact path="/" component={Delivery} />
                 </Route>
             <Route exact path="/product/create" component={CreateProduct} />
             <Route exact path="/product/edit" component={UpdateProduct} />
