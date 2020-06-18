@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import ServiceForm from "./serviceForm";
 import List from "./list";
 import '../../styles/form.scss';
 import '../../styles/delivery-section.scss';
+import ReactLoading from 'react-loading';
 
 const Delivery = (props) => {
     const [ serviceOwners, setServiceOwners ] = useState([]);
+    const [ waiting, setWaiting ] = useState(false);
 
     return (
         <div className="delivery-section">
@@ -16,12 +18,17 @@ const Delivery = (props) => {
             </div>
             <div className="delivery-form">
                 {
+                    waiting 
+                    ?
+                    <ReactLoading type="cylon" color="rgb(196, 0, 42)" height={'40%'} width={'40%'} />
+                    : 
                     serviceOwners.length == 0 
                     ?
-                    <ServiceForm setServiceOwners={setServiceOwners}/>
+                    <ServiceForm setServiceOwners={setServiceOwners} setWaiting={setWaiting}/>
                     :
                     <List serviceOwners={serviceOwners}/>
                 }
+                
             </div>
         </div>
     )

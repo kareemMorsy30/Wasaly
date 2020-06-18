@@ -7,7 +7,7 @@ import { getAvailableTransportations, getAvailableServiceOwners } from '../../en
 import { getGeoLocation } from '../../endpoints/geocoding';
 import '../../styles/delivery-section.scss';
 
-const ServiceOrderForm = ({ setServiceOwners }) => {
+const ServiceOrderForm = ({ setServiceOwners, setWaiting }) => {
     const [item, setItem] = useState('')
     const [amount, setAmount] = useState(1)
     const [description, setDescription] = useState('')
@@ -89,6 +89,7 @@ const ServiceOrderForm = ({ setServiceOwners }) => {
     }
 
     const handleSubmit = event => {
+        setWaiting(true);
         event.preventDefault();
         if(!item || !amount || !description || !transportation || !from || !to)
             setAlert({
@@ -108,6 +109,7 @@ const ServiceOrderForm = ({ setServiceOwners }) => {
         getAvailableServiceOwners(order)
         .then(owners => {
             setServiceOwners(owners);
+            setWaiting(false);
         })
         .catch(err => console.error(err));
     }
