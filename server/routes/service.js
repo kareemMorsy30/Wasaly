@@ -3,6 +3,9 @@ const router = express.Router();
 const { serviceController,serviceOwnerController } = require('./../controllers/allControllers');
 const { Auth } = require('../middlewares/Auth');
 
+// Get all transportation methods
+router.get('/transportations', serviceController.transportation);
+
 Auth(router);
 
 // Request a service owner for delivery
@@ -10,9 +13,6 @@ router.post('/available/owners', serviceController.filteredServiceOwners);
 
 // Select one service owner
 router.post('/orders', serviceController.order);
-
-// Get all transportation methods
-router.get('/transportations', serviceController.transportation);
 
 // Cancel submitted request
 router.get('/orders/:id/cancel', serviceController.cancel);
