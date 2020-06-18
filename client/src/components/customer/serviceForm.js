@@ -3,11 +3,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { useForm } from "react-hook-form";
 import '../../styles/form.scss';
-import { getAvailableTransportations } from '../../endpoints/order';
+import { getAvailableTransportations, getAvailableServiceOwners } from '../../endpoints/order';
 import { getGeoLocation } from '../../endpoints/geocoding';
 import '../../styles/delivery-section.scss';
 
-const ServiceOrderForm = (props) => {
+const ServiceOrderForm = ({ setServiceOwners }) => {
     const [item, setItem] = useState('')
     const [amount, setAmount] = useState(1)
     const [description, setDescription] = useState('')
@@ -51,13 +51,13 @@ const ServiceOrderForm = (props) => {
             getGeoLocation(input).then(data => {
                 if(data.area) setFrom({
                     ...from,
-                    area: data.area,
+                    area: data.fullArea,
                     city: data.city,
                     longitude: data.longitude,
                     latitude: data.latitude,
                 });
-
-                if(data.area && !suggested.includes(data.area)){
+                console.log(data.area);
+                if(input > toValue && data.area && !suggested.includes(data.area) && data.area.toLowerCase().includes(input)){
                     setSuggested([...suggested, data.area]);
                     setFromValue(data.area);
                 }
@@ -74,13 +74,13 @@ const ServiceOrderForm = (props) => {
             getGeoLocation(input).then(data => {
                 if(data.area) setTo({
                     ...to,
-                    area: data.area,
+                    area: data.fullArea,
                     city: data.city,
                     longitude: data.longitude,
                     latitude: data.latitude,
                 });
 
-                if(data.area && !suggested.includes(data.area)){
+                if(input > toValue && data.area && !suggested.includes(data.area) && data.area.toLowerCase().includes(input)){
                     setSuggested([...suggested, data.area]);
                     setToValue(data.area);
                 }
@@ -95,6 +95,21 @@ const ServiceOrderForm = (props) => {
                 message: 'Check required inputs',
                 type: 'error'
             })
+
+        const order = {
+            item,
+            amount,
+            description,
+            transportation,
+            from,
+            to
+        };
+
+        getAvailableServiceOwners(order)
+        .then(owners => {
+            setServiceOwners(owners);
+        })
+        .catch(err => console.error(err));
     }
 
     return (

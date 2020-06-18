@@ -17,6 +17,7 @@ const availableServiceOwners = async ({ body }) => {
             console.log(owner);
             const location = owner.user.address.length != 0 ? owner.user.address[0].location : null;
             const distance = await getDistance(from, to, location);
+            console.log(distance);
             return owner.distance >= distance;
         }
     });

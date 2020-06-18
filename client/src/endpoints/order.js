@@ -6,7 +6,24 @@ export const getAvailableTransportations = () => {
     console.log(domain);
     const url = `${domain}/services/transportations`;
     return axios.get(url, {
-        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWU0ZTFiOTFjNjQ5YTI0ZTgwYTg1ZmIiLCJpYXQiOjE1OTIzNTE1MzEsImV4cCI6MTU5MjUyNDMzMX0.oAOCvvPE2BrheJzqyo18efFBCEDc7XzRsuXerhdFuFg` }
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data)
+            return res.data;
+    })
+    .catch(err => err);
+}
+
+export const getAvailableServiceOwners = (order) => {
+    const url = `${domain}/services/available/owners`;
+    console.log(localStorage.getItem("token"));
+
+    return axios.post(url, {
+        ...order
+    }, 
+    {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     })
     .then(res => {
         if(res.data)
