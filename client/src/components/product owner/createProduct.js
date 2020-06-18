@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useForm } from "react-hook-form";
 import axios from 'axios'
+import {authHeader} from '../config/config'
 
 
 const CreateProduct = (props) => {
@@ -16,6 +17,7 @@ const CreateProduct = (props) => {
     const [description, setDescription] = useState('')
     const [price, setPrice] = useState(0)
     const [quantity, setQuantity] = useState(0)
+    const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
 
     const onSubmit = (e) => {
@@ -28,16 +30,7 @@ const CreateProduct = (props) => {
         data.set("price", price)
         data.set("quantity", quantity)
 
-        console.log('====================================');
-        console.log( localStorage.getItem("token"));
-        console.log('====================================');
-        axios.post('http://localhost:5000/product', data, {
-            headers: {
-              'Authorization': 'Bearer ' + localStorage.getItem("token")
-            },
-            'Content-Type': 'multipart/form-data',
-
-        }).then((res) => {
+        axios.post(`${domain}/product`, data, authHeader).then((res) => {
                     toast.success('upload success')
             }).catch(err=>{
                 console.log(err.message)

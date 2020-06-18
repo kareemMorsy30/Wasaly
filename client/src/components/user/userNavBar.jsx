@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 import Login from "../login";
 import Logout from "../user/logout";
+import Search from "../search"
 
 const NavBar = (props) => {
     const [searchInput, setSearchInput] = useState('');
@@ -95,12 +96,13 @@ const NavBar = (props) => {
 
 
             </Collapse>
-            <Form inline onSubmit={handleClick}>
+            {/* <Form inline onSubmit={handleClick}>
                 <FormControl type="text" value={searchInput} onChange={handleSearchInput} placeholder="Search for product " className="mr-sm-2" />
                 <Link to={`/search/${searchInput}`}>
                     <Button variant="outline-primary" onClick={handleClick}>Search</Button>
                 </Link>
-            </Form>
+            </Form> */}
+             <Search/>
         </Navbar>
     );
 };

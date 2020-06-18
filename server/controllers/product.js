@@ -53,7 +53,7 @@ exports.updateProduct = async (req, res, next) => {
         const owner_id = req.user._id
         const product = await Product.findById(productID).exec()
 
-        product.owner !== owner_id && res.status(401).send({ message: "You are not Authorized for this action" })
+        String(product.owner) != String(owner_id)  && res.status(401).send({ message: "You are not Authorized for this action" })
 
         console.log(req.body.name)
         req.body.name && (product.name = req.body.name)

@@ -130,7 +130,7 @@ const ServiceOrderForm = ({ setServiceOwners, setWaiting }) => {
                     <select name="author" id="author" value={transportation} onChange={event => setTransportation(event.target.value)} style={{border: alert.type === 'error' && !transportation && '1px red solid'}}>
                         <option disabled selected value="">Transportation way</option>
                         {
-                            transportations.map(transportation => {
+                            transportations.length&&transportations.map(transportation => {
                                 return <option value={transportation}>{transportation}</option>;
                             })
                         }

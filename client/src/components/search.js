@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './search.css';
 import { Link } from "react-router-dom";
+import DropDown from './dropDown';
 
 
-const Search = (props) => {
-    const [products, setProducts] = useState([])
+const Search = () => {
+  
     const [suggestedProducts, setSuggestedProducts] = useState([])
     const [searchInput, setSearchInput] = useState("")
+    const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
     useEffect(() => {
         if (searchInput.length > 1) {
-            axios.get('http://localhost:8000/search/suggestion', {
+            axios.get(`${domain}/search/suggestion`, {
                 params: {
                     q: searchInput
                 }
@@ -31,26 +33,12 @@ const Search = (props) => {
             setSuggestedProducts([])
             setSearchInput("") 
         }
-        else    
-        setSearchInput(e.target.value)
+        else  setSearchInput(e.target.value)
     }
     return (
-        <div className="dropdown">
-            <input type="text" value={searchInput} onChange={handleChange} />
-            {
-            suggestedProducts.length>1&&
-            <div className="dropdown-content">               
-                {suggestedProducts.map((product)=>{
-                    console.log(product)
-                    return(
-                    <div className="suggestion">
-                        <Link to="/s">{product.name}</Link>
-                    </div>)
-                    }
-                )}
-            </div>
-            }   
-        </div>
+     
+        <DropDown options={suggestedProducts} handleChange={handleChange} searchInput={searchInput} fieldName="name" to="/s"/>
+       
     )
 
 }
