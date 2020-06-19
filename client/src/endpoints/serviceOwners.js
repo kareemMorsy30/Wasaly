@@ -17,7 +17,7 @@ export const allRequests = () => {
 export const updateOrderStatus = (id) => {
     const url = `${domain}/orders/${id}/status`;
 
-    return axios.get(url, {
+    return axios.post(url, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     })
     .then(res => {

@@ -35,23 +35,30 @@ const transportation = (req, res) => {
 
 const order = (req, res) => {
     const order = req.body;
-    const serviceOwnerId = order.id;
+    const serviceOwnerId = order.serviceOwnerId;
 
-    ServiceOwner.findById(serviceOwnerId).then(owner => {
-        let newOrder = new Order({
-            customer: req.user._id,
-            service: owner.user,
-            ...order,
-            cost: 0
-        });
+    ServiceOwner.findById(serviceOwnerId)
+    .populate('user')
+    .then(owner => {
+        const location = owner.user.address.length != 0 ? owner.user.address[0].location : null;
 
-        newOrder.save().then(order => {
-            io.on('connection', (socket) => {
-                socket.emit(`notify:${owner && owner.user.email}`, { success: true, msg: `A new request delivery from ${req.user ? req.user.username : 'Anonymous'}` });
+        getDistance(order.from, order.to, location)
+        .then(distance => {
+            let newOrder = new Order({
+                customer: req.user._id,
+                service: owner.user,
+                ...order,
+                cost: distance * 0.5
             });
-
-            res.status(200).json(order);
-        }).catch(error => console.log(error));
+    
+            newOrder.save().then(order => {
+                io.on('connection', (socket) => {
+                    socket.emit(`notify:${owner && owner.user.email}`, { success: true, msg: `A new request delivery from ${req.user ? req.user.username : 'Anonymous'}` });
+                });
+    
+                res.status(200).json(order);
+            }).catch(error => console.log(error));
+        })
     })
 }
 

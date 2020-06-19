@@ -5,11 +5,14 @@ const allIncomingOrders = (req, res) => {
     const { user } = req;
 
     Order.find({service: user._id})
+    .sort({_id: 'desc'})
+    .populate('customer')
     .then(orders => {
         res.status(200).json(orders);
     })
     .catch(error => res.status(500).end());
 }
+
 const changeStatus = async(req,res)=>{
     try{
         const serviceUser = await ServiceOwner.findOne({_id : req.params.id})
