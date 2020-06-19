@@ -17,6 +17,7 @@ const availableServiceOwners = async ({ body }) => {
             console.log(owner);
             const location = owner.user.address.length != 0 ? owner.user.address[0].location : null;
             const distance = await getDistance(from, to, location);
+            console.log(distance);
             return owner.distance >= distance;
         }
     });
@@ -107,20 +108,22 @@ const delivered = (req, res) => {
 const saveReview = async (req, res, next) => {
     const {user} = req
     const { serviceOwnerID } = req.params
-    const { review } = req.body
+    const { review, order } = req.body
     try {
         const serviceOwner = await ServiceOwner.findById(serviceOwnerID)
         for(let i=0; i<serviceOwner.rates.length; i++){
             //if he already gave review
-            if (serviceOwner.rates[i].user.toString() == user._id.toString()) {                
+            if (serviceOwner.rates[i].user.toString() == user._id.toString() && serviceOwner.rates[i].order.toString() == order.toString()) {                
                 serviceOwner.rates[i].reviews.push(review)
                 serviceOwner.save()
                 return res.json("Review added successfully")                    
             }
         }
         // save review for first time
-        serviceOwner.rates.push({reviews:[review], user: user._id})
+        serviceOwner.rates.push({reviews:[review], user: user._id, order})
         serviceOwner.save()
+        //save review to order
+        await Order.updateOne({ _id: order}, { $push: { 'rate.reviews': review } })
         return res.json("Review added successfully")
     } catch (err) {
         next(err)
@@ -131,33 +134,53 @@ const saveReview = async (req, res, next) => {
 const saveRate = async (req, res, next) => {
     const {user} = req
     const { serviceOwnerID } = req.params
-    const { rate } = req.body
+    const { rating, order } = req.body
+   
     try {
-        const serviceOwner = await ServiceOwner.findById(serviceOwnerID)
+        const serviceOwner = await ServiceOwner.findOne({user:serviceOwnerID})
         for(let i=0; i<serviceOwner.rates.length; i++){
-            //if he already gave review
-            if (serviceOwner.rates[i].user.toString() == user._id.toString()) {                
-                serviceOwner.rates[i].rating= rate
+            console.log(serviceOwner.rates[i].order.toString())
+            console.log(order.toString())
+            //if he already gave rate
+            if (serviceOwner.rates[i].user.toString() == user._id.toString() && serviceOwner.rates[i].order.toString() == order.toString()) {     
+                serviceOwner.rates[i].rating= rating               
                 serviceOwner.save()
+                //save rate to order
+                await Order.updateOne({ _id: order}, {"rate.rating": rating })
                 return res.json("Rate added successfully")                    
             }
         }
-        // save review for first time
-        serviceOwner.rates.push({rating:rate, user: user._id})
+        // save rate for first time
+        serviceOwner.rates.push({rating, user: user._id, order})
         serviceOwner.save()
+        //save rate to order
+        await Order.updateOne({ _id: order}, {"rate.rating": rating })
         return res.json("Rate added successfully")
     } catch (err) {
         next(err)
     }
 }
+// get user review and rate to the service owner
+const getUserRateForOrder = async (req, res, next) => {
+    const {user} = req
+    const { orderId } = req.params
 
-var options = {
-    select:   'rates user',
-    sort:     { date: -1 },
-    lean:     true,
-    offset:   0, 
-    limit:    10
-};
+    try{
+        const Order = await Owner.findOne({_id:orderId})
+        for(let i=0; i<serviceOwner.rates.length; i++){
+            //get his previous rating
+            if (serviceOwner.rates[i].user.toString() == user._id.toString()) {                
+                return res.json(serviceOwner.rates[i].rating)                    
+            }
+        }
+        return res.json('');
+
+    }catch (err) {
+        next(err)
+    }
+
+}
+
  
 
 
@@ -173,4 +196,5 @@ module.exports = {
     delivered,
     saveReview,
     saveRate,
+    getUserRateForOrder
 }

@@ -16,7 +16,8 @@ const rate = new mongoose.Schema({
         required: true,
         unique: true,
         ref: 'User'
-    }
+    },
+    order:{  type: mongoose.Schema.Types.ObjectId}
 });
 
 const serviceOwnerSchema = new mongoose.Schema({
@@ -43,7 +44,5 @@ const serviceOwnerSchema = new mongoose.Schema({
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null }
     }
 })
-
-
 
 module.exports= mongoose.model('ServiceOwner', serviceOwnerSchema)

@@ -8,7 +8,7 @@ const Product = require('../models/product')
 const { route } = require('./search')
 const productOwner= require('../config/productOwner')
 const { Auth } = require('../middlewares/Auth');
-
+const {getAllCategories}= require('../controllers/category')
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -25,13 +25,14 @@ var upload = multer({ storage: storage }).array('file')
 Auth(router, productOwner);
 
 router.get('/', listProducts)
+router.get('/categories', getAllCategories)
 router.get('/:id', getProduct)
 router.post('/',
     async function (req, res, next) {
 
         await upload(req, res, async function (err) {
 
-            let owner = "5ee027333b9d0e3fd1fe4e27"
+            let owner = req.user._id
             let product = await Product.find({ name: req.body.name, owner })
             if (product.length > 0) return next("Duplicate product")
 
@@ -49,7 +50,9 @@ router.post('/',
 router.patch('/:id',
     async function (req, res, next) {
 
-        await upload(req, res, function (err) {          
+        await upload(req, res, async function (err) {   
+            let owner = req.user._id
+            let product = await Product.find({ name: req.body.name, owner, _id: { $nin: [req.params.id] }  })             
             if (product.length > 0) return next("Duplicate product")
             if (err instanceof multer.MulterError) {
                 return res.status(500).json(err)
@@ -67,5 +70,6 @@ router.patch('/:id',
 router.delete('/:productID/images/:id', deleteImage)
 router.delete('/:id', deleteProduct)
 router.post('/:productID/images/', saveImage)
+
 
 module.exports = router

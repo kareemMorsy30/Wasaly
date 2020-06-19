@@ -5,6 +5,9 @@ const Report = require('../models/report')
 
 const jwt = require("jsonwebtoken");
 let userController = {};
+
+
+  
 userController.regesiter = async (req, res, next) => {
     const { name, username, email, password, role, phones, address, image_path } = req.body;
     console.log(role)
@@ -119,6 +122,22 @@ userController.login = async (request, response, next) => {
         next(error);
     }
 };
+
+userController.uploadAvatar = async (req, res) => {
+    console.log('====================================');
+    console.log(req.user);
+    console.log('====================================');
+    // console.log(req.User);
+    console.log('====================================');
+    console.log('====================================');
+    console.log('====================================');
+    console.log(req);
+    console.log('====================================');
+    const user = req.user;
+    user.avatar = '/uploads/users/images/' + req.file.filename;
+    await user.save();
+    res.send();
+  };
 
 userController.getAllUsers = async(req,res)=>{
     try{

@@ -21,12 +21,13 @@ const {
   userRoutes,
   adminRouter,
   productOwnerRouter,
-  OrderRouter
+  OrderRouter,
+  CategoryRouter
 } = require('./routes/allRoutes');
 const passport = require('passport');
 const morgan = require('morgan');
 
-app.use(cors())
+app.use(cors({origin: true, credentials: true}));
 app.use(express.json())
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }))
@@ -79,6 +80,7 @@ app.get('/', (req, res) =>{
 app.use('/search', searchRouter)
 app.use('/product', productRouter)
 app.use('/orders', OrderRouter)
+app.use('/categories', CategoryRouter)
 
 
 /* --------------- Product owner routes -------------------------*/

@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { authHeader } from '../../config'
 import { Table, Button, Container, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 import VerticallyCenteredModal from '../verticallCenteredModal'
+import { authHeader } from '../config/config'
+import CreateProduct from './createProduct'
+import UpdateProduct from './updateProduct';
 
 const ListProducts = (props) => {
     const [products, setProducts] = useState([])
     const [modalShow, setModalShow] = useState(false);
+    const [createModalShow, setCreateModalShow] = useState(false);
+    const [editModalShow, setEditModalShow] = useState(false);
     const [productId, setProductID] = useState("")
     const [deleted, setDeleted] = useState(false)
+    const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
     useEffect(() => {
-        axios.get('http://localhost:8000/product', authHeader)
+        axios.get(`${domain}/product`, authHeader)
             .then(res => {
                 console.log(res)
                 res.data.length >= 0 && setProducts(res.data)
@@ -20,10 +25,10 @@ const ListProducts = (props) => {
             ).catch(err => {
                 console.log(err)
             })
-    }, [deleted])
+    }, [deleted, createModalShow, editModalShow])
 
     const deleteProduct = () => {
-        axios.delete(`http://localhost:8000/product/${productId}`, authHeader)
+        axios.delete(`${domain}/product/${productId}`, authHeader)
             .then(res => {
                 setDeleted((prevState) => !prevState)
                 setModalShow(false)
@@ -36,6 +41,9 @@ const ListProducts = (props) => {
 
     return (
         <>
+
+            <Button onClick={() => {setCreateModalShow(true) }}><a>Create Product</a></Button>
+
             {products.length ?
                 <Table striped bordered hover size="sm">
                     <thead>
@@ -58,24 +66,44 @@ const ListProducts = (props) => {
                                 <td>{product.price}</td>
                                 <td>{product.quantity}</td>
                                 <td>
-                                    <Button><Link to={`/products/${product._id}/edit`}>Edit</Link></Button>{" "}
+                                    <Button onClick={() => { setProductID(product._id); setEditModalShow(true) }}>Edit</Button>{" "}
                                     <Button onClick={() => { setProductID(product._id); setModalShow(true) }}><a>Delete</a></Button>
                                 </td>
-                                
+
                             </tr>
 
 
                         )}
-                    
-                </tbody>
+
+                    </tbody>
                 </Table>
                 : "Loading..."
-                        }
-                < VerticallyCenteredModal
-                        show={modalShow}
-                        deleteProduct={deleteProduct}
-                        onHide={() => setModalShow(false)}
-                    />
+            }
+            < VerticallyCenteredModal
+                show={modalShow}
+                title={"Delete Product"}
+                body={"Are you sure?"}
+                handleClose={()=>setModalShow(false)}             
+
+            >
+                <Button onClick={deleteProduct}>Delete</Button>
+                <Button onClick={() => setModalShow(false)}>Close</Button>
+            </ VerticallyCenteredModal>
+
+            < VerticallyCenteredModal
+                show={createModalShow}
+                title={"Create Product"}  
+                handleClose={()=>setCreateModalShow(false)}             
+            >
+            <CreateProduct/>
+            </ VerticallyCenteredModal>
+            < VerticallyCenteredModal
+                show={editModalShow}
+                title={"Edit Product"}  
+                handleClose={()=>setEditModalShow(false)}             
+            >
+            <UpdateProduct id={productId}/>
+            </ VerticallyCenteredModal>
         </>
     )
 
