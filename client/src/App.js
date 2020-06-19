@@ -10,7 +10,7 @@ import ListProducts  from './components/product owner/listProducts';
 import Register from "./components/auth/Register";
 import AdminLogin from "./components/admin/adminLogin";
 import UserNavBar from "./components/user/userNavBar";
-
+import ServiceOwnerOrders from './components/service owner/orders';
 /**
  * Admin NavBar Ya adham :)
  */
@@ -24,26 +24,29 @@ function App() {
       <div>
         {/* <NavBar/> */}
 
+        <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
+
         <div className="container">
           
           <Switch>
             <Route exact path="/products" component={ListProducts} />
             <Route exact path="/products/create" component={CreateProduct} />
             <Route exact path="/products/:id/edit" component={UpdateProduct} />
-          <Route exact path="/admin">
-                    <NavBar />
-                    <AdminLogin />
-                </Route>
-                <Route exact path="/register" component={ Register } />
+            <Route exact path="/admin">
+                <NavBar />
+                <AdminLogin />
+            </Route>
+            <Route exact path="/register" component={ Register } />
 
-                <Route exact path="/" >
-                    <UserNavBar />
-                    <Route exact path="/" component={Delivery} />
-                </Route>
+            <Route exact path="/" >
+                <UserNavBar />
+                <Route exact path="/" component={Delivery} />
+            </Route>
             <Route exact path="/product/create" component={CreateProduct} />
             <Route exact path="/product/edit" component={UpdateProduct} />
             {/* <Route exact path="/" component={ServiceOrderForm} /> */}
             {/* <Route exact path="/" component={Delivery} /> */}
+            
           </Switch>
         </div>
       </div>

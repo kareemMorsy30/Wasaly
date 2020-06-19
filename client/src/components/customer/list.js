@@ -2,11 +2,21 @@ import React, { useState, useEffect } from 'react';
 import ReactStars from 'react-rating-stars-component';
 import { Table } from 'reactstrap';
 import '../../styles/stripped-list.scss';
+import { submitOrder } from '../../endpoints/order';
 
-const List = ({ serviceOwners }) => {
+const List = ({ serviceOwners, order }) => {
     useEffect(() => {
 
     }, [serviceOwners]);
+
+    const selectOwner = (owner) => {
+        console.log(owner);
+        console.log(order);
+        submitOrder(order, owner)
+        .then(order => {
+            console.log(order);
+        })
+    }
 
     return (
         <Table striped className="table-striped">
@@ -26,7 +36,7 @@ const List = ({ serviceOwners }) => {
                                         color2={'#F99A3D'} 
                                     />
                                 </td>
-                                <td className="text-center align-middle"><button className="submit-btn request-del-btn">Request</button></td>
+                                <td className="text-center align-middle"><button onClick={() => selectOwner(owner)} className="submit-btn request-del-btn">Request</button></td>
                             </tr>
                         )
                     })
