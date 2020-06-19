@@ -17,6 +17,8 @@ import ServiceOwnerOrders from './components/service owner/orders';
 import NavBar from "./components/admin/adminNavBar";
 import ServiceOrderForm from './components/customer/serviceForm';
 import Delivery from './components/customer/delivery';
+import Order  from './components/user/orders';
+import OrderDetails from './components/user/orderDetails'
 
 function App() {
   return (
@@ -38,15 +40,16 @@ function App() {
             </Route>
             <Route exact path="/register" component={ Register } />
 
-            <Route exact path="/" >
-                <UserNavBar />
-                <Route exact path="/" component={Delivery} />
-            </Route>
-            <Route exact path="/product/create" component={CreateProduct} />
-            <Route exact path="/product/edit" component={UpdateProduct} />
+                <Route exact path="/" >
+                    <UserNavBar />
+                    <Route exact path="/" component={Delivery} />
+                </Route>
+            
             {/* <Route exact path="/" component={ServiceOrderForm} /> */}
             {/* <Route exact path="/" component={Delivery} /> */}
-            
+           
+            <Route exact path="/orders" component={Order} />
+            <Route exact path="/orders/:id" component={OrderDetails} />
           </Switch>
         </div>
       </div>

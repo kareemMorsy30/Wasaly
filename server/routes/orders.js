@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {  listOrders, changeOrderStatus, listCustomerOrders } = require('../controllers/order')
+const {  listOrders, changeOrderStatus, listCustomerOrders,getOrder } = require('../controllers/order')
 const { route } = require('./search')
 const productOwner= require('../config/productOwner')
 const passport = require('passport');
@@ -18,6 +18,8 @@ router.post('/:id/status', changeOrderStatus)
 //get customer orders
 router.get('/user', listCustomerOrders)
 
+
+router.get('/:orderId', getOrder)
 
 
 module.exports = router

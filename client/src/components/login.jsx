@@ -6,6 +6,7 @@ import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 const Login = (props) => {
     const [emailInput, setEmailInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
+    const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
     const hanleEmailChange = (e) => {
         const { target: { value } } = e;
@@ -21,7 +22,7 @@ const Login = (props) => {
         e.preventDefault();
         axios({
             method: 'post',
-            url: 'http://localhost:5000/users/login',
+            url: `${domain}/users/login`,
             data: {
                 email: emailInput,
                 password: passwordInput
@@ -40,14 +41,17 @@ const Login = (props) => {
     return (
         <div className="container">
             <Form inline>
-                <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                    <Label for="Email" className="mr-sm-2">Email</Label>
-                    <Input type="email" name="email" id="Email" placeholder="Email" value={emailInput} onChange={hanleEmailChange} />
-                </FormGroup>
-                <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                    <Label for="Password" className="mr-sm-2">Password</Label>
-                    <Input type="password" name="password" id="Password" placeholder="Password" value={passwordInput} onChange={hanlePasswordChange} />
-                </FormGroup>
+                <div style={{width: "83%"}}>
+                    <FormGroup style={{paddingBottom:'8px'}} className="mb-2 mr-sm-2 mb-sm-0">
+                        <Label style={{width:'20%'}}for="Email" className="mr-sm-2">Email</Label>
+                        <Input type="email" name="email" id="Email" placeholder="Email" value={emailInput} onChange={hanleEmailChange} />
+                    </FormGroup>
+                    <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                        <Label style={{width:'20%', paddingRight:"2px"}} for="Password" className="mr-sm-2">Password</Label>
+                        <Input type="password" name="password" id="Password" placeholder="Password" value={passwordInput} onChange={hanlePasswordChange} />
+                    </FormGroup>
+
+                </div>
                 <Button onClick={handleSubmit}>Login</Button>
             </Form>
         </div>

@@ -5,6 +5,7 @@ const orderSchema = new mongoose.Schema({
     productOwner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     customer: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     service: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // service owner is a user
+    targetedServiceOwners: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     status: { 
         type: String, 
         enum: ['Pending', 'Canceled', 'Accepted', 'Rejected', 'Out for delivery', 'Delivered'], 
@@ -35,6 +36,10 @@ const orderSchema = new mongoose.Schema({
     },
     description: {
         type: String
+    },
+    rate:{
+        rating:{ type: Number, default:0 },
+        reviews:[{ type: String }]
     }
 })
 

@@ -1,7 +1,7 @@
 const Product = require('../models/product')
 const multer = require('multer')
 const fs = require("fs")
-
+const { Category } = require('../models/allModels')
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'public')
@@ -16,7 +16,10 @@ var upload = multer({ storage: storage }).array('file')
 
 exports.createProduct = async (req, res, next) => {
     try {
-        const { name, price, quantity, description } = req.body
+        const { name, price, quantity, description, category } = req.body
+        console.log(category)
+        const categoryID= await Category.findOne({name: category}).select('_id').exec()
+
         let owner = req.user._id
         let images = req.files
         images_path = images.map(image => image.filename)
@@ -26,7 +29,8 @@ exports.createProduct = async (req, res, next) => {
             price,
             quantity,
             images_path,
-            description
+            description,
+            category: categoryID
         }).save()
         res.json("done")
     }
@@ -53,7 +57,7 @@ exports.updateProduct = async (req, res, next) => {
         const owner_id = req.user._id
         const product = await Product.findById(productID).exec()
 
-        product.owner !== owner_id && res.status(401).send({ message: "You are not Authorized for this action" })
+        String(product.owner) != String(owner_id)  && res.status(401).send({ message: "You are not Authorized for this action" })
 
         console.log(req.body.name)
         req.body.name && (product.name = req.body.name)
@@ -141,4 +145,25 @@ exports.saveImage = async (req, res, next) => {
     })
 
 }
+
+// exports.categoryProducts=async (req,res,next)=>{
+//     const   category_id  =req.params.id;
+//     try {
+//          const  categoryProducts= await Product.find({:category_id})
+//     } catch (error) {
+        
+//     }
+    
+    
+// }
+// const allIncomingOrders = (req, res) => {
+//     const { user } = req;
+
+//     Order.find({service: user._id})
+//     .then(orders => {
+//         res.status(200).json(orders);
+//     })
+//     .catch(error => res.status(500).end());
+// }
+
 

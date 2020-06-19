@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Progress } from 'reactstrap';
@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useForm } from "react-hook-form";
 import axios from 'axios'
+import { authHeader } from '../config/config'
 
 
 const CreateProduct = (props) => {
@@ -14,9 +15,22 @@ const CreateProduct = (props) => {
     const { register, errors, handleSubmit } = useForm();
     const [productname, setProductname] = useState('')
     const [description, setDescription] = useState('')
-    const [price, setPrice] = useState(0)
-    const [quantity, setQuantity] = useState(0)
+    const [price, setPrice] = useState()
+    const [quantity, setQuantity] = useState()
+    const [categories, setCategories] = useState('')
+    const [category, setCategory] = useState('')
 
+    const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
+
+    useEffect(() => {
+        axios.get(`${domain}/product/categories`, authHeader).
+            then((res) => {
+                console.log(res)
+                setCategories(res.data)
+            }).catch(e => {
+                console.log(e)
+            })
+    }, [])
 
     const onSubmit = (e) => {
         const data = new FormData()
@@ -27,22 +41,13 @@ const CreateProduct = (props) => {
         data.set("description", description)
         data.set("price", price)
         data.set("quantity", quantity)
-
-        console.log('====================================');
-        console.log( localStorage.getItem("token"));
-        console.log('====================================');
-        axios.post('http://localhost:5000/product', data, {
-            headers: {
-              'Authorization': 'Bearer ' + localStorage.getItem("token")
-            },
-            'Content-Type': 'multipart/form-data',
-
-        }).then((res) => {
-                    toast.success('upload success')
-            }).catch(err=>{
-                console.log(err.message)
-                toast.error('Error Submiting the form')
-            })
+        data.set("category", category)
+        axios.post(`${domain}/product`, data, authHeader).then((res) => {
+            toast.success('upload success')
+        }).catch(err => {
+            console.log(err.message)
+            toast.error('Error Submiting the form')
+        })
     }
 
     const fileSelectedHandler = (e) => {
@@ -117,10 +122,9 @@ const CreateProduct = (props) => {
 
     return (
         <>
-            <h2>Create New Product</h2>
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <Form.Group controlId="name">
-                    <Form.Label>product name</Form.Label>
+                    <Form.Label>Name</Form.Label>
                     <Form.Control
                         name="name"
                         type="text"
@@ -140,7 +144,7 @@ const CreateProduct = (props) => {
                             }</p> : ""}
 
                 <Form.Group controlId="description">
-                    <Form.Label>product description</Form.Label>
+                    <Form.Label>Description</Form.Label>
                     <Form.Control
                         name="description"
                         value={description}
@@ -160,6 +164,39 @@ const CreateProduct = (props) => {
                                         "Product description is too short" : ""
                             }</p> : ''
                 }
+
+                <Form.Group controlId="category">
+                <Form.Label>Category</Form.Label>
+                <Form.Control
+                    as="select"
+                    custom
+                    ref={register({ required: true})}
+                    name="category"
+                    placeholder="Category"
+                    onChange={(e) =>{
+                    setCategory(e.target.value)
+                    }
+                }
+
+                >
+
+                    <option></option>
+                    {categories && categories.map(category =>
+                        <option id={category._id}>{category.name}</option>
+                    )}
+                </Form.Control>
+                </Form.Group>
+
+                {
+                    errors.category ?
+                        <p className="alert alert-danger">
+                            {
+                                errors.category.type == "required" ?
+                                    "Product Category is required" :''
+                                    
+                            }</p> :''
+                }
+
 
                 <Form.Group controlId="price">
                     <Form.Label>Price</Form.Label>
@@ -225,7 +262,7 @@ const CreateProduct = (props) => {
 
                 <Button variant="primary" type="submit">
                     Submit
-        </Button>
+                </Button>
             </Form>
 
             <div className="form-group">
