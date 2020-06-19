@@ -26,7 +26,8 @@ exports.createProduct = async (req, res, next) => {
             price,
             quantity,
             images_path,
-            description
+            description,
+            category
         }).save()
         res.json("done")
     }

@@ -24,7 +24,17 @@ const remove = (req, res) => {
 
 }
 
+const getAllCategories= async (req,res,next)=>{
+    try{
+        categories= await Category.find({}).select('_id name').exec()
+        res.json(categories)
+    }catch(error){
+        next(error)
+    }
+}
+
 module.exports = {
     add,
-    remove
+    remove,
+    getAllCategories
 }

@@ -8,7 +8,7 @@ const Product = require('../models/product')
 const { route } = require('./search')
 const productOwner= require('../config/productOwner')
 const { Auth } = require('../middlewares/Auth');
-
+const {getAllCategories}= require('../controllers/category')
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -69,5 +69,7 @@ router.patch('/:id',
 router.delete('/:productID/images/:id', deleteImage)
 router.delete('/:id', deleteProduct)
 router.post('/:productID/images/', saveImage)
+
+router.get('/categories', getAllCategories)
 
 module.exports = router

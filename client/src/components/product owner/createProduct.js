@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Progress } from 'reactstrap';
@@ -18,7 +18,16 @@ const CreateProduct = (props) => {
     const [price, setPrice] = useState()
     const [quantity, setQuantity] = useState()
     const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
-
+    
+    useEffect(()=>{
+        axios.get(`${domain}/product/categories`, authHeader).
+        then((res)=>{
+            console.log(res)
+            // setOrders(res.data)
+        }).catch(e=>{
+            console.log(e)
+        })
+    },[])
 
     const onSubmit = (e) => {
         const data = new FormData()

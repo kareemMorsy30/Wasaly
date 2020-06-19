@@ -36,6 +36,10 @@ const orderSchema = new mongoose.Schema({
     },
     description: {
         type: String
+    },
+    rate:{
+        rating:{ type: Number, default:0 },
+        reviews:[{ type: String }]
     }
 })
 

@@ -148,8 +148,6 @@ const UpdateProduct = (props) => {
     }
     return (
         <>
-            <h2>Edit the Product</h2>
-
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <Form.Group controlId="name">
                     <Form.Label>product name</Form.Label>
