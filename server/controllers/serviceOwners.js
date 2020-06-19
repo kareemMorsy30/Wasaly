@@ -1,4 +1,7 @@
 const { Order, ServiceOwner, User } = require('./../models/allModels');
+const { getDistance, asyncFilter } = require('./controller');
+
+
 
 // Get all service owner orders
 const allIncomingOrders = (req, res) => {
@@ -43,6 +46,28 @@ const updateServiceOwner = (req,res)=>{
     })
 } 
 
+const getAllConnectedServiceOwner = (req,res)=>{
+    try{
+    ServiceOwner.find({'productOwner.status': 'connected'}).populate('user')
+    res.status(200).json(data);
+    }catch(err){
+        console.log(err);
+        res.status(400).json({err});
+    }
+}
+
+const getProductOwnerDetails = async(req,res)=>{
+    try{
+        const productUser = await ServiceOwner.findOne({'productOwner.status': 'connected'})
+        const userData = await User.findOne({_id:productUser.user._id}).populate('user')
+        console.log(userData);
+        res.json({
+            userData
+          });
+}catch(err){
+    console.error(err.message);
+}
+}
 // Get service owner reviews
 const reviews = (req, res) => {
     let {id}= req.params
@@ -153,6 +178,67 @@ const remove = (req, res) => {
 // Add new category
 
 
+//service owner can view his ratings
+// const viewRatings = async(req,res)=>{
+//     try{
+//         const userRate = await ServiceOwner.findOne({_id : req.params.id}) 
+//         res.status(200).json(data);
+//     }catch(err){
+//         console.log(err);
+//         res.status(400).json({err});
+//     }   
+// }
+
+
+//filter delivery service owner
+
+const availableServiceOwners = async ({ body }) => {
+    const { from, to } = body;
+    const owners = await ServiceOwner.find({ }).populate({
+        path: 'user',
+        match: { status: 'online' }
+    });
+
+    return await asyncFilter(owners, async owner => {
+        if (owner.user != null) {
+            console.log(owner);
+            const location = owner.user.address.length != 0 ? owner.user.address[0].location : null;
+            const distance = await getDistance(from, to, location);
+            return owner.distance >= distance;
+        }
+    });
+};
+
+const filteredServiceOwners = (req, res) => {
+    availableServiceOwners(req).then(owners => {
+        res.status(200).json(owners);
+    });
+}
+
+//create notification for filtered service owner of a new product
+const deliverNewProduct = (req, res) => {
+    const order = req.body;
+    const serviceOwnerId = order.id;
+    ServiceOwner.findById(serviceOwnerId).then(owner => {
+        const availableUsers = filteredServiceOwners();
+        let newOrder = new Order({
+            customer: req.user._id,
+            targetedServiceOwners: [availableUsers],
+            ...order,
+            cost: 0,
+            amount: 0
+        });
+
+        newOrder.save().then(order => {
+            io.on('connection', (socket) => {
+                socket.emit(`notify:${owner && owner.user.email}`, { success: true, msg: `A new request delivery from ${req.user ? req.user.username : 'Anonymous'}` });
+            });
+
+            res.status(200).json(order);
+        }).catch(error => console.log(error));
+    })
+}
+
 module.exports = {
     allIncomingOrders,
     reviews,
@@ -162,5 +248,9 @@ module.exports = {
     remove,
     getServiceOwner,
     updateServiceOwner,
-    changeStatus
+    changeStatus,
+    getAllConnectedServiceOwner,
+    getProductOwnerDetails,
+    filteredServiceOwners,
+    deliverNewProduct
 }

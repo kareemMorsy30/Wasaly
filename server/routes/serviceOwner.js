@@ -38,5 +38,16 @@ router.get('/product-owner', productOwnerController.productOwnerDetails);
 // Accept or reject product owner connection request
 router.patch('/connection/:status', serviceOwnerController.updateConnection);
 
+//get all connected service owner
+router.get('/connected',serviceOwnerController.getAllConnectedServiceOwner);
+
+//get all product owner details related to connected service owners
+router.get('/details',serviceOwnerController.getProductOwnerDetails);
+
+//select available service owner
+router.post('/available/owners', serviceOwnerController.filteredServiceOwners);
+
+//notification to taregt service owner
+router.post('/notify', serviceOwnerController.deliverNewProduct);
 
 module.exports = router;
