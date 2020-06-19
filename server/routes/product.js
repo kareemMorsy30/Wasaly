@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const {
-     createProduct, listProducts, updateProduct, deleteProduct, getProduct, deleteImage, saveImage, changeProductStatus
+     createProduct, listProducts, updateProduct, productDetails,deleteProduct, getProduct, deleteImage, saveImage, changeProductStatus
  } = require('../controllers/product')
 var multer = require('multer')
 const Product = require('../models/product')
@@ -24,7 +24,11 @@ var upload = multer({ storage: storage }).array('file')
 
 Auth(router, productOwner);
 
+// productDetails
+router.get('/:id/ownerinfo', productDetails)
+
 router.get('/', listProducts)
+
 router.get('/:id', getProduct)
 router.post('/',
     async function (req, res, next) {

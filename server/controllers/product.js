@@ -140,25 +140,15 @@ exports.saveImage = async (req, res, next) => {
     })
 
 }
+// Show product page details with product owner info
+exports.productDetails=  async(req, res)=>{
+    try {
+        const products = await Product.findById(req.params.id).populate('owner');
+        res.send(products);
+    } catch (error) {
+        // error=new Error("No products there ")
 
-// exports.categoryProducts=async (req,res,next)=>{
-//     const   category_id  =req.params.id;
-//     try {
-//          const  categoryProducts= await Product.find({:category_id})
-//     } catch (error) {
-        
-//     }
-    
-    
-// }
-// const allIncomingOrders = (req, res) => {
-//     const { user } = req;
-
-//     Order.find({service: user._id})
-//     .then(orders => {
-//         res.status(200).json(orders);
-//     })
-//     .catch(error => res.status(500).end());
-// }
-
-
+     res.send({error,id:req.params.id}).status(400);   
+    }
+   
+}
