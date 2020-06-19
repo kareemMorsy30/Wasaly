@@ -49,7 +49,7 @@ router.post('/',
 router.patch('/:id',
     async function (req, res, next) {
 
-        await upload(req, res, function (err) {   
+        await upload(req, res, async function (err) {   
             let owner = req.user._id
             let product = await Product.find({ name: req.body.name, owner, _id: { $nin: [req.params.id] }  })             
             if (product.length > 0) return next("Duplicate product")

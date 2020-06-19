@@ -39,13 +39,14 @@ const NavBar = (props) => {
 
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
 
     useEffect(() => {
         (async function () {
             try {
                 let response = await axios.get(
-                    "http://localhost:5000/users/logincheck", {
+                    `${domain}/users/logincheck`, {
                     headers: {
                         'Authorization': 'Bearer ' + localStorage.getItem("token")
                     }
@@ -102,7 +103,7 @@ const NavBar = (props) => {
                     <Button variant="outline-primary" onClick={handleClick}>Search</Button>
                 </Link>
             </Form> */}
-             <Search/>
+            <Search/>
         </Navbar>
     );
 };

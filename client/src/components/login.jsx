@@ -6,6 +6,7 @@ import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 const Login = (props) => {
     const [emailInput, setEmailInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
+    const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
     const hanleEmailChange = (e) => {
         const { target: { value } } = e;
@@ -21,7 +22,7 @@ const Login = (props) => {
         e.preventDefault();
         axios({
             method: 'post',
-            url: 'http://localhost:5000/users/login',
+            url: `${domain}/users/login`,
             data: {
                 email: emailInput,
                 password: passwordInput

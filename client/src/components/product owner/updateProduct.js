@@ -20,7 +20,7 @@ const UpdateProduct = (props) => {
     const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
 
-    const {id}= props.match.params
+    const {id}= props
     useEffect(() => {
         axios.get(`${domain}/product/${id}`,authHeader)
             .then(res => {
@@ -48,11 +48,7 @@ const UpdateProduct = (props) => {
         data.set("price", price)
         data.set("quantity", quantity)
 
-        axios.patch(`${domain}/product/${id}`, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }).then((res, err) => {
+        axios.patch(`${domain}/product/${id}`, data, authHeader).then((res, err) => {
             toast.success('Updated successfully')
         }).catch(err => {
             console.log(err)
@@ -66,13 +62,7 @@ const UpdateProduct = (props) => {
             for (var x = 0; x < e.target.files.length; x++) {
                 data.append('file', e.target.files[x])
             }
-            axios.post(`${domain}/product/${id}/images`, data, {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                  'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWUzZWNkZmY1NTEzNTYwODI2MWY0YjciLCJpYXQiOjE1OTIwNDY4NjYsImV4cCI6MTU5MjA1ODk5N30.qyPuZ7wse45E8sJl8tEaVNnDBEJ17XarOcAOJAvDJ5Y`
-
-                }
-            }).then((res) => {
+            axios.post(`${domain}/product/${id}/images`, data, authHeader).then((res) => {
                 setImages((prevImages)=>[...prevImages,...res.data])
                 }).catch(err=>{
                     toast.error('Error Submiting the form')

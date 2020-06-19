@@ -15,8 +15,8 @@ const CreateProduct = (props) => {
     const { register, errors, handleSubmit } = useForm();
     const [productname, setProductname] = useState('')
     const [description, setDescription] = useState('')
-    const [price, setPrice] = useState(0)
-    const [quantity, setQuantity] = useState(0)
+    const [price, setPrice] = useState()
+    const [quantity, setQuantity] = useState()
     const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
 
@@ -110,7 +110,6 @@ const CreateProduct = (props) => {
 
     return (
         <>
-            <h2>Create New Product</h2>
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <Form.Group controlId="name">
                     <Form.Label>product name</Form.Label>
@@ -218,7 +217,7 @@ const CreateProduct = (props) => {
 
                 <Button variant="primary" type="submit">
                     Submit
-        </Button>
+                </Button>
             </Form>
 
             <div className="form-group">

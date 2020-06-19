@@ -40,8 +40,7 @@ function App() {
                     <UserNavBar />
                     <Route exact path="/" component={Delivery} />
                 </Route>
-            <Route exact path="/product/create" component={CreateProduct} />
-            <Route exact path="/product/edit" component={UpdateProduct} />
+            
             {/* <Route exact path="/" component={ServiceOrderForm} /> */}
             {/* <Route exact path="/" component={Delivery} /> */}
           </Switch>
