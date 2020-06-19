@@ -16,8 +16,8 @@ import UserNavBar from "./components/user/userNavBar";
  */
 import NavBar from "./components/admin/adminNavBar";
 import ServiceOrderForm from './components/customer/serviceForm';
-import Delivery from './components/customer/delivery';
-
+// import Delivery from './components/customer/delivery';
+import Category from './components/Category';
 function App() {
   return (
     
@@ -38,9 +38,11 @@ function App() {
 
                 <Route exact path="/" >
                     <UserNavBar />
-                    <Route exact path="/" component={Delivery} />
                 </Route>
-            
+
+              <Route exact path="/test" >
+                    < Category/>
+                </Route>
             {/* <Route exact path="/" component={ServiceOrderForm} /> */}
             {/* <Route exact path="/" component={Delivery} /> */}
           </Switch>
