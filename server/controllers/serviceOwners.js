@@ -223,7 +223,7 @@ const deliverNewProduct = (req, res) => {
         const availableUsers = filteredServiceOwners();
         let newOrder = new Order({
             customer: req.user._id,
-            targetedServiceOwners: [availableUsers],
+            targetedServiceOwners: targetedServiceOwners.push(availableUsers),
             ...order,
             cost: 0,
             amount: 0
