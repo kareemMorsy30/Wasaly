@@ -15,13 +15,30 @@ export const getAvailableTransportations = () => {
     .catch(err => err);
 }
 
-export const getAvailableServiceOwners = (order) => {
+export const getAvailableServiceOwners = (order, owner) => {
     const url = `${domain}/services/available/owners`;
     console.log(localStorage.getItem("token"));
 
     return axios.post(url, {
         ...order
     }, 
+    {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data)
+            return res.data;
+    })
+    .catch(err => err);
+}
+
+export const submitOrder = (order, owner) => {
+    const url = `${domain}/services/orders`;
+
+    return axios.post(url, {
+        ...order,
+        serviceOwnerId: owner._id
+    },
     {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     })
