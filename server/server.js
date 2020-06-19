@@ -21,7 +21,8 @@ const {
   userRoutes,
   adminRouter,
   productOwnerRouter,
-  OrderRouter
+  OrderRouter,
+  CategoryRouter
 } = require('./routes/allRoutes');
 const passport = require('passport');
 const morgan = require('morgan');
@@ -79,6 +80,7 @@ app.get('/', (req, res) =>{
 app.use('/search', searchRouter)
 app.use('/product', productRouter)
 app.use('/orders', OrderRouter)
+app.use('/categories', CategoryRouter)
 
 
 /* --------------- Product owner routes -------------------------*/

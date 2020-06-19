@@ -1,7 +1,6 @@
 const Product = require('../models/product')
 const multer = require('multer')
 const fs = require("fs")
-
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'public')
@@ -141,4 +140,25 @@ exports.saveImage = async (req, res, next) => {
     })
 
 }
+
+// exports.categoryProducts=async (req,res,next)=>{
+//     const   category_id  =req.params.id;
+//     try {
+//          const  categoryProducts= await Product.find({:category_id})
+//     } catch (error) {
+        
+//     }
+    
+    
+// }
+// const allIncomingOrders = (req, res) => {
+//     const { user } = req;
+
+//     Order.find({service: user._id})
+//     .then(orders => {
+//         res.status(200).json(orders);
+//     })
+//     .catch(error => res.status(500).end());
+// }
+
 

@@ -23,8 +23,19 @@ const remove = (req, res) => {
     }).catch(error => console.log(error));
 
 }
+const showCategoryProducts=  async(req, res)=>{
+    try {
+        const products = await Category.findById(req.params.id).populate('products');
+        res.send({"res":products});
+    } catch (error) {
+        // error=new Error("No products there ")
+
+     res.send({error,id:req.params.id}).status(400);   
+    }
+   
+}
 
 module.exports = {
     add,
-    remove
+    remove,showCategoryProducts
 }
