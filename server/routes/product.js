@@ -25,6 +25,7 @@ var upload = multer({ storage: storage }).array('file')
 Auth(router, productOwner);
 
 router.get('/', listProducts)
+router.get('/categories', getAllCategories)
 router.get('/:id', getProduct)
 router.post('/',
     async function (req, res, next) {
@@ -70,6 +71,5 @@ router.delete('/:productID/images/:id', deleteImage)
 router.delete('/:id', deleteProduct)
 router.post('/:productID/images/', saveImage)
 
-router.get('/categories', getAllCategories)
 
 module.exports = router
