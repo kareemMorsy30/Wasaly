@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/table.scss';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -8,6 +8,8 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 const Table = ({ cols, data, editUrl, delUrl, del, options }) => {
     const [modal, setModal] = useState(false);
     const [order, setOrder] = useState(null);
+
+    useEffect(() => {}, [data])
 
     const toggle = (record) => {
         setModal(!modal)
@@ -61,6 +63,10 @@ const Table = ({ cols, data, editUrl, delUrl, del, options }) => {
                                             ?
                                             <option disabled selected value={option}>{option}</option>
                                             :
+                                            ['Accepted'].includes(record.status) && ['Pending', 'Canceled', 'Rejected'].includes(option) ? 
+                                            <option disabled value={option}>{option}</option>
+                                            :
+                                            !['Rejected'].includes(record.status) &&
                                             <option value={option}>{option}</option>
                                         })
                                     }
@@ -94,6 +100,10 @@ const Table = ({ cols, data, editUrl, delUrl, del, options }) => {
                 <Modal isOpen={modal} toggle={toggle} className="test">
                     <ModalHeader toggle={toggle}>{order.customer && order.customer.name}</ModalHeader>
                     <ModalBody>
+                        {
+                        !['Pending', 'Canceled', 'Rejected'].includes(order.status) 
+                        ?
+                        <>
                         <div className="body-section">
                             <div className="image-section">
                                 <img className="user-profile" src={order.customer && order.customer.image_path ? order.customer.image_path : "../../img/user.png"}/>
@@ -112,8 +122,13 @@ const Table = ({ cols, data, editUrl, delUrl, del, options }) => {
                     
                         <hr></hr>
                         <div className="description-section">
+                            <label>Order details</label>
                             <textarea placeholder="More info" value={order.description} readOnly/>
                         </div>
+                        </>
+                        :
+                        <div className="container">You have to accept order first to show customer details</div>
+                        }
                     </ModalBody>
                 </Modal>
                 }
