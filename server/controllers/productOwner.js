@@ -10,7 +10,8 @@ const connect = (req, res) => {
         }
     }, {
         new: true
-    }).then(owner => res.status(200).json(owner))
+    }).populate('user')
+    .then(owner => res.status(200).json(owner))
     .catch(error => res.status(500).end());
 }
 
