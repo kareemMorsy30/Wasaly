@@ -21,10 +21,10 @@ const userSchema = new mongoose.Schema({
         street: { type: String, required: true },
         city: { type: String, required: true },
         area: { type: String, required: true },
-        location: {
+        // location: {
             latitude: {type: Number, required: true},
             longitude: {type: Number, required: true}
-        }
+        // }
     }],
     password: {
         type: String,

@@ -49,7 +49,10 @@ const ServiceOrderForm = ({ setServiceOwners, setWaiting }) => {
 
         if(input.length >= 3 && input[input.length-1] !== ' '){
             getGeoLocation(input).then(data => {
+                console.log(data);
+
                 if(data.area) setFrom({
+                    
                     ...from,
                     area: data.fullArea,
                     city: data.city,
@@ -58,8 +61,12 @@ const ServiceOrderForm = ({ setServiceOwners, setWaiting }) => {
                 });
                 console.log(data.area);
                 if(input > toValue && data.area && !suggested.includes(data.area) && data.area.toLowerCase().includes(input)){
-                    setSuggested([...suggested, data.area]);
-                    setFromValue(data.area);
+                console.log('====================================');
+                console.log(data.area);
+                console.log('====================================');
+                    // setSuggested([...suggested, data.area]);
+                    setFromValue(data.city);
+                
                 }
             })
         }

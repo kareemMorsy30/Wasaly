@@ -38,12 +38,14 @@ function App() {
 
                 <Route exact path="/" >
                     <UserNavBar />
+                    {/* <Route exact path="/" component={Delivery} /> */}
+
                 </Route>
 
               <Route exact path="/test" >
                     < Category/>
                 </Route>
-            {/* <Route exact path="/" component={ServiceOrderForm} /> */}
+            <Route exact path="/sO" component={ServiceOrderForm} />
             {/* <Route exact path="/" component={Delivery} /> */}
           </Switch>
         </div>
