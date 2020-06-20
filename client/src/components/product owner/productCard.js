@@ -7,7 +7,6 @@ import {
     CardSubtitle,
     CardText,
 } from "reactstrap";
-// import StarRatingComponent from "react-star-rating-component";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
@@ -18,25 +17,31 @@ const ProductCard = ({ product }) => {
                     top
                     width="318px"
                     height="180px"
-                    src={product.images_path}
+                    src={product.images_path[0]}
                     alt="product Image"
                 />
                 <CardBody>
-                    <CardTitle>{product.name}</CardTitle>
+                    <CardTitle>productname :{product.name}</CardTitle>
                     <CardSubtitle>
-                        <Link to={`/owners/${product.owner._id}`}>
-                            {product.owner.name}
+                        <Link to={`/owners/${product.owner}`}>
+                            ownername :{product.owner.ownerName}
                         </Link>
                     </CardSubtitle>
                     <CardText>
-                    {product.category.name}
+                    category : {product.category.name}
                     </CardText>
 
                     <CardText>
-                    {product.price}
+                    price : {product.price}
                     </CardText>
                     <CardText>
-                    {product.description}
+                 desc:    {product.description}
+                    </CardText>
+                    <CardText>
+                    marketName: {product.owner.marketName}
+                    </CardText>
+                    <CardText>
+                    phonne: {product.owner.marketPhone}
                     </CardText>
                     <Link className="btn btn-primary" to={`/products/${product._id}`}>
                         View
