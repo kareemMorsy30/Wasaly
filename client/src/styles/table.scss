@@ -17,6 +17,8 @@
   
 #table tr:hover {
     background-color: $color_primary;
+    color: white;
+    cursor: pointer;
 }
 
 .delete-record:hover {
@@ -33,4 +35,27 @@
 .actions{
     display: flex;
     justify-content: space-around;
+}
+
+.body-section {
+    display: flex;
+    flex-direction: row;
+}
+
+.image-section {
+    display: flex;
+    flex-grow: 1;
+    width: 30%;
+    height: 60%;
+}
+
+.details-section {
+    display: flex;
+    flex-grow: 4;
+    flex-direction: column;
+}
+
+.user-profile {
+    height: 100%;
+    width: 100%;
 }
