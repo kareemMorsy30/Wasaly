@@ -1,6 +1,7 @@
 const Product = require('../models/product')
 const multer = require('multer')
 const fs = require("fs")
+const { Category } = require('../models/allModels')
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'public')
@@ -15,7 +16,10 @@ var upload = multer({ storage: storage }).array('file')
 
 exports.createProduct = async (req, res, next) => {
     try {
-        const { name, price, quantity, description } = req.body
+        const { name, price, quantity, description, category } = req.body
+        console.log(category)
+        const categoryID= await Category.findOne({name: category}).select('_id').exec()
+
         let owner = req.user._id
         let images = req.files
         images_path = images.map(image => image.filename)
@@ -25,7 +29,8 @@ exports.createProduct = async (req, res, next) => {
             price,
             quantity,
             images_path,
-            description
+            description,
+            category: categoryID
         }).save()
         res.json("done")
     }
@@ -152,3 +157,31 @@ exports.productDetails=  async(req, res)=>{
     }
    
 }
+// exports.showCategoryProducts=  async(req, res)=>{
+//         // try {
+//             const products = await Product.find({}).exec((err,data)=>{
+//                 if (err) {
+//                     return res.send(err);
+//                 }
+//             });
+//             res.send(products);
+//         // } catch (error) {
+//         //     // error=new Error("No products there ")
+    
+//         //  res.send({error}).status(400);   
+//         // }
+       
+//     }
+    
+
+
+    exports.showCategoryProducts = async (req, res, next) => {
+
+        try {
+            const id = req.user._id
+            const products = await Product.find({ }).populate('category').exec()
+            res.json(products)
+        } catch (err) {
+            next(err)
+        }
+    }

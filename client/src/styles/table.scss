@@ -1,0 +1,61 @@
+@import "src/styles/main";
+#table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+  
+#table td,#table th {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+  
+#table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+  
+#table tr:hover {
+    background-color: $color_primary;
+    color: white;
+    cursor: pointer;
+}
+
+.delete-record:hover {
+    cursor: pointer;
+}
+  
+#table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: $color_accent;
+    color: white;
+}
+  
+.actions{
+    display: flex;
+    justify-content: space-around;
+}
+
+.body-section {
+    display: flex;
+    flex-direction: row;
+}
+
+.image-section {
+    display: flex;
+    flex-grow: 1;
+    width: 30%;
+    height: 60%;
+}
+
+.details-section {
+    display: flex;
+    flex-grow: 4;
+    flex-direction: column;
+}
+
+.user-profile {
+    height: 100%;
+    width: 100%;
+}

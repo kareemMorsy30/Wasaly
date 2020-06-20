@@ -1,14 +1,14 @@
 const express = require('express')
 const router = express.Router()
 const {
-     createProduct, listProducts, updateProduct, productDetails,deleteProduct, getProduct, deleteImage, saveImage, changeProductStatus
+     createProduct, listProducts, updateProduct,showCategoryProducts ,productDetails,deleteProduct, getProduct, deleteImage, saveImage, changeProductStatus
  } = require('../controllers/product')
 var multer = require('multer')
 const Product = require('../models/product')
 const { route } = require('./search')
 const productOwner= require('../config/productOwner')
 const { Auth } = require('../middlewares/Auth');
-
+const {getAllCategories}= require('../controllers/category')
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -23,12 +23,13 @@ var upload = multer({ storage: storage }).array('file')
 
 
 Auth(router, productOwner);
+router.get('/categoryproducts',showCategoryProducts);
 
 // productDetails
 router.get('/:id/ownerinfo', productDetails)
 
 router.get('/', listProducts)
-
+router.get('/categories', getAllCategories)
 router.get('/:id', getProduct)
 router.post('/',
     async function (req, res, next) {
@@ -73,5 +74,6 @@ router.patch('/:id',
 router.delete('/:productID/images/:id', deleteImage)
 router.delete('/:id', deleteProduct)
 router.post('/:productID/images/', saveImage)
+
 
 module.exports = router

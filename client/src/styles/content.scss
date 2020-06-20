@@ -1,0 +1,114 @@
+@import "src/styles/main";
+.dashboard {
+    height: 100%;
+}
+
+.layout-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex-grow: 3;
+}
+
+.side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: $color_accent;
+    flex-grow: 0.1;
+}
+
+.side > div{
+    display: flex;
+    flex-direction: column;
+    color: white;
+    font-size: medium;
+}
+
+.side ul{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.side li{
+    display: flex;
+    width: 100%;
+    background-color: $color_accent-light;
+    border: 2px solid;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-color: $color_accent;
+    padding: 2% 2% 2% 4%;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 5%;
+}
+
+.side li:hover{
+    background-color: $color_primary;
+    cursor: pointer;
+    padding: 2px;
+}
+
+.side-options span{
+    margin: 10px;
+}
+
+.svg {
+    padding-left: 2%;
+}
+
+.nav-option {
+    float: left;
+    display: block;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 4;
+    background-color: $color_accent-lighter;
+}
+
+.body > div {
+    display: flex;
+    background-color: white;
+    border:10px $color_accent-lighter solid;
+}
+
+.card_one {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 1%;
+    justify-content: space-between;
+    background-color: $color_accent_light;
+    // flex-grow: 1;
+}
+
+.card_one > h5 {
+    justify-content: start;
+    padding: 0px;
+    margin: 0px;
+    color: $color_accent_lightest;
+}
+
+.addIcon {
+    justify-content: end;
+    font-size: x-large;
+    color: $color_primary;
+    padding: 0px;  
+}
+
+.card_two {
+    display: flex;
+    flex-direction: column;
+}

@@ -34,9 +34,21 @@ exports.changeOrderStatus = async (req, res, next) => {
 exports.listCustomerOrders= async (req, res, next) => {
     try {
         const id = req.user._id
-        const orders = await Order.find({ custoemr: id }).select("service status description cost amount item products productOwner").exec()
+        const orders = await Order.find({ customer: id }).select("service status description cost amount item products productOwner rate").exec()
         res.json(orders)
     } catch (err) {
+        next(err)
+    }
+}
+
+exports.getOrder= async(req,res,next)=>{
+
+    try {
+        const id = req.user._id
+        const {orderId}= req.params
+        const orders = await Order.findOne({_id:orderId, customer:id}).populate('products').exec()
+        res.json(orders)
+    }catch (err) {
         next(err)
     }
 }

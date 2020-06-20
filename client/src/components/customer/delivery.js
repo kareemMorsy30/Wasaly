@@ -10,6 +10,7 @@ import ReactLoading from 'react-loading';
 const Delivery = (props) => {
     const [ serviceOwners, setServiceOwners ] = useState([]);
     const [ waiting, setWaiting ] = useState(false);
+    const [ order, setOrder ] = useState(null);
 
     return (
         <div className="delivery-section">
@@ -24,9 +25,9 @@ const Delivery = (props) => {
                     : 
                     serviceOwners.length == 0 
                     ?
-                    <ServiceForm setServiceOwners={setServiceOwners} setWaiting={setWaiting}/>
+                    <ServiceForm setServiceOwners={setServiceOwners} setWaiting={setWaiting} setOrder={setOrder}/>
                     :
-                    <List serviceOwners={serviceOwners}/>
+                    <List serviceOwners={serviceOwners} order={order}/>
                 }
                 
             </div>

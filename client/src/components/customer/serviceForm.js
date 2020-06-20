@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
+import Push from 'push.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { useForm } from "react-hook-form";
+import io from 'socket.io-client';
 import '../../styles/form.scss';
 import { getAvailableTransportations, getAvailableServiceOwners } from '../../endpoints/order';
 import { getGeoLocation } from '../../endpoints/geocoding';
 import '../../styles/delivery-section.scss';
 
-const ServiceOrderForm = ({ setServiceOwners, setWaiting }) => {
+const ServiceOrderForm = ({ setServiceOwners, setWaiting, setOrder }) => {
     const [item, setItem] = useState('')
     const [amount, setAmount] = useState(1)
     const [description, setDescription] = useState('')
@@ -39,7 +40,26 @@ const ServiceOrderForm = ({ setServiceOwners, setWaiting }) => {
         getAvailableTransportations().then(transportations => {
             setTransportations(transportations);
         });
-        console.log(suggested);
+        const socket = io('http://localhost:5000/');
+        socket.on('connect', () => {
+            console.log("Client connected successfully to the server");
+            socket.on('disconnect', function(){
+                console.log('user disconnected');
+            });
+        });
+
+        socket.on('pushNotification', function (data) {
+            console.log(data);
+            Push.create("Hello world!", {
+                body: data.msg, //this should print "hello"
+                icon: '/icon.png',
+                timeout: 4000,
+                onClick: function () {
+                    window.focus();
+                    this.close();
+                }
+            });
+        });
     }, []);
 
     const insertFrom = event => {
@@ -113,6 +133,8 @@ const ServiceOrderForm = ({ setServiceOwners, setWaiting }) => {
             to
         };
 
+        setOrder(order);
+
         getAvailableServiceOwners(order)
         .then(owners => {
             setServiceOwners(owners);
@@ -137,7 +159,7 @@ const ServiceOrderForm = ({ setServiceOwners, setWaiting }) => {
                     <select name="author" id="author" value={transportation} onChange={event => setTransportation(event.target.value)} style={{border: alert.type === 'error' && !transportation && '1px red solid'}}>
                         <option disabled selected value="">Transportation way</option>
                         {
-                            transportations.length&&transportations.map(transportation => {
+                            transportations.length > 0 && transportations.map(transportation => {
                                 return <option value={transportation}>{transportation}</option>;
                             })
                         }

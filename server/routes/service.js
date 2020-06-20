@@ -25,5 +25,7 @@ router.patch('/:serviceOwnerID/rates', serviceController.saveRate);
 
 router.get('/:id/reviews', serviceOwnerController.reviews);
 
+router.get('/:id/rate', serviceController.getUserRateForOrder);
+
 
 module.exports = router;
