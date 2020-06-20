@@ -7,9 +7,11 @@ import { Router, Switch, Route } from 'react-router-dom'
 import CreateProduct from './components/product owner/createProduct'
 import UpdateProduct from './components/product owner/updateProduct'
 import ListProducts  from './components/product owner/listProducts';
+import Connections from './components/product owner/connection';
 import Register from "./components/auth/Register";
 import AdminLogin from "./components/admin/adminLogin";
 import UserNavBar from "./components/user/userNavBar";
+/*** Service owners */
 import ServiceOwnerOrders from './components/service owner/orders';
 /**
  * Admin NavBar Ya adham :)
@@ -27,6 +29,8 @@ function App() {
         {/* <NavBar/> */}
 
         <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
+
+        <Route exact path="/product-owner/connections" component={Connections} />
 
         <div className="container">
           
