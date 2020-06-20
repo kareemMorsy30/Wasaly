@@ -3,6 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import {Link} from "react-router-dom";
 import Table from '../table';
+import Modal from './modal';
 import Alert from '../alerts/alert';
 import { allRequests, updateOrderStatus } from '../../endpoints/serviceOwners';
 import { handleSuccess } from '../../errors/handleAlerts';
@@ -52,7 +53,7 @@ const ServiceOwnerOrders = (props) => {
             }
             </div>
             <div className="card_two">
-                <Table cols={cols} data={orders} editUrl="/admin/books/edit" options={[options, changeOption]}/>
+                <Table cols={cols} data={orders} options={[options, changeOption]}><Modal /></Table>
             </div>
         </>
     )
