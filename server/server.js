@@ -80,7 +80,7 @@ app.get('/', (req, res) =>{
 app.use('/search', searchRouter)
 app.use('/product', productRouter)
 app.use('/orders', OrderRouter)
-app.use('/categories', CategoryRouter)
+// app.use('/category', CategoryRouter)
 
 
 /* --------------- Product owner routes -------------------------*/

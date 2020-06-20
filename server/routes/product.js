@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const {
-     createProduct, listProducts, updateProduct, deleteProduct, getProduct, deleteImage, saveImage, changeProductStatus
+     createProduct, listProducts, updateProduct,showCategoryProducts ,productDetails,deleteProduct, getProduct, deleteImage, saveImage, changeProductStatus
  } = require('../controllers/product')
 var multer = require('multer')
 const Product = require('../models/product')
@@ -21,8 +21,14 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage }).array('file')
 
+Auth(router);
+router.get('/categoryproducts',showCategoryProducts);
+
 
 Auth(router, productOwner);
+
+// productDetails
+router.get('/:id/ownerinfo', productDetails)
 
 router.get('/', listProducts)
 router.get('/categories', getAllCategories)

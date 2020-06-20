@@ -4,8 +4,10 @@ const { Auth } = require('../middlewares/Auth');
 const  category= require('../controllers/category');
 // Auth(router);
 
-router.get('/products/:id', category.showCategoryProducts);
-// router.post('/add',category.add);
+// router.get('/categoryproducts/:id', category.showCategoryProducts);
+router.post('/add',category.add);
+// router.post('/listcat',category.getAllCategories);
+
 
 
 module.exports = router

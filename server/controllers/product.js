@@ -1,7 +1,7 @@
 const Product = require('../models/product')
 const multer = require('multer')
 const fs = require("fs")
-const { Category } = require('../models/allModels')
+const { Category,productOwner } = require('../models/allModels')
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'public')
@@ -145,25 +145,43 @@ exports.saveImage = async (req, res, next) => {
     })
 
 }
+// Show product page details with product owner info
+exports.productDetails=  async(req, res)=>{
+    try {
+        const products = await Product.findById(req.params.id).populate('owner');
+        res.send(products);
+    } catch (error) {
+        // error=new Error("No products there ")
 
-// exports.categoryProducts=async (req,res,next)=>{
-//     const   category_id  =req.params.id;
-//     try {
-//          const  categoryProducts= await Product.find({:category_id})
-//     } catch (error) {
-        
+     res.send({error,id:req.params.id}).status(400);   
+    }
+   
+}
+// exports.showCategoryProducts=  async(req, res)=>{
+//         // try {
+//             const products = await Product.find({}).exec((err,data)=>{
+//                 if (err) {
+//                     return res.send(err);
+//                 }
+//             });
+//             res.send(products);
+//         // } catch (error) {
+//         //     // error=new Error("No products there ")
+    
+//         //  res.send({error}).status(400);   
+//         // }
+       
 //     }
     
-    
-// }
-// const allIncomingOrders = (req, res) => {
-//     const { user } = req;
-
-//     Order.find({service: user._id})
-//     .then(orders => {
-//         res.status(200).json(orders);
-//     })
-//     .catch(error => res.status(500).end());
-// }
 
 
+    exports.showCategoryProducts = async (req, res, next) => {
+
+        try {
+            const id = req.user._id
+            const products = await Product.find({ }).populate('category').populate('owner').exec()
+            res.json(products)
+        } catch (err) {
+            next(err)
+        }
+    }

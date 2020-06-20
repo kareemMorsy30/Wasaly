@@ -3,7 +3,6 @@ import axios from 'axios';
 export const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`;
 
 export const getAvailableTransportations = () => {
-    console.log(domain);
     const url = `${domain}/services/transportations`;
     return axios.get(url, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
