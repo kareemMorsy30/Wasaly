@@ -9,11 +9,8 @@ Auth(router, serviceOwner);
 // Check all incoming requests of customers
 router.get('/orders', serviceOwnerController.allIncomingOrders);
 
-// Accept order request
-router.get('/orders/:id/accept', serviceController.accept);
-
-// Reject order request
-router.get('/orders/:id/reject', serviceController.reject);
+// Update order status
+router.get('/orders/:id/:status', serviceController.updateOrderStatus);
 
 // Get service owner reviews
 router.get('/reviews', serviceOwnerController.reviews);
@@ -26,11 +23,6 @@ router.patch('/:id', serviceOwnerController.updateServiceOwner);
 
 //change status of service owner
 router.get('/:id/status',serviceOwnerController.changeStatus)
-// Ship order for delivery
-router.get('/orders/:id/out-for-delivery', serviceController.outForDelivery);
-
-// Reject order request
-router.get('/orders/:id/delivered', serviceController.delivered);
 
 // Retrieve product owners request details
 router.get('/product-owner', productOwnerController.productOwnerDetails);

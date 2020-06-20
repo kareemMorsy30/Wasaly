@@ -68,8 +68,8 @@ const cancel = (req, res) => {
         .catch(err => res.status(500).end());
 }
 
-const accept = (req, res) => {
-    changeOrderStatus(req.params.id, 'Accepted')
+const updateOrderStatus = (req, res) => {
+    changeOrderStatus(req.params.id, req.params.status)
         .then(order => {
             io.on('connection', (socket) => {
                 socket.emit(`notify:${order.customer.email && order.customer.email}`, { success: true, msg: `Congratulations! Your order is accepted` });
@@ -79,38 +79,6 @@ const accept = (req, res) => {
         .catch(err => res.status(500).end());
 }
 
-const reject = (req, res) => {
-    changeOrderStatus(req.params.id, 'Rejected')
-        .then(order => {
-            io.on('connection', (socket) => {
-                socket.emit(`notify:${order.customer.email && order.customer.email}`, { success: true, msg: `Sorry! Your order is rejected` });
-            });
-            res.status(200).json({ status: order.status })
-        })
-        .catch(err => res.status(500).end());
-}
-
-const outForDelivery = (req, res) => {
-    changeOrderStatus(req.params.id, 'Out for delivery')
-        .then(order => {
-            io.on('connection', (socket) => {
-                socket.emit(`notify:${order.customer.email && order.customer.email}`, { success: true, msg: `Your order is on his way to you` });
-            });
-            res.status(200).json({ status: order.status })
-        })
-        .catch(err => res.status(500).end());
-}
-
-const delivered = (req, res) => {
-    changeOrderStatus(req.params.id, 'Delivered')
-        .then(order => {
-            io.on('connection', (socket) => {
-                socket.emit(`notify:${order.customer.email && order.customer.email}`, { success: true, msg: `Order has been delivered! leave a rating on the service` });
-            });
-            res.status(200).json({ status: order.status })
-        })
-        .catch(err => res.status(500).end());
-}
 // save customer review to service owner
 const saveReview = async (req, res, next) => {
     const {user} = req
@@ -197,10 +165,7 @@ module.exports = {
     transportation,
     order,
     cancel,
-    accept,
-    reject,
-    outForDelivery,
-    delivered,
+    updateOrderStatus,
     saveReview,
     saveRate,
     getUserRateForOrder

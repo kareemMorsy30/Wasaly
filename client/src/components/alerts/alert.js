@@ -1,10 +1,10 @@
 import React from 'react';
 import '../../styles/alert.scss';
 
-const Alert = ({ message, type }) => {
+const Alert = ({ alert }) => {
     return (
-        <div className="alert-msg" style={{backgroundColor: type === 'success' && '#2ecc71'}}>
-            <p>{message}</p>
+        <div className="alert-msg" style={{backgroundColor: alert.success && '#2ecc71'}}>
+            <p>{alert.message}</p>
         </div>
     );
 };

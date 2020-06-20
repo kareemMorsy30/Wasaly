@@ -14,10 +14,10 @@ export const allRequests = () => {
     .catch(err => err);
 }
 
-export const updateOrderStatus = (id) => {
-    const url = `${domain}/orders/${id}/status`;
+export const updateOrderStatus = (id, status) => {
+    const url = `${domain}/service-owners/orders/${id}/${status}`;
 
-    return axios.post(url, {
+    return axios.get(url, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     })
     .then(res => {
