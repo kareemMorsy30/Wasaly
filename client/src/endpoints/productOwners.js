@@ -14,8 +14,8 @@ export const getUnConnectedOwners = () => {
     .catch(err => err);
 }
 
-export const connect = (serviceOwnerId) => {
-    const url = `${domain}/product-owners/connect`;
+export const connectAndDisconnect = (serviceOwnerId , type) => {
+    const url = `${domain}/product-owners/${type}`;
 
     return axios.patch(url, {
         serviceOwnerId
