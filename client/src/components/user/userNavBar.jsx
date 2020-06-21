@@ -70,33 +70,36 @@ const NavBar = (props) => {
     }, []);
     return (
         <Navbar color="light" light expand="md">
-            <NavbarBrand href="/">wasaly</NavbarBrand>
-            <NavbarToggler onClick={toggle} />
-            <Collapse isOpen={isOpen} navbar>
-                <Nav className="mr-auto" navbar>
-                    <NavItem>
-                        <Link className="nav-link" to="/">Home</Link>
-                    </NavItem>
-                    <NavItem>
-                        <Link className="nav-link" to="/products/list">Products</Link>
-                    </NavItem>
-                    <NavItem>
-                        <Link className="nav-link" to="/services">Services</Link>
-                    </NavItem>
-                    <NavItem>
-                        <Link className="nav-link" to="/users">users</Link>
-                    </NavItem>
-                    {
-                        isLoggedIn == false ? (
-                            <NavItem>
-                                <Login />
-                            </NavItem>
-                        ) : <Logout />
-                    }
-                </Nav>
+                <div className="container">
+                    <NavbarBrand href="/">wasaly</NavbarBrand>
+                    <NavbarToggler onClick={toggle} />
+                    <Collapse isOpen={isOpen} navbar>
+
+                    <Nav navbar>
+                        <NavItem>
+                            <Link className="nav-link" to="/">Home</Link>
+                        </NavItem>
+                        <NavItem>
+                            <Link className="nav-link" to="/products/list">Products</Link>
+                        </NavItem>
+                        <NavItem>
+                            <Link className="nav-link" to="/services">Services</Link>
+                        </NavItem>
+                        <NavItem>
+                            <Link className="nav-link" to="/users">users</Link>
+                        </NavItem>
+                        {
+                            isLoggedIn == false ? (
+                                <NavItem>
+                                    <Login />
+                                </NavItem>
+                            ) : <Logout />
+                        }
+                    </Nav>
+                     </Collapse>
+              
 
 
-            </Collapse>
             {/* <Form inline onSubmit={handleClick}>
                 <FormControl type="text" value={searchInput} onChange={handleSearchInput} placeholder="Search for product " className="mr-sm-2" />
                 <Link to={`/search/${searchInput}`}>
@@ -104,6 +107,7 @@ const NavBar = (props) => {
                 </Link>
             </Form> */}
             <Search/>
+            </div>
         </Navbar>
     );
 };

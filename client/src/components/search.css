@@ -4,6 +4,7 @@
   min-width: 100%;
   border: 1px solid #fff;
   z-index: 1;
+  
 }
 .dropdown input{
   min-width: 2rem;
@@ -12,6 +13,7 @@
 .dropdown {
   position: relative;
   display: inline-block;
+  margin-right: 10px;
 }
 .dropdown-content a {
   color: black;

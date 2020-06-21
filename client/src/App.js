@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Search from './components/search';
@@ -6,9 +6,9 @@ import { Router, Switch, Route } from 'react-router-dom'
 // import NavBar from './components/navbar'
 import CreateProduct from './components/product owner/createProduct'
 import UpdateProduct from './components/product owner/updateProduct'
-import ListProducts  from './components/product owner/listProducts';
+import ListProducts from './components/product owner/listProducts';
 import Connections from './components/product owner/connection';
-import ListCatProducts  from './components/product owner/CategoryProducts';
+import ListCatProducts from './components/product owner/CategoryProducts';
 import Register from "./components/auth/Register";
 import AdminLogin from "./components/admin/adminLogin";
 import UserNavBar from "./components/user/userNavBar";
@@ -22,44 +22,45 @@ import ServiceOrderForm from './components/customer/serviceForm';
 // import Delivery from './components/customer/delivery';
 import Category from './components/Category';
 import Delivery from './components/customer/delivery';
-import Order  from './components/user/orders';
+import Order from './components/user/orders';
 import OrderDetails from './components/user/orderDetails'
-
+import LandingPage from './pages/landingPage'
 
 function App() {
   return (
+
+    <div>
+      {/* <NavBar/> */}
+
+      <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
+
+      <Route exact path="/product-owner/connections" component={Connections} />
+
     
-      <div>
-        {/* <NavBar/> */}
 
-        <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
+        <Switch>
+          <Route exact path="/products" component={ListProducts} />
+          <Route exact path="/products/create" component={CreateProduct} />
+          <Route exact path="/products/:id/edit" component={UpdateProduct} />
+          <Route exact path="/admin">
+            <NavBar />
+            <AdminLogin />
+          </Route>
+          <Route exact path="/register" component={Register} />
 
-        <Route exact path="/product-owner/connections" component={Connections} />
+          <Route exact path="/" component={LandingPage} />
+            {/* <UserNavBar /> */}
+            {/* <Route exact path="/" component={Delivery} /> */}
 
-        <div className="container">
-          
-          <Switch>
-            <Route exact path="/products" component={ListProducts} />
-            <Route exact path="/products/create" component={CreateProduct} />
-            <Route exact path="/products/:id/edit" component={UpdateProduct} />
-            <Route exact path="/admin">
-                <NavBar />
-                <AdminLogin />
+
+
+            <div className="container">
+            <Route exact path="/test" >
+              < Category />
             </Route>
-            <Route exact path="/register" component={ Register } />
-
-                <Route exact path="/" >
-                    <UserNavBar />
-                    {/* <Route exact path="/" component={Delivery} /> */}
-
-                </Route>
-
-              <Route exact path="/test" >
-                    < Category/>
-                </Route>
             <Route exact path="/sO" component={ServiceOrderForm} />
             {/* <Route exact path="/" component={Delivery} /> */}
-           
+
             <Route exact path="/orders" component={Order} />
             <Route exact path="/orders/:id" component={OrderDetails} />
             <Route exact path="/categoryproducts/:id" component={ListCatProducts} />
@@ -73,8 +74,8 @@ function App() {
        </div> 
        
            }/> */}
-          </Switch>
         </div>
+          </Switch>
       </div>
 
    
