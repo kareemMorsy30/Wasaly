@@ -103,7 +103,7 @@ userController.login = async (request, response, next) => {
                 //expiration
                 const expire = process.env.expirationDate;
                 //for now just id but we can pass all the user object {sub:user._id}
-                const token = jwt.sign({ _id: user._id }, secret, {
+                const token = jwt.sign({ _id: user._id, role: user.role }, secret, {
                     expiresIn: expire,
                 });
                 /**
