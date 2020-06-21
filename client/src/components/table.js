@@ -4,9 +4,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ReactStars from 'react-rating-stars-component';
 import { Link } from 'react-router-dom';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-const Table = ({ cols, data, editUrl, delUrl, del, options, button, children }) => {
+const Table = ({ cols, data, editUrl, delUrl, del, options, Button, children }) => {
     const [modal, setModal] = useState(false);
     const [record, setRecord] = useState(null);
 
@@ -31,12 +31,12 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, button, children }) 
                 </tr>
             </thead>
             <tbody>
-                {data.map((record) => {
+                {data.length && data.map((record) => {
                     return (
-                        <tr key={record._id} onClick={() => toggle(record)}>
+                        <tr key={record._id}>
                             {cols.map((col, id) => {
                                 return (
-                                    <td key={id}>
+                                    <td key={id} onClick={() => toggle(record)}>
                                         { col === "image"?
                                             <img style={{width: "50px", height: "50px"}} src= {typeof record[col] == 'object' && record[col] != null
                                                 ? 
@@ -87,9 +87,9 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, button, children }) 
                                 </select>
                             </td>
                             :
-                            button ?
+                            Button ?
                             <td className="actions">
-                                <button className="submit-btn request-del-btn" onClick={event => button.onClick(event, record._id)}>{button.name}</button>
+                                <Button record={record}/>
                             </td>
                             :
                             <td className="actions">
