@@ -23,7 +23,7 @@ const LandingPage = () => {
 
     return (
         <>
-            <UserNavBar />
+            {/* <UserNavBar />
             <SideNav
                 onSelect={(selected) => {
                     // Add your code here
@@ -58,7 +58,7 @@ const LandingPage = () => {
                     
                     </NavItem>
                 </SideNav.Nav>
-            </SideNav>
+            </SideNav> */}
 
             <div className="container">
                 <Delivery />

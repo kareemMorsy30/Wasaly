@@ -11,7 +11,7 @@ import Connections from './components/product owner/connection';
 import ListCatProducts from './components/product owner/CategoryProducts';
 import Register from "./components/auth/Register";
 import AdminLogin from "./components/admin/adminLogin";
-import UserNavBar from "./components/user/userNavBar";
+import UserAndCustomerNavBar from "./components/customer/navbar";
 /*** Service owners */
 import ServiceOwnerOrders from './components/service owner/orders';
 /**
@@ -25,6 +25,8 @@ import Delivery from './components/customer/delivery';
 import Order from './components/user/orders';
 import OrderDetails from './components/user/orderDetails'
 import LandingPage from './pages/landingPage'
+import {isUser, isCustomer} from './services/authServices'
+import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 
 function App() {
   return (
@@ -35,8 +37,11 @@ function App() {
       <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
 
       <Route exact path="/product-owner/connections" component={Connections} />
+   
+      {isUser() || isCustomer() ?
+        <UserAndCustomerNavBar/>:''  
+      }
 
-    
 
         <Switch>
           <Route exact path="/products" component={ListProducts} />
