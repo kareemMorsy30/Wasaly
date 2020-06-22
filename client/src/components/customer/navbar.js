@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import {Link} from 'react-router-dom'
 import UserNavBar from "../user/userNavBar";
 import axios from 'axios'
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
+import {isUser} from '../../services/authServices'
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
@@ -34,10 +36,20 @@ const NavBar = () => {
                             <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em' }} />
                         </NavIcon>
                         <NavText>
-                            Home
+                        <Link to='/'> Home</Link>
                       </NavText>
                     </NavItem>
-                    <NavItem eventKey="charts">
+                    { isUser()&&
+                        <NavItem eventKey="Orders">
+                            <NavIcon>
+                                <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em' }} />
+                            </NavIcon>
+                            <NavText>
+                               <Link to='orders'> Track Orders</Link>
+                        </NavText>
+                        </NavItem>
+                    }
+                    <NavItem eventKey="categories">
                         <NavIcon>
                             <i className="fa fa-fw fa-line-chart" style={{ fontSize: '1.75em' }} />
                         </NavIcon>

@@ -27,6 +27,8 @@ import OrderDetails from './components/user/orderDetails'
 import LandingPage from './pages/landingPage'
 import {isUser, isCustomer} from './services/authServices'
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
+import SearchResults from './pages/searchResults'
+
 
 function App() {
   return (
@@ -58,7 +60,7 @@ function App() {
             {/* <Route exact path="/" component={Delivery} /> */}
 
 
-
+          <Route exact path="/search/:id" component={SearchResults}/>
             <div className="container">
             <Route exact path="/test" >
               < Category />

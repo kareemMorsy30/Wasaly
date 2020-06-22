@@ -13,7 +13,7 @@ const isServiceOwner=()=>{
 }
 const isUser=()=>{
     const user= JSON.parse(localStorage.getItem('user'));
-    return user.role?  user.role=="customer"? true: false : false
+    return user&&user.role? user.role=="customer"? true: false : false
 }
 const isCustomer=()=>{
     const user= JSON.parse(localStorage.getItem('user'));
