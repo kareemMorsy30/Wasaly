@@ -155,7 +155,7 @@ const updateConnection = (req, res) => {
     const { user } = req;
     
     ServiceOwner.findOneAndUpdate({user: user._id}, {
-        'productOwner.status': status === 'accept' ? 'Connected' : 'Not Connected'
+        'productOwner.status': status === 'accept' ? 'Connected' : 'Not connected'
     }, { new: true })
     .then(owner => res.status(200).json({status: owner.productOwner.status}))
     .catch(error => res.status(500).end());
