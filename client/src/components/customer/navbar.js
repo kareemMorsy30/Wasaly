@@ -7,10 +7,13 @@ import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import {isUser} from '../../services/authServices'
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
+var styles={
+    'background-color': 'rgba(76, 175, 80, 0)'
+}
 
 const NavBar = () => {
     const [categories, setCategories] = useState([])
-
+    const [sideBarColor, setSideBarColor]= useState({  'background-color': 'rgba(76, 175, 80, 0)'})
     useEffect(() => {
         axios.get(`${domain}/customers/categories`).
             then((res) => {
@@ -23,17 +26,22 @@ const NavBar = () => {
 
     return (
         <>
-            <UserNavBar />
-            <SideNav
+            <UserNavBar/>
+            <SideNav            
+                style={sideBarColor}
+                onToggle={(expanded)=>
+                    expanded ? setSideBarColor({'background-color': 'rgb(219, 61, 68)'}) :   setSideBarColor({'background-color':  'rgba(76, 175, 80, 0)'})
+                }
                 onSelect={(selected) => {
                     // Add your code here
-                }}
+                }}            
             >
                 <SideNav.Toggle />
-                <SideNav.Nav defaultSelected="home">
+                <SideNav.Nav  >
                     <NavItem eventKey="home">
                         <NavIcon>
-                            <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em' }} />
+                     
+                            <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em', color:'red'}} />
                         </NavIcon>
                         <NavText>
                         <Link to='/'> Home</Link>

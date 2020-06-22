@@ -69,7 +69,7 @@ const NavBar = (props) => {
         })();
     }, []);
     return (
-        <Navbar color="light" light expand="md">
+        <Navbar color="light" light expand="md" >
                 <div className="container">
                     <NavbarBrand href="/">wasaly</NavbarBrand>
                     <NavbarToggler onClick={toggle} />

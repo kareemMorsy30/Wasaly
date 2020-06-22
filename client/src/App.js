@@ -26,23 +26,24 @@ import Order from './components/user/orders';
 import OrderDetails from './components/user/orderDetails'
 import LandingPage from './pages/landingPage'
 import {isUser, isCustomer} from './services/authServices'
-import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import SearchResults from './pages/searchResults'
-
+import FooterPage from './components/footer'
 
 function App() {
   return (
 
-    <div>
+    <div style={{height:'100%', display:'flex', flexDirection:'column'}}>
       {/* <NavBar/> */}
+
+      {isUser() || isCustomer() ?
+        <UserAndCustomerNavBar/>:''  
+      }
+      <div style={{  flex: '1 0 auto', marginTop:'12vh'}}>
 
       <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
 
       <Route exact path="/product-owner/connections" component={Connections} />
    
-      {isUser() || isCustomer() ?
-        <UserAndCustomerNavBar/>:''  
-      }
 
 
         <Switch>
@@ -81,8 +82,11 @@ function App() {
        </div> 
        
            }/> */}
-        </div>
+
+          </div>
           </Switch>
+          </div>
+           <FooterPage/>
       </div>
 
    
