@@ -28,8 +28,11 @@ const Login = (props) => {
                 password: passwordInput
             }
         }).then((response) => {
-            const { token } = response.data;
+            const { token, user } = response.data;         
             localStorage.setItem("token", token);
+
+            console.log(user)
+            localStorage.setItem("user", JSON.stringify(user));
             window.location.href = "http://localhost:3000/";
         }, (error) => {
             console.log(error);

@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/table.scss';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import ReactStars from 'react-rating-stars-component';
 import { Link } from 'react-router-dom';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-const Table = ({ cols, data, editUrl, delUrl, del, options }) => {
+const Table = ({ cols, data, editUrl, delUrl, del, options, Button, children }) => {
     const [modal, setModal] = useState(false);
-    const [order, setOrder] = useState(null);
+    const [record, setRecord] = useState(null);
+
+    useEffect(() => {}, [data])
 
     const toggle = (record) => {
         setModal(!modal)
-        setOrder(record);
+        setRecord(record);
         console.log(record);
     };
     
@@ -21,26 +24,36 @@ const Table = ({ cols, data, editUrl, delUrl, del, options }) => {
                 <tr>
                     {cols.map((col, id) => {
                         return (
-                            <th key={id}>{Array.isArray(col) ? col[0] : col}</th>
+                            <th key={id}>{Array.isArray(col) ? col[0].toUpperCase() : col.toUpperCase()}</th>
                         );
                     })}
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {data.map((record) => {
+                {data.length && data.map((record) => {
                     return (
-                        <tr key={record._id} onClick={() => toggle(record)}>
+                        <tr key={record._id}>
                             {cols.map((col, id) => {
                                 return (
-                                    <td key={id}>
+                                    <td key={id} onClick={() => toggle(record)}>
                                         { col === "image"?
                                             <img style={{width: "50px", height: "50px"}} src= {typeof record[col] == 'object' && record[col] != null
                                                 ? 
                                                 "http://localhost:5000/"+record[col]                                               :
                                                 record[col] == 0 ? "-" : "http://localhost:5000/"+record[col]
                                             }/>
-                                            : Array.isArray(col)
+                                            : 
+                                            col === "rating" ?
+                                            <ReactStars className="rating"
+                                                count={5}
+                                                size={25}
+                                                value={record[col]}
+                                                edit={false}
+                                                color2={'#F99A3D'} 
+                                            />
+                                            :
+                                            Array.isArray(col)
                                                 ? 
                                                 record[col[0]][col[1]]
                                                 : 
@@ -56,15 +69,27 @@ const Table = ({ cols, data, editUrl, delUrl, del, options }) => {
                             <td>
                                 <select name="category" id="category" onChange={event => options[1](event, record._id)}>
                                     {
+                                        record.status === 'Canceled' ?
+                                        <option disabled selected>Canceled</option>
+                                        :
                                         options[0].map(option => {
                                             return option === record.status
                                             ?
                                             <option disabled selected value={option}>{option}</option>
                                             :
+                                            ['Accepted'].includes(record.status) && ['Pending', 'Canceled', 'Rejected'].includes(option) ? 
+                                            <option disabled value={option}>{option}</option>
+                                            :
+                                            !['Rejected'].includes(record.status) &&
                                             <option value={option}>{option}</option>
                                         })
                                     }
                                 </select>
+                            </td>
+                            :
+                            Button ?
+                            <td className="actions">
+                                <Button record={record}/>
                             </td>
                             :
                             <td className="actions">
@@ -89,32 +114,11 @@ const Table = ({ cols, data, editUrl, delUrl, del, options }) => {
                         </tr>
                     );
                 })}
-                {order 
+                {record 
                 && 
+                children && 
                 <Modal isOpen={modal} toggle={toggle} className="test">
-                    <ModalHeader toggle={toggle}>{order.customer && order.customer.name}</ModalHeader>
-                    <ModalBody>
-                        <div className="body-section">
-                            <div className="image-section">
-                                <img className="user-profile" src={order.customer && order.customer.image_path ? order.customer.image_path : "../../img/user.png"}/>
-                            </div>
-                            <div className="details-section">
-                                <label>Username</label>
-                                <input type="text" placeholder="From" value={order.customer && order.customer.username} readOnly/>
-                                <label>Email</label>
-                                <input type="text" placeholder="To" value={order.customer && order.customer.email} readOnly/>
-                                <label>Phone</label>
-                                <input type="text" placeholder="To" value={order.customer && order.customer.phones[0]} readOnly/>
-                                <label>Address</label>
-                                <input type="text" placeholder="Address" value={order.customer && order.customer.address.length > 0 && order.customer.address[0].area && `${order.customer.address[0].area} ${order.customer.address[0].city}`} readOnly/>
-                            </div>
-                        </div>
-                    
-                        <hr></hr>
-                        <div className="description-section">
-                            <textarea placeholder="More info" value={order.description} readOnly/>
-                        </div>
-                    </ModalBody>
+                        {React.cloneElement(children, { record })}
                 </Modal>
                 }
             </tbody>

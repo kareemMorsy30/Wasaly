@@ -30,7 +30,7 @@ storage,
 fileFilter
 });
 
-Auth(router, adminAuth);
+// Auth(router, adminAuth);
 
 // Retrieve all service owners
 router.get('/service-owners', serviceOwnerController.all);

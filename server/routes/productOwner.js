@@ -10,8 +10,14 @@ Auth(router, productOwner);
 // Product owner can list all unconnected service owners
 router.get('/idle', serviceOwnerController.allIdle);
 
+// Product owner can list all available service owners
+router.get('/service-owners/all', serviceOwnerController.all);
+
 // Product owner connect to one of service owners
 router.patch('/connect', productOwnerController.connect);
+
+// Product owner disconnect of one of service owners
+router.patch('/disconnect', productOwnerController.disconnect);
 
 // get all product owners
 router.get('', productOwnerController.getAllproductsOwner);

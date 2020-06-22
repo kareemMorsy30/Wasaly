@@ -1,0 +1,29 @@
+@import "./src/styles/main";
+
+.left-card {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    flex-grow: 1;
+    padding: 0;
+}
+
+.book-img {
+    display: block;
+    height: 180px;
+    width: 200px;
+    padding: 2%;
+}
+
+.shelve-options {
+    width: 200px;
+    height: 25px;
+    padding: 0px 0px 0px 10px;
+    background-color: $color_primary;
+    color: white;
+}
+
+.shelve-options:focus {
+    background-color: $color_accent;
+}

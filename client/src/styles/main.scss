@@ -1,7 +1,7 @@
 $color_primary: #FF0038;
 $color_primary_light: #FD6A62;
 $color_primary_lighter: #FEC6AC;
-$color_primary_dark: rgb(196, 0, 42);
+$color_primary_dark: #c4002a;
 $color_primary_darker: #990015;
 $color_accent: #151515;
 $color_accent_light: #413F4A;
@@ -19,4 +19,48 @@ body, html{
   height: 100%;
   width: 100%;
 
+}
+.sidenav---sidenav---_2tBP{
+  position: fixed !important;
+}
+
+// .navbar-collapse{
+//   justify-content: center;
+// }
+
+.navbar-expand-md .navbar-collapse{
+  justify-content: center;
+  align-items: center;
+  // background-color: #2E2E2E;
+}
+.navbar{
+  background-color: #2E2E2E !important;
+  color: white !important;
+  position: fixed;
+  width: 100vw;
+  z-index: 2;
+  opacity: 0.9;
+}
+
+@media (min-width: 1200px){
+
+  .container, .container-lg, .container-md, .container-sm, .container-xl {
+      max-width: 1400px;
+  }
+}
+
+.btn-card{
+  color: #fff;
+  background-color: #FD6A62;
+  border-color: #FD6A62;
+}
+
+.page-footer{
+  background-color: #2E2E2E;
+  flex-shrink: 0;
+  color:white  
+}
+
+.nav-link, .nav-item, .navbar-toggler-icon,.navbar-brand{
+  color:white !important;
 }

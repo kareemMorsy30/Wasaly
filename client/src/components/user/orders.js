@@ -3,7 +3,7 @@ import axios from 'axios'
 import { authHeader } from '../config/config'
 import {Link} from 'react-router-dom'
 import RateService from '../rateService'
-
+import '../../styles/order.scss'
 const Order=()=>{
     const[orders,setOrders]= useState([])
     const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
@@ -20,10 +20,11 @@ const Order=()=>{
 
     return(
         <>
-        <h1>order page</h1>
+
+        <div className="container" style={{marginTop:'50px'}}>
+              <h2 style={{width:'80%', padding:' 10px', margin: '10px auto'}}>Track Your Orders</h2>
         {orders.map(order=>
-            <div className="container">
-                <div className="row">
+                <div className="row order">
                     <div className="col-3">
                        { order._id}
                     </div>
@@ -38,8 +39,8 @@ const Order=()=>{
                       <RateService serviceId={order.service} rate={order.rate.rating} order={order._id}/>
                     </div>
                 </div>
-            </div>
         )}
+        </div>
         </>
     )
 
