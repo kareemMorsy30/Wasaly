@@ -1,46 +1,50 @@
-import React, { useState, useEffect } from 'react'
-import { Card, Button} from 'react-bootstrap'
-
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { Card, Button } from 'react-bootstrap'
+import useProductSearch from '../components/hooks/useProductSearch'
 import axios from 'axios'
+import ShowProducts from '../components/showProducts'
 import {
-    BrowserRouter as Router,
-    Switch,
-    useParams,
-    useLocation
-  } from "react-router-dom";
-  
+  BrowserRouter as Router,
+  useParams,
+} from "react-router-dom";
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
 const SearchResults = () => {
-    const {state:{products}}= useLocation()
-    console.log(products)
-    return (
-        <>
-        <div className="container" style={{width:'60%', marginTop:"50px"}}>
-        <div className="row">
+  const [pageNumber, setPageNumber] = useState(1);
+  const { id } = useParams()
+  const {
+    products,
+    hasMore,
+    loading,
+    error
+  } = useProductSearch(id, pageNumber)
 
-    
-          
-         {products&& products.map((product)=>
-             <Card style={{ width: '20rem', marginTop:'10px' }}>
-             <Card.Img variant="top" src={`${domain}/${product.images_path[0]}`} style={{width:'90%', margin:'auto', marginTop:'10px'}}/>
-             <Card.Body>
-               <Card.Title>{product.name}</Card.Title>
-               <Card.Text>
-                {product.description}
-               </Card.Text>
-               <div style={{display:'flex', 'justify-content': 'space-around'}}>
-                    <Button variant="danger" className="btn-card" >View</Button>
-                    <Button variant="danger"  className="btn-card">Add to Cart</Button>
-               </div>
-             </Card.Body>
-           </Card>
-         )}
-         </div>
-        </div>
-        </>
-    )
+  const observer = useRef()
+  
+  const lastProductElementRef = useCallback(node => {
+    if (loading) return
+    if (observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPageNumber(prevPageNumber => prevPageNumber + 1)
+      }
+    })
+    if (node) observer.current.observe(node)
+  }, [loading, hasMore])
+
+  return (
+    <>
+
+      {products &&
+        <ShowProducts products={products} lastProductElementRef={lastProductElementRef} />
+      }
+
+      <div>{loading && 'Loading ...'}</div>
+      <div>{error && 'Error'}</div>
+    </>
+
+  )
 
 }
 
