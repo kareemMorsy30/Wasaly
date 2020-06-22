@@ -47,6 +47,8 @@ const Authentication = (props) => {
     const [address, setInputFields] = useState([ ]);
     const [phones, setphones] = useState([])
    
+  
+
     const removePhone = (id) => {
         return (e) => {
             setphones(phones.filter((phone, index) => {
@@ -54,6 +56,9 @@ const Authentication = (props) => {
             }))
         }
     }
+
+
+
 
 
 
@@ -77,6 +82,9 @@ const Authentication = (props) => {
 
     };
 
+        
+
+  
     const handleAddFields = () => {
         const values = [...address];
         values.push({ street: '', city: '', area: '', location: { latitude, longitude } });
@@ -406,7 +414,6 @@ const Authentication = (props) => {
                     />
 
                 </FormGroup>
-
 
                 <div className="phones-card">
                     {phones.map((phone, index) => {
