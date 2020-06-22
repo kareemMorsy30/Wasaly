@@ -25,7 +25,7 @@ const DropDown = (props) => {
                             <div className="suggestion">
                                 <Link style={{ textDecoration: "none" }}
                                 to={{
-                                    pathname: to,                                    
+                                    pathname: `/search/${option[fieldName]}`,                                    
                                     state: { products: options }
                                 }}
                                 onClick={()=>setOptions('')}

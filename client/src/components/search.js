@@ -16,7 +16,7 @@ const Search = () => {
         if (searchInput.length > 1) {
             axios.get(`${domain}/search/suggestion`, {
                 params: {
-                    q: searchInput
+                    q: searchInput,
                 }
             })
                 .then(function (response) {
@@ -38,8 +38,7 @@ const Search = () => {
             setSuggestedProducts([])
             setSearchInput("") 
         }
-        else{  
-          
+        else{            
             setSearchInput(e.target.value)
         }
     }

@@ -8,12 +8,12 @@ import {isUser} from '../../services/authServices'
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 var styles={
-    'background-color': 'rgba(76, 175, 80, 0)'
+    'backgroundColor': 'rgba(76, 175, 80, 0)'
 }
 
 const NavBar = () => {
     const [categories, setCategories] = useState([])
-    const [sideBarColor, setSideBarColor]= useState({  'background-color': 'rgba(76, 175, 80, 0)'})
+    const [sideBarColor, setSideBarColor]= useState({  'backgroundColor': 'rgba(76, 175, 80, 0)'})
     useEffect(() => {
         axios.get(`${domain}/customers/categories`).
             then((res) => {
@@ -30,7 +30,7 @@ const NavBar = () => {
             <SideNav            
                 style={sideBarColor}
                 onToggle={(expanded)=>
-                    expanded ? setSideBarColor({'background-color': 'rgb(219, 61, 68)'}) :   setSideBarColor({'background-color':  'rgba(76, 175, 80, 0)'})
+                    expanded ? setSideBarColor({'backgroundColor': 'rgb(219, 61, 68)'}) :   setSideBarColor({'backgroundColor':  'rgba(76, 175, 80, 0)'})
                 }
                 onSelect={(selected) => {
                     // Add your code here
@@ -66,7 +66,7 @@ const NavBar = () => {
                        </NavText>
 
                         {categories.length > 0 && categories.map((category) =>
-                            <NavItem eventKey="charts/linechart">
+                            <NavItem eventKey="charts/linechart" key={category.name}>
                                 <NavText>
                                     {category.name}
                                 </NavText>
