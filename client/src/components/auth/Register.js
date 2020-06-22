@@ -230,7 +230,7 @@ console.log('====================================');
 
                         //Should logged in first by history.push what is the route ?
 
-                        // history.push("/");
+                        history.push("/");
 
                         // window.location = "http://localhost:3000/home";
 
@@ -300,7 +300,7 @@ console.log('====================================');
 
                         //Should logged in first by history.push what is the route ?
 
-                        history.push("/products/list");
+                        history.push("/");
 
                         // window.location = "http://localhost:3000/home";
 
@@ -409,7 +409,8 @@ console.log('====================================');
           
                 <div className="phones-card">
                     {phones.map((phone, index) => {
-                        return (<div key={index}><input className="form-input" placeholder="Phone" value={phone}
+                        return (<div key={index}>
+                        <input className="form-input" placeholder="Phone" value={phone}
                             onChange={handleChangePhone(index)} />
                             {
                                 <Button size="sm" id={index} onClick={removePhone(index)} >Remove Phone </Button>}</div>)
