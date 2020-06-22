@@ -13,7 +13,7 @@ import { Form, FormControl } from 'react-bootstrap';
 
 import { Link } from 'react-router-dom';
 import axios from "axios";
-import Login from "../login";
+// import Login from "../login";
 import Logout from "../user/logout";
 import Search from "../search"
 
@@ -91,7 +91,7 @@ const NavBar = (props) => {
                         {
                             isLoggedIn == false ? (
                                 <NavItem>
-                                    <Login />
+                                    {/* <Login /> */}
                                 </NavItem>
                             ) : <Logout />
                         }

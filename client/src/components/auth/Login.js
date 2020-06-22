@@ -48,31 +48,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AdminLogin() {
-    const [emailInput, setEmailInput] = useState('');
-        const [passwordInput, setPasswordInput] = useState('');
-        const [isLoggedIn, setIsLoggedIn] = useState(false);
-        const [loginMsg, setLoginMsg] = useState('');
-  const classes = useStyles();
-  
-    useEffect(() => {
-        (async function () {
-            try {
-                let response = await axios.get("http://localhost:5000/users/admin", {
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem("token")
-                    }
-                }).then((response) => {
-                    if (response.data.status === 200) {
-                        setIsLoggedIn(true);
-                    }
-                });
+export default function Login() {
 
-            } catch (error) {
-                console.log(error);
-            }
-        })();
-    }, []);
+     const [emailInput, setEmailInput] = useState('');
+    const [passwordInput, setPasswordInput] = useState('');
+    const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const hanleEmailChange = (e) => {
         const { target: { value } } = e;
@@ -88,37 +69,55 @@ export default function AdminLogin() {
         e.preventDefault();
         axios({
             method: 'post',
-            url: 'http://localhost:5000/users/login',
+            url: `${domain}/users/login`,
             data: {
                 email: emailInput,
                 password: passwordInput
             }
         }).then((response) => {
-            const { token } = response.data;
-            console.log("response", response.data)
-            if (response.data.user.role == 'admin') {
-                localStorage.setItem("token", token);
-                window.location.href = "http://localhost:3000/admin";
-                console.log('====================================');
-                console.log(response.data.user.role.admin );
-                console.log('====================================');
-            }
-            else {
-                setLoginMsg("You are not authorized to login to admin panel...");
-                console.log("not admin...");
-            }
+            const { token, user } = response.data;         
+            localStorage.setItem("token", token);
 
+            console.log(user)
+            localStorage.setItem("user", JSON.stringify(user));
+            window.location.href = "http://localhost:3000/";
         }, (error) => {
-            setLoginMsg("Email or Password is incorrect...");
             console.log(error);
         });
 
         setEmailInput('');
         setPasswordInput('');
     }
+ 
+  const classes = useStyles();
+  useEffect(() => {
+    (async function () {
+        try {
+            let response = await axios.get(
+                `${domain}/users/logincheck`, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("token")
+                }
+            }
+            ).then((response) => {
+                console.log('====================================');
+                console.log("Response  ::  ",response);
+                console.log('====================================');
+                if (response.status === 200) {
+                    setIsLoggedIn(true);
+                    sessionStorage.setItem("user", JSON.stringify(response.data.user));
+                    sessionStorage.setItem("loggedIn", JSON.stringify(true));
+                }
+            });
 
 
-    if (isLoggedIn == false) {
+        } catch (error) {
+            console.log("error is ...", error);
+        }
+    })();
+}, []);
+
+    // if (isLoggedIn == false) {
 
   return (
     <Container component="main" maxWidth="xs">
@@ -176,7 +175,7 @@ export default function AdminLogin() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/register" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
@@ -188,16 +187,16 @@ export default function AdminLogin() {
       </Box>
     </Container>
   );
-    }
-else{return (
-                <div className="container">
-                    <Jumbotron>
-                        <h1 style={{ textAlign: "center" }}><Badge color="secondary" >Welcome to Admin Panel</Badge></h1>
-                    </Jumbotron>
+    // }
+// else{return (
+//                 <div className="container">
+//                     <Jumbotron>
+//                         <h1 style={{ textAlign: "center" }}><Badge color="secondary" >Welcome to Admin Panel</Badge></h1>
+//                     </Jumbotron>
     
-                </div>
-            );
+//                 </div>
+//             );
 
-}
+// }
 
 }

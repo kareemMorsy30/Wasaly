@@ -40,18 +40,18 @@ const NavBar = (props) => {
 
     return (
         <Navbar color="light" light expand="md">
-            <NavbarBrand >itiReads</NavbarBrand>
+            <NavbarBrand >Wasaly Admin</NavbarBrand>
             <NavbarToggler onClick={toggle} />
             <Collapse isOpen={isOpen} navbar>
                 <Nav className="mr-auto" navbar>
                     <NavItem>
-                        <Link className="nav-link" to="/admin/categories">Categories</Link>
+                        <Link className="nav-link" to="/admin/categories">ProductOwners</Link>
                     </NavItem>
                     <NavItem>
-                        <Link className="nav-link" to="/admin/books">Books</Link>
+                        <Link className="nav-link" to="/admin/books">ServiceOwners</Link>
                     </NavItem>
                     <NavItem>
-                        <Link className="nav-link" to="/admin/authors">Authors</Link>
+                        <Link className="nav-link" to="/admin/authors">Users</Link>
                     </NavItem>
                 </Nav>
                 {console.log("is logged in : ", isLoggedIn)}
