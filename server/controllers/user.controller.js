@@ -133,6 +133,7 @@ userController.login = async (request, response, next) => {
             }
         });
     } catch (error) {
+        // res.send(error)
         next(error);
     }
 };

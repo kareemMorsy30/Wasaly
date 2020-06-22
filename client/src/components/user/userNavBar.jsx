@@ -42,32 +42,32 @@ const NavBar = (props) => {
     const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
 
-    useEffect(() => {
-        (async function () {
-            try {
-                let response = await axios.get(
-                    `${domain}/users/logincheck`, {
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem("token")
-                    }
-                }
-                ).then((response) => {
-                    console.log('====================================');
-                    console.log("Response  ::  ",response);
-                    console.log('====================================');
-                    if (response.status === 200) {
-                        setIsLoggedIn(true);
-                        sessionStorage.setItem("user", JSON.stringify(response.data.user));
-                        sessionStorage.setItem("loggedIn", JSON.stringify(true));
-                    }
-                });
+    // useEffect(() => {
+    //     (async function () {
+    //         try {
+    //             let response = await axios.get(
+    //                 `${domain}/users/logincheck`, {
+    //                 headers: {
+    //                     'Authorization': 'Bearer ' + localStorage.getItem("token")
+    //                 }
+    //             }
+    //             ).then((response) => {
+    //                 console.log('====================================');
+    //                 console.log("Response  ::  ",response);
+    //                 console.log('====================================');
+    //                 if (response.status === 200) {
+    //                     setIsLoggedIn(true);
+    //                     sessionStorage.setItem("user", JSON.stringify(response.data.user));
+    //                     sessionStorage.setItem("loggedIn", JSON.stringify(true));
+    //                 }
+    //             });
 
 
-            } catch (error) {
-                console.log("error is ...", error);
-            }
-        })();
-    }, []);
+    //         } catch (error) {
+    //             console.log("error is ...", error);
+    //         }
+    //     })();
+    // }, []);
     return (
         <Navbar color="light" light expand="md" >
                 <div className="container">

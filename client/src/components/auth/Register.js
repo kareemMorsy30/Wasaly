@@ -230,6 +230,7 @@ const Authentication = (props) => {
                         if (response.status == 250) {
 
                             // setErrorsRegister(response.message)
+                            
 
                         } else if (response.status == 200) {
 
@@ -237,7 +238,7 @@ const Authentication = (props) => {
 
                             //Should logged in first by history.push what is the route ?
 
-                            // history.push("/");
+                            history.push("/");
 
                             // window.location = "http://localhost:3000/home";
 
