@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { useInput } from './hooks/input-hooks';
 import axios from 'axios';
 import './Auth.css';
-import '../../styles/form.scss'
+// import '../../styles/form.scss'
 import { Link, useHistory } from "react-router-dom";
 import {
     Button,
