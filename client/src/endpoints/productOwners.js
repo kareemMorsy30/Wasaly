@@ -29,3 +29,15 @@ export const connectAndDisconnect = (serviceOwnerId , type) => {
     })
     .catch(err => err);
 }
+
+export const marketDetails = () => {
+    const url = `${domain}/service-owners/product-owner`;
+    return axios.get(url, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data)
+            return res.data;
+    })
+    .catch(err => err);
+}

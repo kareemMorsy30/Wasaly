@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import { faPlusCircle, faAddressBook, faWindowClose, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faUserFriends, faWindowClose, faUserSlash } from '@fortawesome/free-solid-svg-icons';
 import {Link} from "react-router-dom";
 import Table from '../table';
 import Modal from './modal';
@@ -37,7 +37,7 @@ const Connections = (props) => {
     const button = ({record}) => {
         if(record.productOwner.status === 'Not connected'){
             return (
-                <button className="submit-btn request-del-btn" onClick={event => connect(event, record, 'connect')}><FontAwesomeIcon icon={faAddressBook}/> Connect</button>
+                <button className="submit-btn request-del-btn" onClick={event => connect(event, record, 'connect')}><FontAwesomeIcon icon={faUserFriends}/> Connect</button>
             );
         }else if(record.productOwner.status === 'Pending'){
             return (
@@ -45,7 +45,7 @@ const Connections = (props) => {
             );
         }else if(record.productOwner.status === 'Connected'){
             return (
-                <button className="submit-btn request-del-btn" onClick={event => connect(event, record, 'disconnect')}><FontAwesomeIcon icon={faTrash}/> Remove</button>
+                <button className="submit-btn request-del-btn" onClick={event => connect(event, record, 'disconnect')}><FontAwesomeIcon icon={faUserSlash}/> Remove</button>
             );
         }
         
