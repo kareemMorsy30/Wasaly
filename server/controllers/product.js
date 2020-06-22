@@ -186,13 +186,13 @@ exports.productDetails=  async(req, res)=>{
     
 
 
-    exports.showCategoryProducts = async (req, res, next) => {
+    // exports.showCategoryProducts = async (req, res, next) => {
 
-        try {
-            const id = req.user._id
-            const products = await Product.find({ }).populate('category').populate('owner').exec()
-            res.json(products)
-        } catch (err) {
-            next(err)
-        }
-    }
+    //     try {
+    //         const id = req.user._id
+    //         const products = await Product.find({ }).populate('category').populate('owner').exec()
+    //         res.json(products)
+    //     } catch (err) {
+    //         next(err)
+    //     }
+    // }

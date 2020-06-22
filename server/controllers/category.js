@@ -23,17 +23,17 @@ const remove = (req, res) => {
     }).catch(error => console.log(error));
 
 }
-// const showCategoryProducts=  async(req, res)=>{
-//     try {
-//         const products = await Prod.findById(req.params.id).populate('products');
-//         res.send(products);
-//     } catch (error) {
-//         // error=new Error("No products there ")
+const showCategoryProducts=  async(req, res)=>{
+    try {
+        const products = await Prod.findById(req.params.id).populate('products');
+        res.send(products);
+    } catch (error) {
+        // error=new Error("No products there ")
 
-//      res.send({error,id:req.params.id}).status(400);   
-//     }
+     res.send({error,id:req.params.id}).status(400);   
+    }
    
-// }
+}
 
 const getAllCategories= async (req,res,next)=>{
     try{
@@ -47,6 +47,6 @@ const getAllCategories= async (req,res,next)=>{
 module.exports = {
     add,
     remove,
-    getAllCategories
-    // showCategoryProducts
+    getAllCategories,
+    showCategoryProducts
 }

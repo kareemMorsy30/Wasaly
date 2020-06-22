@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { useInput } from './hooks/input-hooks';
 import axios from 'axios';
 import './Auth.css';
+import '../../styles/form.scss'
 import { Link, useHistory } from "react-router-dom";
 import {
     Button,
@@ -403,7 +404,37 @@ const Authentication = (props) => {
 
             <hr />
 
-            <Form onSubmit={handleRegisterSubmit} >
+            <Form onSubmit={handleRegisterSubmit}  
+//             style={
+//                 {
+//   width: 98% !important;
+//   display: inline-block !important;
+// }
+  
+//   } 
+            >
+
+            <FormGroup>
+            <p className="class1" style={{color: '#c8c0d5'}}> Choose Your Account :</p>
+
+<Input type="select" name="role" id="exampleSelect"
+
+    {...bindrole}
+
+>
+    <option>customer</option>
+
+    <option>serviceowner</option>
+
+
+
+    <option>productowner</option>
+
+</Input>
+
+
+</FormGroup>
+
                 <FormGroup>
 
                     <Input type="text" name="name" placeholder="name"
@@ -412,70 +443,14 @@ const Authentication = (props) => {
 
                         {...bindname}
 
-                    />
+                    />*
 
                 </FormGroup>
-
-                <div className="phones-card">
-                    {phones.map((phone, index) => {
-                        return (<div key={index}>
-                        <input className="form-input" placeholder="Phone" value={phone}
-                            onChange={handleChangePhone(index)} />
-                            
-                            {
-                                <button
-                                   className="btn btn-link"
-                                   type="button"
-                                   onClick={removePhone(index)}
-                               >
-                                   Remove Phone
-                                 </button>
-                                                                
-                                
-                                }</div>
-                                
-                                
-                                )
-                    })}
-                    {
-                        // <Button size="sm" onClick={() => {
-                        //     setphones(phones.concat([""]))
-                        // }} >Add Phone</Button>
-                        
-                        <button
-                        className="btn btn-link"
-                        type="button"
-                        onClick={() =>  setphones(phones.concat([""]))}
-                    >
-                        Add Phone
-                      </button>
-                        }
-                </div>
-
-                <FormGroup>
-
-                    <Input type="select" name="role" id="exampleSelect"
-
-                        {...bindrole}
-
-                    >
-
-                        <option>serviceowner</option>
-
-                        <option>customer</option>
-
-
-                        <option>productowner</option>
-
-                    </Input>
-
-
-                </FormGroup>
-
+             
                 <FormGroup>
 
                     <Input type="text" name="username" placeholder="Username"
-
+required
                         pattern='[A-Za-z\\s]*'
 
                         {...bindUsernameRegister}
@@ -494,66 +469,8 @@ const Authentication = (props) => {
 
                 </FormGroup>
 
-                {
 
-                    console.log("Kareeem : ", address)
-                }
-
-
-                {address.length>0 && address.map((inputField, index) => (
-                    <Fragment key={`${inputField}~${index}`
-                    }>
-                        <FormGroup >
-                            <Label for="exampleAddress">Address</Label>
-                            <Input type="text" name="street" placeholder="street"
-                                pattern='[A-Za-z\\s]*'
-                                value={inputField.street}
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <Input type="text" name="city" placeholder="city"
-                                pattern='[A-Za-z\\s]*'
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <datalist id="from">
-                                <option key="source" value={city} />
-                            </datalist>
-                            <Input type="text" name="area" placeholder="area"
-                                pattern='[A-Za-z\\s]*'
-                                // {...bindaddress}
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <datalist id="from">
-                                <option key="source" value={area} />
-                            </datalist>
-                            <Input type="number" name="latitude" placeholder="latitude"
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <Input type="number" name="longitude" placeholder="longitude"
-                                onChange={event => handleInputChange(index, event)}
-                            />
-
-                        </FormGroup>
-
-                        <div className="form-group col-sm-2">
-                            <button
-                                className="btn btn-link"
-                                type="button"
-                                onClick={() => handleRemoveFields(index)}
-                            >
-                                removeAddress
-                </button>
-                        
-                        </div>
-                    </Fragment>
-                ))}
-
-                    <button
-                                className="btn btn-link"
-                                type="button"
-                                onClick={() => handleAddFields()}
-                            >
-                                Add Address
-                </button>
+            
                 <FormGroup>
                     <Input type="password" name="password" placeholder="password "
                         {...bindPasswordRegister}
@@ -615,6 +532,103 @@ const Authentication = (props) => {
                     </FormGroup>
                     : null
                 }
+                <p className="class1" style={{color: '#c8c0d5'}}> Add Optional Information :</p>
+
+                <FormGroup >
+                    {phones.map((phone, index) => {
+                        return (<div key={index}>
+                        <Input className="form-input" placeholder="Phone" value={phone}
+                            onChange={handleChangePhone(index)} />
+                            
+                            {
+                                <button
+                                   className="btn btn-link"
+                                   type="button"
+                                   onClick={removePhone(index)}
+                               >
+                                   Remove Phone
+                                 </button>
+                                                                
+                                
+                                }</div>
+                                
+                                
+                                )
+                    })}
+                    {
+                        // <Button size="sm" onClick={() => {
+                        //     setphones(phones.concat([""]))
+                        // }} >Add Phone</Button>
+                        
+                        <button
+                        className="btn btn-link"
+                        type="button"
+                        style={{height: '1px', width : '110px',padding:"0px"}}
+
+                        onClick={() =>  setphones(phones.concat([""]))}
+                    >
+                        Add Phone
+                      </button>
+                        }
+                </FormGroup>
+
+             
+                {address.length>0 && address.map((inputField, index) => (
+                    <Fragment key={`${inputField}~${index}`
+                    }>
+                        <FormGroup >
+                            <Label for="exampleAddress">Address</Label>
+                            <Input type="text" name="street" placeholder="street"
+                                pattern='[A-Za-z\\s]*'
+                                value={inputField.street}
+                                onChange={event => handleInputChange(index, event)}
+                            />
+                            <Input type="text" name="city" placeholder="city"
+                                pattern='[A-Za-z\\s]*'
+                                onChange={event => handleInputChange(index, event)}
+                            />
+                            <datalist id="from">
+                                <option key="source" value={city} />
+                            </datalist>
+                            <Input type="text" name="area" placeholder="area"
+                                pattern='[A-Za-z\\s]*'
+                                // {...bindaddress}
+                                onChange={event => handleInputChange(index, event)}
+                            />
+                            <datalist id="from">
+                                <option key="source" value={area} />
+                            </datalist>
+                            <Input type="number" name="latitude" placeholder="latitude"
+                                onChange={event => handleInputChange(index, event)}
+                            />
+                            <Input type="number" name="longitude" placeholder="longitude"
+                                onChange={event => handleInputChange(index, event)}
+                            />
+
+                        </FormGroup>
+
+                        <div className="form-group col-sm-2">
+                            <button
+                                className="btn btn-link"
+                                type="button"
+                                onClick={() => handleRemoveFields(index)}
+                            >
+                                removeAddress
+                </button>
+                        
+                        </div>
+                    </Fragment>
+                ))}
+
+                    <button
+                                className="btn btn-link"
+                                type="button"
+                                onClick={() => handleAddFields()}
+                                style={{height: '1px', width : '110px',padding:"0px"}}
+
+                            >
+                                Add Address
+                </button>
 
                 <FormGroup >
                     <Input style={{ display: "block" }} type="file" name="files" onChange={handleAvatarChange}

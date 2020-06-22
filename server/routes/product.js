@@ -24,7 +24,7 @@ var upload = multer({ storage: storage }).array('file')
 router.get('/:id/ownerinfo', productDetails)
 
 Auth(router);
-router.get('/categoryproducts',showCategoryProducts);
+// router.get('/categoryproducts',showCategoryProducts);
 
 
 Auth(router, productOwner);
