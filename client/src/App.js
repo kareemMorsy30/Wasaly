@@ -8,6 +8,7 @@ import CreateProduct from './components/product owner/createProduct'
 import UpdateProduct from './components/product owner/updateProduct'
 import ListProducts from './components/product owner/listProducts';
 import Connections from './components/product owner/connection';
+import ProductOwnerDetails from './components/product owner/productOwnerDetails';
 import ListCatProducts from './components/product owner/CategoryProducts';
 import Register from "./components/auth/Register";
 import AdminLogin from "./components/admin/adminLogin";
@@ -39,12 +40,10 @@ function App() {
         <UserAndCustomerNavBar/>:''  
       }
       <div style={{  flex: '1 0 auto', marginTop:'12vh'}}>
-
-      <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
-
-      <Route exact path="/product-owner/connections" component={Connections} />
    
-
+      <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
+      <Route exact path="/service-owner/connection" component={ProductOwnerDetails} />
+      <Route exact path="/product-owner/connections" component={Connections} />
 
         <Switch>
           <Route exact path="/products" component={ListProducts} />

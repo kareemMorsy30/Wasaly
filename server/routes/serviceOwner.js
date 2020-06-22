@@ -15,6 +15,9 @@ router.get('/orders/:id/:status', serviceController.updateOrderStatus);
 // Get service owner reviews
 router.get('/reviews', serviceOwnerController.reviews);
 
+// Retrieve product owners request details
+router.get('/product-owner', productOwnerController.productOwnerDetails);
+
 //get specific service owner by id
 router.get('/:id/',serviceOwnerController.getServiceOwner)
 
@@ -22,10 +25,7 @@ router.get('/:id/',serviceOwnerController.getServiceOwner)
 router.patch('/:id', serviceOwnerController.updateServiceOwner);
 
 //change status of service owner
-router.get('/:id/status',serviceOwnerController.changeStatus)
-
-// Retrieve product owners request details
-router.get('/product-owner', productOwnerController.productOwnerDetails);
+router.get('/:id/status',serviceOwnerController.changeStatus);
 
 // Accept or reject product owner connection request
 router.patch('/connection/:status', serviceOwnerController.updateConnection);

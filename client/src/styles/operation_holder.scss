@@ -24,6 +24,38 @@
     color: white;
 }
 
+.owner-img {
+    margin: 2%;
+    background-color: $color_accent_sky;
+    border-radius: 25px;
+}
+
+.action-holder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.owner-img > button {
+    font-size: large;
+    margin: 5%;
+    border-radius: 15px;
+}
+
+.remove-connection {
+    font-size: large;
+    margin: 5%;
+    border-radius: 30px;
+    width: 90%;
+}
+
+.name-section {
+    text-align: center;
+    color: $color_accent_light;
+    font-size: x-large;
+    margin: 4%;
+}
+
 .shelve-options:focus {
     background-color: $color_accent;
 }
