@@ -9,7 +9,10 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 
-const ProductCard = ({ product }) => {
+
+const ProductCard = ({ product ,match,handleClick}) => {
+        
+   
     return (
         <div>
             <Card width="318px" height="180px">
@@ -46,6 +49,10 @@ const ProductCard = ({ product }) => {
                     <Link className="btn btn-primary" to={`/products/${product._id}`}>
                         View
                     </Link>
+                    <Link className="btn btn-primary" to={`/products/cart`}>
+                    <button onClick={()=>{handleClick(product)}}>Add to cart</button>
+                    </Link>
+
                 </CardBody>
             </Card>
         </div>

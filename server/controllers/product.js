@@ -40,16 +40,27 @@ exports.createProduct = async (req, res, next) => {
 
 }
 
+// exports.listProducts = async (req, res, next) => {
+
+//     try {
+//         const id = req.user._id
+//         const products = await Product.find({ owner: id }).exec()
+//         res.json(products)
+//     } catch (err) {
+//         next(err)
+//     }
+// }
 exports.listProducts = async (req, res, next) => {
 
     try {
         const id = req.user._id
-        const products = await Product.find({ owner: id }).exec()
+        const products = await Product.find({ }).exec()
         res.json(products)
     } catch (err) {
         next(err)
     }
 }
+
 
 exports.updateProduct = async (req, res, next) => {
     try {
@@ -149,7 +160,7 @@ exports.saveImage = async (req, res, next) => {
 exports.productDetails=  async(req, res)=>{
     try {
         const products = await Product.findById(req.params.id).populate('owner');
-        res.send(products);
+        res.send([products]);
     } catch (error) {
         // error=new Error("No products there ")
 
