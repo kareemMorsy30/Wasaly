@@ -10,6 +10,7 @@ import ListProducts from './components/product owner/listProducts';
 import Connections from './components/product owner/connection';
 import ListCatProducts from './components/product owner/CategoryProducts';
 import Register from "./components/auth/Register";
+import Login from "./components/auth/Login";
 import AdminLogin from "./components/admin/adminLogin";
 import UserAndCustomerNavBar from "./components/customer/navbar";
 /*** Service owners */
@@ -79,6 +80,7 @@ function App() {
 
             <Route exact path="/:id/ownerinfo" component={ProductDetails} />
             <Route exact path="/cart" component={Cart} />
+            <Route exact path="/login" component={Login} />
           
            
            {/* <div className="menu-items">

@@ -417,7 +417,8 @@ const Authentication = (props) => {
 
                 <div className="phones-card">
                     {phones.map((phone, index) => {
-                        return (<div key={index}><input className="form-input" placeholder="Phone" value={phone}
+                        return (<div key={index}>
+                        <input className="form-input" placeholder="Phone" value={phone}
                             onChange={handleChangePhone(index)} />
                             {
                                 <Button size="sm" id={index} onClick={removePhone(index)} >Remove Phone </Button>}</div>)
