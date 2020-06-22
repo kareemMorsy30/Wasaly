@@ -420,13 +420,35 @@ const Authentication = (props) => {
                         return (<div key={index}>
                         <input className="form-input" placeholder="Phone" value={phone}
                             onChange={handleChangePhone(index)} />
+                            
                             {
-                                <Button size="sm" id={index} onClick={removePhone(index)} >Remove Phone </Button>}</div>)
+                                <button
+                                   className="btn btn-link"
+                                   type="button"
+                                   onClick={removePhone(index)}
+                               >
+                                   Remove Phone
+                                 </button>
+                                                                
+                                
+                                }</div>
+                                
+                                
+                                )
                     })}
                     {
-                        <Button size="sm" onClick={() => {
-                            setphones(phones.concat([""]))
-                        }} >Add Phone</Button>}
+                        // <Button size="sm" onClick={() => {
+                        //     setphones(phones.concat([""]))
+                        // }} >Add Phone</Button>
+                        
+                        <button
+                        className="btn btn-link"
+                        type="button"
+                        onClick={() =>  setphones(phones.concat([""]))}
+                    >
+                        Add Phone
+                      </button>
+                        }
                 </div>
 
                 <FormGroup>
@@ -529,7 +551,7 @@ const Authentication = (props) => {
                                 type="button"
                                 onClick={() => handleAddFields()}
                             >
-                                addAddress
+                                Add Address
                 </button>
                 <FormGroup>
                     <Input type="password" name="password" placeholder="password "
