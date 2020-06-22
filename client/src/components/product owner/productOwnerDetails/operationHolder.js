@@ -1,47 +1,44 @@
 import React from 'react';
-import ReactStars from 'react-rating-stars-component';
-import '../../styles/operation_holder.scss';
-import { updateBookStatus, rateBook } from '../../API/book';
-import {getUserData} from "../../utils/utils";
-import { handleSuccess, handleError } from '../../errors/book';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { faUserSlash } from '@fortawesome/free-solid-svg-icons';
+import { Button } from 'reactstrap';
+import { updateConnection } from '../../../endpoints/serviceOwners';
+import '../../../styles/operation_holder.scss';
+import { handleSuccess, handleError } from '../../../errors/handleAlerts';
 
-const OperationHolder = ({ book, setBook, setAlert, alert }) => {
-    const addToShelve = (event) => {
-        const status = event.target.value;
-        updateBookStatus(getUserData()._id, book._id, status).then(res => {
-            setBook({
-                ...book,
-                status
-            });
-            handleSuccess(setAlert, 'Book added to shelve successfully', 5000);
-        }).catch(err => handleError(setAlert, 'Server error'))
+const OperationHolder = ({ market, setStatus, status, setAlert, alert }) => {
+    const handleAccept = event => {
+        updateConnection('accept')
+        .then(connection => {
+            setStatus(connection.status);
+            handleSuccess(setAlert, `Congratulations! You are now connected`, 5000);
+        });
     }
 
-    const rate = (newRate) => {
-        console.log(book._id);
-        rateBook(book._id, newRate).then(res => {
-            setBook({
-                ...book,
-                userRate: newRate
-            });
-            handleSuccess(setAlert, 'Your book rate is submitted successfully', 5000);
-        }).catch(err => handleError(setAlert, 'Server error'))
+    const handleReject = event => {
+        updateConnection('reject')
+        .then(connection => setStatus(connection.status))
+        .catch(err => console.log(err))
     }
+
     return (
         <div className="left-card">
-            <img className="book-img" src={book.image ? `${process.env.REACT_APP_BACKEND_URL}${book.image}` : "https://www.esm.rochester.edu/uploads/NoPhotoAvailable-335x419.jpg"}/>
-            <select className="shelve-options" name="category" id="category" value={book.status} onChange={addToShelve} >
-                <option disabled value="not selected">Add to shelve</option>
-                <option value="read">Read</option>
-                <option value="reading">Reading</option>
-                <option value="want to read">Want to read</option>
-            </select>
-            <ReactStars
-            count={5}
-            onChange={rate}
-            size={40}
-            value={book.userRate ? book.userRate : 0}
-            color2={'#F99A3D'} />
+            <div className="owner-img">
+                <img className="book-img" src={market.user.image_path ? market.user.image_path : "../../img/market.png"} alt="Market image"/>
+                <p className="name-section">{market.marketName}</p>
+                {
+                    status === 'Pending'
+                    ?
+                    <>
+                    <Button onClick={handleAccept} color="success">Accept</Button>
+                    <Button onClick={handleReject} color="danger">Reject</Button>
+                    </>
+                    :
+                    <div>
+                        <Button onClick={handleReject} className="remove-connection" color="danger"><FontAwesomeIcon icon={faUserSlash}></FontAwesomeIcon> Remove</Button>
+                    </div>
+                }
+            </div>
         </div>
     );
 };
