@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-    products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    products: [{
+        product: {type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+        amount:  {type: Number, required: true}     
+    }],
     productOwner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     customer: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     service: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // service owner is a user

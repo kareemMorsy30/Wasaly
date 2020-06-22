@@ -9,12 +9,15 @@ let userController = {};
 
   
 userController.regesiter = async (req, res, next) => {
-    const { name, username, email, password, role, phones, address, image_path } = req.body;
+
+    const { name, username, email, password, role, phones, address } = req.body;
     console.log(role)
     const newUser = new User({
-        name, username, email, password, phones, role, address, image_path
+        name, username, email, password, phones, role, address
     });
-
+console.log('====================================');
+console.log("PHONES ",phones);
+console.log('====================================');
     if(newUser.role==="admin"){
         console.log("Are you mad ??? ");
 
@@ -24,9 +27,20 @@ userController.regesiter = async (req, res, next) => {
         try {
             console.log("\n  new USER :::     ", newUser);
             // if (newUser.role=="customer"){
-            const user = await newUser.save();
-            console.log("\n USER ::    :      :    ".user);
-            return res.send({ user });
+            const user = await newUser.save().catch(err=>console.log(err)
+            );
+            const token = jwt.sign(
+                {
+                  _id: user._id.toString(),
+                },
+                process.env.secret
+                // , { expiresIn: '1h' }
+              );
+            console.log('================Tooookeeeen====================');
+            console.log(token);
+            console.log('====================================');
+            console.log("\n USER ::    :      :    ",user);
+            return res.send({ user,token });
 
         }
         catch (error) {
@@ -124,19 +138,29 @@ userController.login = async (request, response, next) => {
 };
 
 userController.uploadAvatar = async (req, res) => {
+User.findById(req.params.id,(err,user)=>{
+
     console.log('====================================');
-    console.log(req.user);
+    console.log(user);
     console.log('====================================');
-    // console.log(req.User);
-    console.log('====================================');
-    console.log('====================================');
-    console.log('====================================');
-    console.log(req);
-    console.log('====================================');
-    const user = req.user;
-    user.avatar = '/uploads/users/images/' + req.file.filename;
-    await user.save();
-    res.send();
+
+    if (!user) {
+        res.status(404).send("user is not found")
+
+        
+    }else{
+        user.avatar= '/uploads/users/images/' + req.file.filename;
+        user.save().then(user=>{
+            res.json("user updated");
+        }).catch(err=>{res.status(400).send("update not possiple")});
+    }
+})
+    // // const user = req.user;
+  
+    // user.avatar = '/uploads/users/images/' + req.file.filename;
+    // await user.save();
+    // res.send();
+  
   };
 
 userController.getAllUsers = async(req,res)=>{

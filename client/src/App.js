@@ -22,7 +22,10 @@ import Category from './components/Category';
 import Delivery from './components/customer/delivery';
 import Order  from './components/user/orders';
 import OrderDetails from './components/user/orderDetails'
+import ProductDetails from './components/product owner/Cart/ProductDetails';
+import Cart from './components/product owner/Cart/Cart';
 
+// import MainCart  from './components/product owner/Cart/AddCart';
 
 function App() {
   return (
@@ -60,15 +63,10 @@ function App() {
             <Route exact path="/orders/:id" component={OrderDetails} />
             <Route exact path="/categoryproducts/:id" component={ListCatProducts} />
 
-            {/* <Route path="/store/products" exact   render={(props)=>
+            <Route exact path="/:id/ownerinfo" component={ProductDetails} />
+            <Route exact path="/cart" component={Cart} />
+          
            
-           <div className="menu-items">
-                
-              {products.map(item => <Products item={item} key={item.itemId} handleClick={this.handleClick} {...props} />)}
-       
-       </div> 
-       
-           }/> */}
           </Switch>
         </div>
       </div>

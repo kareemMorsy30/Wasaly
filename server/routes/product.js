@@ -20,6 +20,8 @@ var storage = multer.diskStorage({
 })
 
 var upload = multer({ storage: storage }).array('file')
+//id:product
+router.get('/:id/ownerinfo', productDetails)
 
 Auth(router);
 router.get('/categoryproducts',showCategoryProducts);
@@ -28,7 +30,6 @@ router.get('/categoryproducts',showCategoryProducts);
 Auth(router, productOwner);
 
 // productDetails
-router.get('/:id/ownerinfo', productDetails)
 
 router.get('/', listProducts)
 router.get('/categories', getAllCategories)

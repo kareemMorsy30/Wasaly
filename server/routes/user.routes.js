@@ -24,22 +24,27 @@ const upload = imageUploader('public/uploads/users/images');
 // and prevent copy paste {passport.authenticate('jwt', { session: false }),}
 router.post('/register', userController.regesiter);
 
-
+router.post(
+  '/profile/avatar/:id',
+  // AAuth,
+  
+  upload.single('avatar'),
+  userController.uploadAvatar,
+  (error, req, res, next) => {
+    return res.status(400).send({ message: error.message ,req});
+  }
+);
 router.post('/login', userController.login);
+
+
 Auth(router);
+
+
 
 //_____________________________Protected route  (all user routes will be here )_____________________________________
 
 
-router.post(
-  '/profile/avatar',
-//   Auth,
-  upload.single('avatar'),
-  userController.uploadAvatar,
-  (error, req, res, next) => {
-    return res.status(400).send({ message: error.message });
-  }
-);
+
 router.get('/admin', adminAuth,
     (req, res, next) => {
         console.log("body : ", req.body)

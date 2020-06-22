@@ -11,6 +11,7 @@ import {
     Label,
 } from 'reactstrap';
 import { getGeoLocation } from '../../endpoints/geocoding';
+import { authHeader } from '../config/config'
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`;
 
@@ -40,41 +41,44 @@ const Authentication = (props) => {
     const [street, setstreet] = useState('');
     const [latitude, setlatitude] = useState(0);
     const [longitude, setlongitude] = useState(0);
-    const [phone, setphone] = useState('');
+    // const [phone, setphone] = useState('');
     const registerUrl = `${domain}/users/register`;
+    const avatarUrl = `${domain}/users/profile/avatar`;
     const [address, setInputFields] = useState([
         { street: '', city: '', area: '', location: { latitude, longitude } }
     ]);
-    const [phones, setphones] = useState([
-        phone
-    ]);
+    const [phones, setphones] = useState([])
 
+    const removePhone = (id) => {
+        return (e) => {
+            setphones(phones.filter((phone, index) => {
+                return index !== id
+            }))
+        }
+    }
+
+
+
+    const handleChangePhone = (id) => {
+        return (e) => {
+            const { target: { value } } = e
+            setphones(phones.map((phone, index) => {
+                if (id === index) {
+                    phone = value
+                }
+                return phone
+            }))
+        }
+    }
     const [errors, setErrors] = useState([]);
     const [avatarInput, setAvatarInput] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const handleAvatarChange = e => {
         setAvatarInput(e.target.files[0]);
+        console.log(e.target.files[0]);
+        
     };
-    /**
-     * Product Owner States 
-    //  */
-    const handleAddphones = () => {
-        const values = [...phones];
-        values.push(phone);
-        setphones(values);
-    };
-    const handleRemovePhones = index => {
-        const values = [...phones];
-        values.splice(index, 1);
-        setphones(values);
-    };
-    const handlephoneChange = (index, event) => {
-        const values = [...phones];
-        if (event.target.name === "phones") {
-            values[index] = event.target.value;
-        }
-        setphones(values)
-    }
+  
     const handleAddFields = () => {
         const values = [...address];
         values.push({ street: '', city: '', area: '', location: { latitude, longitude } });
@@ -114,48 +118,48 @@ const Authentication = (props) => {
         console.log("setInputFields", setInputFields);
         console.log('====================================');
         setInputFields(values);
-        const input = event.target.value;
-        if (input.length >= 3 && input[input.length - 1] !== ' ') {
+        // const input = event.target.value;
+        // if (input.length >= 3 && input[input.length - 1] !== ' ') {
 
 
-            getGeoLocation(input).then(data => {
-                console.log('====================================');
-                console.log("DATAAA ", data);
-                console.log("DATAAA ", data.fullArea);
-                console.log('====================================');
-                // address.map((address)=>{
-                if (data.area) setInputFields({
-                    ...address,
-                    area: data.fullArea,
-                    city: data.city,
-                    longitude: data.longitude,
-                    latitude: data.latitude,
-                });
+        //     getGeoLocation(input).then(data => {
+        //         console.log('====================================');
+        //         console.log("DATAAA ", data);
+        //         console.log("DATAAA ", data.fullArea);
+        //         console.log('====================================');
+        //         // address.map((address)=>{
+        //         if (data.area) setInputFields({
+        //             ...address,
+        //             area: data.fullArea,
+        //             city: data.city,
+        //             longitude: data.longitude,
+        //             latitude: data.latitude,
+        //         });
 
-                if (data.area && !suggested.includes(data.area && data.area.toLowerCase().includes(input))) {
-                    setSuggested([...suggested, data.area]);
-                    // console.log('====================================');
-                    // console.log("DATAAA ", data.area);
-                    // console.log("DATAAA ", data.fullArea);
-                    setcity(data.city);
-                    setarea(data.fullArea);
-                    setlatitude(data.latitude);
-                    setlongitude(data.longitude);
-                    // setstreet()
-                    console.log('=======================inside suggest=============');
-                    // setInputFields([{ street: address.street, area: data.fullArea, city: data.city, location: { latitude: data.latitude, longitude: data.longitude } }]);
-                    console.log('====================================');
-                    console.log(address);
-                    console.log('====================================');
-                }
-            })
-            // })
-        }
-        else {
-            console.log('====================================');
-            console.log("A7a fe aeh");
-            console.log('====================================');
-        }
+        //         if (data.area && !suggested.includes(data.area && data.area.toLowerCase().includes(input))) {
+        //             setSuggested([...suggested, data.area]);
+        //             // console.log('====================================');
+        //             // console.log("DATAAA ", data.area);
+        //             // console.log("DATAAA ", data.fullArea);
+        //             setcity(data.city);
+        //             setarea(data.fullArea);
+        //             setlatitude(data.latitude);
+        //             setlongitude(data.longitude);
+        //             // setstreet()
+        //             console.log('=======================inside suggest=============');
+        //             // setInputFields([{ street: address.street, area: data.fullArea, city: data.city, location: { latitude: data.latitude, longitude: data.longitude } }]);
+        //             console.log('====================================');
+        //             console.log(address);
+        //             console.log('====================================');
+        //         }
+        //     })
+        //     // })
+        // }
+        // else {
+        //     console.log('====================================');
+        //     console.log("A7a fe aeh");
+        //     console.log('====================================');
+        // }
 
     };
     const handleRegisterSubmit = async (e) => {
@@ -195,13 +199,30 @@ const Authentication = (props) => {
                     }, {
                     withCredentials: true,
 
-                }).then(response => {
-
-                    console.log(response);
-
+                })
+                
+                
+                .then(response => {
+console.log('====================================');
+console.log(response);
+console.log('====================================');
+                    console.log(response.data.user._id);
+                    let userId=response.data.user._id
+                    if (avatarInput) {
+                        const formData = new FormData();
+                        formData.append('avatar', avatarInput);
+                         axios.post(`${avatarUrl}/${userId}`, formData, {
+                            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`,
+                            
+                            'content-type': 'multipart/form-data',
+                        }
+                
+                          
+                        });
+                      }
                     if (response.status == 250) {
 
-                        setErrorsRegister(response.data.message)
+                        // setErrorsRegister(response.message)
 
                     } else if (response.status == 200) {
 
@@ -209,13 +230,18 @@ const Authentication = (props) => {
 
                         //Should logged in first by history.push what is the route ?
 
-                        history.push("/products/list");
+                        // history.push("/");
 
                         // window.location = "http://localhost:3000/home";
 
                     }
+             
+                  
 
                 })
+             
+   
+                // axios.post(avatarUrl,authHeader);
 
             }
 
@@ -246,11 +272,27 @@ const Authentication = (props) => {
 
                 }).then(response => {
 
-                    console.log(response);
-
+                    console.log('====================================');
+                    console.log(response.data.productOwner.user);
+                    console.log('====================================');
+                                        console.log(response.data.productOwner.user.toString());
+                                        let userId=response.data.productOwner.user.toString();
+                                        if (avatarInput) {
+                                            const formData = new FormData();
+                                            formData.append('avatar', avatarInput);
+                                             axios.post(`${avatarUrl}/${userId}`, formData, {
+                                                headers: { Authorization: `Bearer ${localStorage.getItem('token')}`,
+                                                
+                                                'content-type': 'multipart/form-data',
+                                            }
+                                    
+                                              
+                                            });
+                                          }
+                    
                     if (response.status == 250) {
 
-                        setErrorsRegister(response.data.message)
+                        // setErrorsRegister(response.message)
 
                     } else if (response.status == 200) {
 
@@ -294,12 +336,28 @@ const Authentication = (props) => {
                     withCredentials: true,
 
                 }).then(response => {
-
+                    console.log('====================================');
                     console.log(response);
+                    console.log('====================================');
+                                        console.log(response.data.serviceOwner.user.toString());
+                                        let userId=response.data.serviceOwner.user.toString()
+                                        if (avatarInput) {
+                                            const formData = new FormData();
+                                            formData.append('avatar', avatarInput);
+                                             axios.post(`${avatarUrl}/${userId}`, formData, {
+                                                headers: { Authorization: `Bearer ${localStorage.getItem('token')}`,
+                                                
+                                                'content-type': 'multipart/form-data',
+                                            }
+                                    
+                                              
+                                            });
+                                          }
+                    
 
                     if (response.status == 250) {
 
-                        setErrorsRegister(response.data.message)
+                        // setErrorsRegister(response.message)
 
                     } else if (response.status == 200) {
 
@@ -322,7 +380,7 @@ const Authentication = (props) => {
             setIsLoading(false);
             console.log(error);
 
-            setErrors([error.response.message]);
+            // setErrors([error.response.message]);
         }
     }
 
@@ -348,34 +406,19 @@ const Authentication = (props) => {
 
                 </FormGroup>
 
-                {phones.map((inputField, index1) => (
-                    <Fragment key={`${inputField}~${index1}`}>
-                        <FormGroup>
-                            <Input type="text" name="phones" placeholder="phones"
-                                pattern='(01)[0-9]{9}'
-                                value={inputField}
-                                onChange={event => handlephoneChange(index1, event)}
-                            />
-                        </FormGroup>
-
-                        <div className="form-group col-sm-2">
-                            <button
-                                className="btn btn-link"
-                                type="button"
-                                onClick={() => handleRemovePhones(index1)}
-                            >
-                                -
-                </button>
-                            <button
-                                className="btn btn-link"
-                                type="button"
-                                onClick={() => handleAddphones()}
-                            >
-                                +
-                </button>
-                        </div>
-                    </Fragment>
-                ))}
+          
+                <div className="phones-card">
+                    {phones.map((phone, index) => {
+                        return (<div key={index}><input className="form-input" placeholder="Phone" value={phone}
+                            onChange={handleChangePhone(index)} />
+                            {
+                                <Button size="sm" id={index} onClick={removePhone(index)} >Remove Phone </Button>}</div>)
+                    })}
+                    {
+                        <Button size="sm" onClick={() => {
+                            setphones(phones.concat([""]))
+                        }} >Add Phone</Button>}
+                </div>
 
                 <FormGroup>
 
@@ -465,18 +508,20 @@ const Authentication = (props) => {
                                 type="button"
                                 onClick={() => handleRemoveFields(index)}
                             >
-                                remove
+                                removeAddress
                 </button>
                             <button
                                 className="btn btn-link"
                                 type="button"
                                 onClick={() => handleAddFields()}
                             >
-                                add
+                                addAddress
                 </button>
                         </div>
                     </Fragment>
                 ))}
+
+
                 <FormGroup>
                     <Input type="password" name="password" placeholder="password "
                         {...bindPasswordRegister}
@@ -487,14 +532,7 @@ const Authentication = (props) => {
                         {...bindPassConfRegister}
                     />
                 </FormGroup>
-                <FormGroup row>
-                    <Input type="file" name="file" id="exampleFile" onChange={handleAvatarChange}
 
-                    />
-                    <FormText color="muted">
-                        Add Your Image :)
-                    </FormText>
-                </FormGroup>
 
                 {role === "productowner" ?
 
@@ -546,7 +584,15 @@ const Authentication = (props) => {
                     : null
                 }
 
+                <FormGroup >
+                    <Input style={{ display: "block" }} type="file" name="files" onChange={handleAvatarChange}
+
+                    />
+
+                </FormGroup>
                 <Button onSubmit={handleRegisterSubmit}> Sign up</Button>
+
+
             </Form>
             {errorsRegister ? <div className="errors-div">
                 <small> {errorsRegister}</small>
