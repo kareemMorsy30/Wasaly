@@ -14,13 +14,25 @@ export const getUnConnectedOwners = () => {
     .catch(err => err);
 }
 
-export const connect = (serviceOwnerId) => {
-    const url = `${domain}/product-owners/connect`;
+export const connectAndDisconnect = (serviceOwnerId , type) => {
+    const url = `${domain}/product-owners/${type}`;
 
     return axios.patch(url, {
         serviceOwnerId
     },
     {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data)
+            return res.data;
+    })
+    .catch(err => err);
+}
+
+export const marketDetails = () => {
+    const url = `${domain}/service-owners/product-owner`;
+    return axios.get(url, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     })
     .then(res => {

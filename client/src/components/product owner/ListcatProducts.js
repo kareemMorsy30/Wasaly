@@ -7,13 +7,13 @@ import { Container, CardDeck } from 'reactstrap';
 const ListcatProducts = ({ productsList }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setpageSize] = useState(8);
-
+    
+    
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
 
     const paginatedproductList = paginate(productsList, currentPage, pageSize);
-
     return (
         <Container>
             <br />
@@ -24,6 +24,7 @@ const ListcatProducts = ({ productsList }) => {
                             <ProductCard
                                 key={ index }
                                 product={ product }
+                                // handleClick={handleClick}
                             />
                         );
                     })

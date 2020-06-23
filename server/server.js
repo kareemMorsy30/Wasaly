@@ -81,7 +81,7 @@ app.get('/', (req, res) =>{
 app.use('/search', searchRouter)
 app.use('/product', productRouter)
 app.use('/orders', OrderRouter)
-// app.use('/category', CategoryRouter)
+app.use('/category', CategoryRouter)
 app.use('/customers', CustomerRouter)
 
 

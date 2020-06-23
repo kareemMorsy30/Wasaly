@@ -9,13 +9,14 @@ const Search = () => {
   
     const [suggestedProducts, setSuggestedProducts] = useState([])
     const [searchInput, setSearchInput] = useState("")
+    const [showDropDown,setShowDropDown]= useState(false)
     const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
     useEffect(() => {
         if (searchInput.length > 1) {
             axios.get(`${domain}/search/suggestion`, {
                 params: {
-                    q: searchInput
+                    q: searchInput,
                 }
             })
                 .then(function (response) {
@@ -28,17 +29,24 @@ const Search = () => {
         }
     }, [searchInput])
 
+    useEffect(()=>{
+        setShowDropDown(true);
+    },[])
     const handleChange = (e) => { 
+        setSearchInput(true)
         if(e.target.value==""){
             setSuggestedProducts([])
             setSearchInput("") 
         }
-        else  setSearchInput(e.target.value)
+        else{            
+            setSearchInput(e.target.value)
+        }
     }
-    return (
-     
-        <DropDown options={suggestedProducts} handleChange={handleChange} searchInput={searchInput} fieldName="name" to="/s"/>
-       
+    return (     
+        
+            showDropDown ?
+                <DropDown options={suggestedProducts} handleChange={handleChange} searchInput={searchInput} fieldName="name" to="/search/s"/>  :''     
+        
     )
 
 }

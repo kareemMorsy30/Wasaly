@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { useInput } from './hooks/input-hooks';
 import axios from 'axios';
 import './Auth.css';
+// import '../../styles/form.scss'
 import { Link, useHistory } from "react-router-dom";
 import {
     Button,
@@ -11,6 +12,7 @@ import {
     Label,
 } from 'reactstrap';
 import { getGeoLocation } from '../../endpoints/geocoding';
+import { authHeader } from '../config/config'
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`;
 
@@ -22,7 +24,7 @@ const Authentication = (props) => {
     const { value: passConfRegister, bind: bindPassConfRegister, reset: resetPassConfRegister } = useInput('');
     const { value: email, bind: bindEmail, reset: resetEmail } = useInput('');
     const { value: name, bind: bindname, reset: resetname } = useInput('');
-    const { value: role, bind: bindrole, reset: resetrole } = useInput('');
+    const { value: role, bind: bindrole, reset: resetrole } = useInput('customer');
     /**
     * Product owner
     */
@@ -40,41 +42,50 @@ const Authentication = (props) => {
     const [street, setstreet] = useState('');
     const [latitude, setlatitude] = useState(0);
     const [longitude, setlongitude] = useState(0);
-    const [phone, setphone] = useState('');
+    // const [phone, setphone] = useState('');
     const registerUrl = `${domain}/users/register`;
-    const [address, setInputFields] = useState([
-        { street: '', city: '', area: '', location: { latitude, longitude } }
-    ]);
-    const [phones, setphones] = useState([
-        phone
-    ]);
+    const avatarUrl = `${domain}/users/profile/avatar`;
+    const [address, setInputFields] = useState([ ]);
+    const [phones, setphones] = useState([])
+   
+  
 
+    const removePhone = (id) => {
+        return (e) => {
+            setphones(phones.filter((phone, index) => {
+                return index !== id
+            }))
+        }
+    }
+
+
+
+
+
+
+    const handleChangePhone = (id) => {
+        return (e) => {
+            const { target: { value } } = e
+            setphones(phones.map((phone, index) => {
+                if (id === index) {
+                    phone = value
+                }
+                return phone
+            }))
+        }
+    }
     const [errors, setErrors] = useState([]);
     const [avatarInput, setAvatarInput] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const handleAvatarChange = e => {
         setAvatarInput(e.target.files[0]);
+        console.log(e.target.files[0]);
+
     };
-    /**
-     * Product Owner States 
-    //  */
-    const handleAddphones = () => {
-        const values = [...phones];
-        values.push(phone);
-        setphones(values);
-    };
-    const handleRemovePhones = index => {
-        const values = [...phones];
-        values.splice(index, 1);
-        setphones(values);
-    };
-    const handlephoneChange = (index, event) => {
-        const values = [...phones];
-        if (event.target.name === "phones") {
-            values[index] = event.target.value;
-        }
-        setphones(values)
-    }
+
+        
+
+  
     const handleAddFields = () => {
         const values = [...address];
         values.push({ street: '', city: '', area: '', location: { latitude, longitude } });
@@ -114,48 +125,48 @@ const Authentication = (props) => {
         console.log("setInputFields", setInputFields);
         console.log('====================================');
         setInputFields(values);
-        const input = event.target.value;
-        if (input.length >= 3 && input[input.length - 1] !== ' ') {
+        // const input = event.target.value;
+        // if (input.length >= 3 && input[input.length - 1] !== ' ') {
 
 
-            getGeoLocation(input).then(data => {
-                console.log('====================================');
-                console.log("DATAAA ", data);
-                console.log("DATAAA ", data.fullArea);
-                console.log('====================================');
-                // address.map((address)=>{
-                if (data.area) setInputFields({
-                    ...address,
-                    area: data.fullArea,
-                    city: data.city,
-                    longitude: data.longitude,
-                    latitude: data.latitude,
-                });
+        //     getGeoLocation(input).then(data => {
+        //         console.log('====================================');
+        //         console.log("DATAAA ", data);
+        //         console.log("DATAAA ", data.fullArea);
+        //         console.log('====================================');
+        //         // address.map((address)=>{
+        //         if (data.area) setInputFields({
+        //             ...address,
+        //             area: data.fullArea,
+        //             city: data.city,
+        //             longitude: data.longitude,
+        //             latitude: data.latitude,
+        //         });
 
-                if (data.area && !suggested.includes(data.area && data.area.toLowerCase().includes(input))) {
-                    setSuggested([...suggested, data.area]);
-                    // console.log('====================================');
-                    // console.log("DATAAA ", data.area);
-                    // console.log("DATAAA ", data.fullArea);
-                    setcity(data.city);
-                    setarea(data.fullArea);
-                    setlatitude(data.latitude);
-                    setlongitude(data.longitude);
-                    // setstreet()
-                    console.log('=======================inside suggest=============');
-                    // setInputFields([{ street: address.street, area: data.fullArea, city: data.city, location: { latitude: data.latitude, longitude: data.longitude } }]);
-                    console.log('====================================');
-                    console.log(address);
-                    console.log('====================================');
-                }
-            })
-            // })
-        }
-        else {
-            console.log('====================================');
-            console.log("A7a fe aeh");
-            console.log('====================================');
-        }
+        //         if (data.area && !suggested.includes(data.area && data.area.toLowerCase().includes(input))) {
+        //             setSuggested([...suggested, data.area]);
+        //             // console.log('====================================');
+        //             // console.log("DATAAA ", data.area);
+        //             // console.log("DATAAA ", data.fullArea);
+        //             setcity(data.city);
+        //             setarea(data.fullArea);
+        //             setlatitude(data.latitude);
+        //             setlongitude(data.longitude);
+        //             // setstreet()
+        //             console.log('=======================inside suggest=============');
+        //             // setInputFields([{ street: address.street, area: data.fullArea, city: data.city, location: { latitude: data.latitude, longitude: data.longitude } }]);
+        //             console.log('====================================');
+        //             console.log(address);
+        //             console.log('====================================');
+        //         }
+        //     })
+        //     // })
+        // }
+        // else {
+        //     console.log('====================================');
+        //     console.log("A7a fe aeh");
+        //     console.log('====================================');
+        // }
 
     };
     const handleRegisterSubmit = async (e) => {
@@ -195,27 +206,51 @@ const Authentication = (props) => {
                     }, {
                     withCredentials: true,
 
-                }).then(response => {
-
-                    console.log(response);
-
-                    if (response.status == 250) {
-
-                        setErrorsRegister(response.data.message)
-
-                    } else if (response.status == 200) {
-
-                        console.log("good");
-
-                        //Should logged in first by history.push what is the route ?
-
-                        history.push("/products/list");
-
-                        // window.location = "http://localhost:3000/home";
-
-                    }
-
                 })
+
+
+                    .then(response => {
+                        console.log('====================================');
+                        console.log(response);
+                        console.log('====================================');
+                        console.log(response.data.user._id);
+                        let userId = response.data.user._id
+                        if (avatarInput) {
+                            const formData = new FormData();
+                            formData.append('avatar', avatarInput);
+                            axios.post(`${avatarUrl}/${userId}`, formData, {
+                                headers: {
+                                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+
+                                    'content-type': 'multipart/form-data',
+                                }
+
+
+                            });
+                        }
+                        if (response.status == 250) {
+
+                            // setErrorsRegister(response.message)
+                            
+
+                        } else if (response.status == 200) {
+
+                            console.log("good");
+
+                            //Should logged in first by history.push what is the route ?
+
+                            history.push("/");
+
+                            // window.location = "http://localhost:3000/home";
+
+                        }
+
+
+
+                    })
+
+
+                // axios.post(avatarUrl,authHeader);
 
             }
 
@@ -246,11 +281,28 @@ const Authentication = (props) => {
 
                 }).then(response => {
 
-                    console.log(response);
+                    console.log('====================================');
+                    console.log(response.data.productOwner.user);
+                    console.log('====================================');
+                    console.log(response.data.productOwner.user.toString());
+                    let userId = response.data.productOwner.user.toString();
+                    if (avatarInput) {
+                        const formData = new FormData();
+                        formData.append('avatar', avatarInput);
+                        axios.post(`${avatarUrl}/${userId}`, formData, {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem('token')}`,
+
+                                'content-type': 'multipart/form-data',
+                            }
+
+
+                        });
+                    }
 
                     if (response.status == 250) {
 
-                        setErrorsRegister(response.data.message)
+                        // setErrorsRegister(response.message)
 
                     } else if (response.status == 200) {
 
@@ -258,7 +310,7 @@ const Authentication = (props) => {
 
                         //Should logged in first by history.push what is the route ?
 
-                        history.push("/products/list");
+                        // history.push("/products/list");
 
                         // window.location = "http://localhost:3000/home";
 
@@ -294,12 +346,29 @@ const Authentication = (props) => {
                     withCredentials: true,
 
                 }).then(response => {
-
+                    console.log('====================================');
                     console.log(response);
+                    console.log('====================================');
+                    console.log(response.data.serviceOwner.user.toString());
+                    let userId = response.data.serviceOwner.user.toString()
+                    if (avatarInput) {
+                        const formData = new FormData();
+                        formData.append('avatar', avatarInput);
+                        axios.post(`${avatarUrl}/${userId}`, formData, {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem('token')}`,
+
+                                'content-type': 'multipart/form-data',
+                            }
+
+
+                        });
+                    }
+
 
                     if (response.status == 250) {
 
-                        setErrorsRegister(response.data.message)
+                        // setErrorsRegister(response.message)
 
                     } else if (response.status == 200) {
 
@@ -307,7 +376,7 @@ const Authentication = (props) => {
 
                         //Should logged in first by history.push what is the route ?
 
-                        history.push("/products/list");
+                        // history.push("/products/list");
 
                         // window.location = "http://localhost:3000/home";
 
@@ -322,20 +391,50 @@ const Authentication = (props) => {
             setIsLoading(false);
             console.log(error);
 
-            setErrors([error.response.message]);
+            // setErrors([error.response.message]);
         }
     }
 
 
     return (
 
-        <div className='col-lg-4 col-md-4 col-sm-4 col-xs-4 '>
+        <div className='col-lg-4 col-md-4 col-sm-4 col-xs-4 ' style={{ margin: 'auto', marginTop: '39px' }}>
 
             <h4>Dont Have an Account ? Create one</h4>
 
             <hr />
 
-            <Form onSubmit={handleRegisterSubmit} >
+            <Form onSubmit={handleRegisterSubmit}  
+//             style={
+//                 {
+//   width: 98% !important;
+//   display: inline-block !important;
+// }
+  
+//   } 
+            >
+
+            <FormGroup>
+            <p className="class1" style={{color: '#c8c0d5'}}> Choose Your Account :</p>
+
+<Input type="select" name="role" id="exampleSelect"
+
+    {...bindrole}
+
+>
+    <option>customer</option>
+
+    <option>serviceowner</option>
+
+
+
+    <option>productowner</option>
+
+</Input>
+
+
+</FormGroup>
+
                 <FormGroup>
 
                     <Input type="text" name="name" placeholder="name"
@@ -344,63 +443,14 @@ const Authentication = (props) => {
 
                         {...bindname}
 
-                    />
+                    />*
 
                 </FormGroup>
-
-                {phones.map((inputField, index1) => (
-                    <Fragment key={`${inputField}~${index1}`}>
-                        <FormGroup>
-                            <Input type="text" name="phones" placeholder="phones"
-                                pattern='(01)[0-9]{9}'
-                                value={inputField}
-                                onChange={event => handlephoneChange(index1, event)}
-                            />
-                        </FormGroup>
-
-                        <div className="form-group col-sm-2">
-                            <button
-                                className="btn btn-link"
-                                type="button"
-                                onClick={() => handleRemovePhones(index1)}
-                            >
-                                -
-                </button>
-                            <button
-                                className="btn btn-link"
-                                type="button"
-                                onClick={() => handleAddphones()}
-                            >
-                                +
-                </button>
-                        </div>
-                    </Fragment>
-                ))}
-
-                <FormGroup>
-
-                    <Input type="select" name="role" id="exampleSelect"
-
-                        {...bindrole}
-
-                    >
-
-                        <option>serviceowner</option>
-
-                        <option>customer</option>
-
-
-                        <option>productowner</option>
-
-                    </Input>
-
-
-                </FormGroup>
-
+             
                 <FormGroup>
 
                     <Input type="text" name="username" placeholder="Username"
-
+required
                         pattern='[A-Za-z\\s]*'
 
                         {...bindUsernameRegister}
@@ -419,64 +469,8 @@ const Authentication = (props) => {
 
                 </FormGroup>
 
-                {
 
-                    console.log("Kareeem : ", address)
-                }
-
-
-                {address.length > 0 && address.map((inputField, index) => (
-                    <Fragment key={`${inputField}~${index}`
-                    }>
-                        <FormGroup >
-                            <Label for="exampleAddress">Address</Label>
-                            <Input type="text" name="street" placeholder="street"
-                                pattern='[A-Za-z\\s]*'
-                                value={inputField.street}
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <Input type="text" name="city" placeholder="city"
-                                pattern='[A-Za-z\\s]*'
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <datalist id="from">
-                                <option key="source" value={city} />
-                            </datalist>
-                            <Input type="text" name="area" placeholder="area"
-                                pattern='[A-Za-z\\s]*'
-                                // {...bindaddress}
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <datalist id="from">
-                                <option key="source" value={area} />
-                            </datalist>
-                            <Input type="number" name="latitude" placeholder="latitude"
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <Input type="number" name="longitude" placeholder="longitude"
-                                onChange={event => handleInputChange(index, event)}
-                            />
-
-                        </FormGroup>
-
-                        <div className="form-group col-sm-2">
-                            <button
-                                className="btn btn-link"
-                                type="button"
-                                onClick={() => handleRemoveFields(index)}
-                            >
-                                remove
-                </button>
-                            <button
-                                className="btn btn-link"
-                                type="button"
-                                onClick={() => handleAddFields()}
-                            >
-                                add
-                </button>
-                        </div>
-                    </Fragment>
-                ))}
+            
                 <FormGroup>
                     <Input type="password" name="password" placeholder="password "
                         {...bindPasswordRegister}
@@ -487,14 +481,7 @@ const Authentication = (props) => {
                         {...bindPassConfRegister}
                     />
                 </FormGroup>
-                <FormGroup row>
-                    <Input type="file" name="file" id="exampleFile" onChange={handleAvatarChange}
 
-                    />
-                    <FormText color="muted">
-                        Add Your Image :)
-                    </FormText>
-                </FormGroup>
 
                 {role === "productowner" ?
 
@@ -545,8 +532,113 @@ const Authentication = (props) => {
                     </FormGroup>
                     : null
                 }
+                <p className="class1" style={{color: '#c8c0d5'}}> Add Optional Information :</p>
 
+                <FormGroup >
+                    {phones.map((phone, index) => {
+                        return (<div key={index}>
+                        <Input className="form-input" placeholder="Phone" value={phone}
+                            onChange={handleChangePhone(index)} />
+                            
+                            {
+                                <button
+                                   className="btn btn-link"
+                                   type="button"
+                                   onClick={removePhone(index)}
+                               >
+                                   Remove Phone
+                                 </button>
+                                                                
+                                
+                                }</div>
+                                
+                                
+                                )
+                    })}
+                    {
+                        // <Button size="sm" onClick={() => {
+                        //     setphones(phones.concat([""]))
+                        // }} >Add Phone</Button>
+                        
+                        <button
+                        className="btn btn-link"
+                        type="button"
+                        style={{height: '1px', width : '110px',padding:"0px"}}
+
+                        onClick={() =>  setphones(phones.concat([""]))}
+                    >
+                        Add Phone
+                      </button>
+                        }
+                </FormGroup>
+
+             
+                {address.length>0 && address.map((inputField, index) => (
+                    <Fragment key={`${inputField}~${index}`
+                    }>
+                        <FormGroup >
+                            <Label for="exampleAddress">Address</Label>
+                            <Input type="text" name="street" placeholder="street"
+                                pattern='[A-Za-z\\s]*'
+                                value={inputField.street}
+                                onChange={event => handleInputChange(index, event)}
+                            />
+                            <Input type="text" name="city" placeholder="city"
+                                pattern='[A-Za-z\\s]*'
+                                onChange={event => handleInputChange(index, event)}
+                            />
+                            <datalist id="from">
+                                <option key="source" value={city} />
+                            </datalist>
+                            <Input type="text" name="area" placeholder="area"
+                                pattern='[A-Za-z\\s]*'
+                                // {...bindaddress}
+                                onChange={event => handleInputChange(index, event)}
+                            />
+                            <datalist id="from">
+                                <option key="source" value={area} />
+                            </datalist>
+                            <Input type="number" name="latitude" placeholder="latitude"
+                                onChange={event => handleInputChange(index, event)}
+                            />
+                            <Input type="number" name="longitude" placeholder="longitude"
+                                onChange={event => handleInputChange(index, event)}
+                            />
+
+                        </FormGroup>
+
+                        <div className="form-group col-sm-2">
+                            <button
+                                className="btn btn-link"
+                                type="button"
+                                onClick={() => handleRemoveFields(index)}
+                            >
+                                removeAddress
+                </button>
+                        
+                        </div>
+                    </Fragment>
+                ))}
+
+                    <button
+                                className="btn btn-link"
+                                type="button"
+                                onClick={() => handleAddFields()}
+                                style={{height: '1px', width : '110px',padding:"0px"}}
+
+                            >
+                                Add Address
+                </button>
+
+                <FormGroup >
+                    <Input style={{ display: "block" }} type="file" name="files" onChange={handleAvatarChange}
+
+                    />
+
+                </FormGroup>
                 <Button onSubmit={handleRegisterSubmit}> Sign up</Button>
+
+
             </Form>
             {errorsRegister ? <div className="errors-div">
                 <small> {errorsRegister}</small>

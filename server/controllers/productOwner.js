@@ -1,4 +1,5 @@
 const { ServiceOwner, productOwner, User } = require('../models/allModels');
+const { populate } = require('../models/user');
 
 const connect = (req, res) => {
     const { serviceOwnerId } = req.body;
@@ -15,16 +16,35 @@ const connect = (req, res) => {
     .catch(error => res.status(500).end());
 }
 
+const disconnect = (req, res) => {
+    const { serviceOwnerId } = req.body;
+
+    ServiceOwner.findByIdAndUpdate(serviceOwnerId, {
+        productOwner: {
+            user: req.user._id,
+            status: 'Not connected'
+        }
+    }, {
+        new: true
+    }).populate('user')
+    .then(owner => res.status(200).json(owner))
+    .catch(error => res.status(500).end());
+}
+
 // Retrieve product owners request details
 const productOwnerDetails = (req, res) => {
     const { user } = req;
     ServiceOwner.findOne({user: user._id})
-    .populate('productOwner.user')
     .then(owner => {
         if(owner.productOwner.status === 'Not connected'){
             res.status(200).json({status: owner.productOwner.status});
         }else{
-            res.status(200).json(owner);
+            console.log(owner.productOwner.user);
+            productOwner.findOne({user: owner.productOwner.user})
+            .populate('user')
+            .then(market => {
+                res.status(200).json({market: market, status: owner.productOwner.status});
+            })
         }
     })
     .catch(error => res.status(500).end());
@@ -75,6 +95,7 @@ const updateProducteOwner = (req,res)=>{
 } 
 module.exports = {
     connect,
+    disconnect,
     productOwnerDetails,
     getAllproductsOwner,
     getProductOwner,

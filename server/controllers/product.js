@@ -17,21 +17,22 @@ var upload = multer({ storage: storage }).array('file')
 exports.createProduct = async (req, res, next) => {
     try {
         const { name, price, quantity, description, category } = req.body
-        console.log(category)
-        const categoryID= await Category.findOne({name: category}).select('_id').exec()
-
+        const categoryy= await Category.findOne({name: category}).exec()
+        
         let owner = req.user._id
         let images = req.files
         images_path = images.map(image => image.filename)
-        product = await new Product({
+        const product = await new Product({
             name,
             owner,
             price,
             quantity,
             images_path,
             description,
-            category: categoryID
+            category: categoryy._id
         }).save()
+        categoryy.products.push(product._id)
+        categoryy.save()
         res.json("done")
     }
     catch (err) {
@@ -40,16 +41,27 @@ exports.createProduct = async (req, res, next) => {
 
 }
 
+// exports.listProducts = async (req, res, next) => {
+
+//     try {
+//         const id = req.user._id
+//         const products = await Product.find({ owner: id }).exec()
+//         res.json(products)
+//     } catch (err) {
+//         next(err)
+//     }
+// }
 exports.listProducts = async (req, res, next) => {
 
     try {
         const id = req.user._id
-        const products = await Product.find({ owner: id }).exec()
+        const products = await Product.find({ }).exec()
         res.json(products)
     } catch (err) {
         next(err)
     }
 }
+
 
 exports.updateProduct = async (req, res, next) => {
     try {
@@ -149,7 +161,7 @@ exports.saveImage = async (req, res, next) => {
 exports.productDetails=  async(req, res)=>{
     try {
         const products = await Product.findById(req.params.id).populate('owner');
-        res.send(products);
+        res.send([products]);
     } catch (error) {
         // error=new Error("No products there ")
 
@@ -175,13 +187,13 @@ exports.productDetails=  async(req, res)=>{
     
 
 
-    exports.showCategoryProducts = async (req, res, next) => {
+    // exports.showCategoryProducts = async (req, res, next) => {
 
-        try {
-            const id = req.user._id
-            const products = await Product.find({ }).populate('category').populate('owner').exec()
-            res.json(products)
-        } catch (err) {
-            next(err)
-        }
-    }
+    //     try {
+    //         const id = req.user._id
+    //         const products = await Product.find({ }).populate('category').populate('owner').exec()
+    //         res.json(products)
+    //     } catch (err) {
+    //         next(err)
+    //     }
+    // }

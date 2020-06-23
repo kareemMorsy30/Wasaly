@@ -16,11 +16,11 @@ const Modal = ({ record }) => {
                 </div>
                 <div className="details-section">
                     <label>Username</label>
-                    <input type="text" placeholder="From" value={record.customer && record.customer.username} readOnly/>
+                    <input type="text" placeholder="Username" value={record.customer && record.customer.username} readOnly/>
                     <label>Email</label>
-                    <input type="text" placeholder="To" value={record.customer && record.customer.email} readOnly/>
+                    <input type="text" placeholder="Email" value={record.customer && record.customer.email} readOnly/>
                     <label>Phone</label>
-                    <input type="text" placeholder="To" value={record.customer && record.customer.phones[0]} readOnly/>
+                    <input type="text" placeholder="Phone" value={record.customer && record.customer.phones[0]} readOnly/>
                     <label>Address</label>
                     <input type="text" placeholder="Address" value={record.customer && record.customer.address.length > 0 && record.customer.address[0].area && `${record.customer.address[0].area} ${record.customer.address[0].city}`} readOnly/>
                 </div>

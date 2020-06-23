@@ -25,3 +25,17 @@ export const updateOrderStatus = (id, status) => {
     })
     .catch(err => console.log(err));
 }
+
+export const updateConnection = (status) => {
+    const url = `${domain}/service-owners/connection/${status}`;
+
+    return axios.patch(url, null,
+    {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data)
+            return res.data;
+    })
+    .catch(err => err);
+}

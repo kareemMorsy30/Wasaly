@@ -16,15 +16,15 @@ const userSchema = new mongoose.Schema({
     },
     status: { type: String, default: "offline" },
     role: { type: String, required: true, enum: ['customer', 'admin', 'serviceowner', 'productowner'] },
-    phones: [{ type: String, required: true, mathc: '(01)[0-9]{9}' }],
+    phones: [{ type: String, mathc: '(01)[0-9]{9}' }],
     address:[{
         street: { type: String, required: true },
         city: { type: String, required: true },
         area: { type: String, required: true },
-        // location: {
+        location: {
             latitude: {type: Number, required: true},
             longitude: {type: Number, required: true}
-        // }
+        }
     }],
     password: {
         type: String,
@@ -65,7 +65,7 @@ userSchema.methods.isPasswordMatch = function (password, hashed, callback) {
 userSchema.methods.toJSON = function () {
     const userObject = this.toObject();
     delete userObject.password;
-    delete userObject.token;
+    // delete userObject.token;
     return userObject;
 }
 
