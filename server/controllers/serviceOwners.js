@@ -107,6 +107,7 @@ const all = (req, res) => {
 
     ServiceOwner.find({}, null, { skip: perPage * (page-1), limit: perPage })
     .populate('user')
+    .populate('reports.user')
     .then(owners => {
         ServiceOwner.countDocuments().exec((err, count) => {
             if (err) res.status(500).end();
