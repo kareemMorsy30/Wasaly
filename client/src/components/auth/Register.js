@@ -19,7 +19,7 @@ const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`;
 
 const Authentication = (props) => {
     const history = useHistory();
-    const [errorsRegister, setErrorsRegister] = useState("");
+    // const [errorsRegister, setErrorsRegister] = useState("");
     const { value: usernameRegister, bind: bindUsernameRegister, reset: resetUsernameRegister } = useInput('');
     const { value: passwordRegister, bind: bindPasswordRegister, reset: resetPasswordRegister } = useInput('');
     const { value: passConfRegister, bind: bindPassConfRegister, reset: resetPassConfRegister } = useInput('');
@@ -230,9 +230,9 @@ const Authentication = (props) => {
                             });
                         }
                         if (response.status=250) {
-                            setErrorsRegister(response.data.message)
+                            // setErrorsRegister(response.data.message)
 
-                            toast(errorsRegister)
+                            // toast(errorsRegister)
 
 console.log("response",response);
                             
@@ -690,9 +690,9 @@ required
 
 
             </Form>
-            {errorsRegister ? <div className="errors-div">
+            {/* {errorsRegister ? <div className="errors-div">
                 <small> {errorsRegister}</small>
-            </div> : null}
+            </div> : null} */}
         </div>
     )
 }
