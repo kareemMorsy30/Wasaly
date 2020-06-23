@@ -11,6 +11,7 @@ import Connections from './components/product owner/connection';
 import ListCatProducts from './components/product owner/CategoryProducts';
 import Register from "./components/auth/Register";
 import AdminLogin from "./components/admin/adminLogin";
+import ServiceOwnerProfile from "./components/service owner/serviceOwnerProfile";
 import UserNavBar from "./components/user/userNavBar";
 /*** Service owners */
 import ServiceOwnerOrders from './components/service owner/orders';
@@ -40,6 +41,8 @@ function App() {
 
         <Switch>
           <Route exact path="/products" component={ListProducts} />
+          <Route exact path="/serviceownerprofile/:id" component={ServiceOwnerProfile} />
+
           <Route exact path="/products/create" component={CreateProduct} />
           <Route exact path="/products/:id/edit" component={UpdateProduct} />
           <Route exact path="/admin">
