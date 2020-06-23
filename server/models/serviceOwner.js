@@ -14,7 +14,6 @@ const rate = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        unique: true,
         ref: 'User'
     },
     order:{  type: mongoose.Schema.Types.ObjectId}
@@ -33,7 +32,8 @@ const serviceOwnerSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId, 
             ref: "User", 
             required: [true, 'Provide User who submitted the report'] 
-        }
+        },
+        createdAt: { type: Date, default: new Date() }
     }],
     productOwner: { 
         status: { 

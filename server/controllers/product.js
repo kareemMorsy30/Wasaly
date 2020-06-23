@@ -37,7 +37,6 @@ exports.createProduct = async (req, res, next) => {
     catch (err) {
         next(err)
     }
-
 }
 
 // exports.listProducts = async (req, res, next) => {
