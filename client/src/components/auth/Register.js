@@ -255,7 +255,7 @@ const Authentication = (props) => {
             }
 
             if (passwordRegister === passConfRegister && role === "productowner") {
-
+// set
                 const registerResult = await axios.post(registerUrl,
 
                     {
@@ -310,7 +310,7 @@ const Authentication = (props) => {
 
                         //Should logged in first by history.push what is the route ?
 
-                        // history.push("/products/list");
+                        history.push("/");
 
                         // window.location = "http://localhost:3000/home";
 
@@ -376,7 +376,7 @@ const Authentication = (props) => {
 
                         //Should logged in first by history.push what is the route ?
 
-                        // history.push("/products/list");
+                        history.push("/");
 
                         // window.location = "http://localhost:3000/home";
 
