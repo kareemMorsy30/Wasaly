@@ -152,6 +152,7 @@ app.use((req, res, next) => { //404 Not Found
 app.use((err, req, res, next) => {
   const status = err.status || 500;
   const error = err.message || 'Error processing your request';
+console.log("app.use",error);
 
   res.status(status).send({
       error
