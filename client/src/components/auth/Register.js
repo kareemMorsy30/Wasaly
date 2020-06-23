@@ -229,12 +229,11 @@ const Authentication = (props) => {
 
                             });
                         }
-                        if (response.status=250) {
+                        if (response.status==250) {
                             // setErrorsRegister(response.data.message)
 
                             // toast(errorsRegister)
 
-console.log("response",response);
                             
 
                         } else if (response.status == 200) {
