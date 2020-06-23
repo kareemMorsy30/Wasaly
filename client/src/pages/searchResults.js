@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { Card, Button } from 'react-bootstrap'
+import { Card, Button, Spinner } from 'react-bootstrap'
 import useProductSearch from '../components/hooks/useProductSearch'
 import axios from 'axios'
 import ShowProducts from '../components/showProducts'
@@ -21,7 +21,7 @@ const SearchResults = () => {
   } = useProductSearch(id, pageNumber)
 
   const observer = useRef()
-  
+
   const lastProductElementRef = useCallback(node => {
     if (loading) return
     if (observer.current) observer.current.disconnect()
@@ -36,11 +36,21 @@ const SearchResults = () => {
   return (
     <>
 
-      {products &&
+      {
+        products &&
         <ShowProducts products={products} lastProductElementRef={lastProductElementRef} />
       }
 
-      <div>{loading && 'Loading ...'}</div>
+      <div className="container" style={{ margin: 'auto', marginTop: '20vh', width: '20%' }}>
+        {
+          loading &&
+          <div className="row">
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          </div>
+        }
+      </div>
       <div>{error && 'Error'}</div>
     </>
 

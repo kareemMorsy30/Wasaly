@@ -19,7 +19,9 @@ exports.createProduct = async (req, res, next) => {
         const { name, price, quantity, description, category } = req.body
         const categoryy= await Category.findOne({name: category}).exec()
         
-        let owner = req.user._id
+        let user = req.user._id
+
+        const owner= await productOwner.findOne({user}).select('_id').exec()
         let images = req.files
         images_path = images.map(image => image.filename)
         const product = await new Product({

@@ -23,7 +23,7 @@ const DropDown = (props) => {
                     {options.map((option) => {
                         return (
                             <div className="suggestion">
-                                <Link style={{ textDecoration: "none" }}
+                                <Link style={{ textDecoration: "none", color:"black" }}
                                 to={{
                                     pathname: `/search/${option[fieldName]}`,                                    
                                     state: { products: options }

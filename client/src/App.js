@@ -51,7 +51,6 @@ function App() {
       <Route exact path="/product-owner/connections" component={Connections} />
 
         <Switch>
-          <Route exact path="/products" component={ListProducts} />
           <Route exact path="/products/create" component={CreateProduct} />
           <Route exact path="/products/:id/edit" component={UpdateProduct} />
           <Route exact path="/admin">
@@ -68,6 +67,7 @@ function App() {
           <Route exact path="/search/:id" component={SearchResults}/>
             <Route exact path="/categoryproducts/:id" component={ListCatProducts} />
             <div className="container">
+          <Route exact path="/products" component={ListProducts} />
             <Route exact path="/test" >
               < Category />
             </Route>
