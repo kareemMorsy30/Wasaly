@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { useInput } from './hooks/input-hooks';
 import axios from 'axios';
 import './Auth.css';
+// import '../../styles/form.scss'
 import { Link, useHistory } from "react-router-dom";
 import {
     Button,
@@ -12,18 +13,19 @@ import {
 } from 'reactstrap';
 import { getGeoLocation } from '../../endpoints/geocoding';
 import { authHeader } from '../config/config'
+import { ToastContainer, toast } from 'react-toastify';
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`;
 
 const Authentication = (props) => {
     const history = useHistory();
-    const [errorsRegister, setErrorsRegister] = useState("");
+    // const [errorsRegister, setErrorsRegister] = useState("");
     const { value: usernameRegister, bind: bindUsernameRegister, reset: resetUsernameRegister } = useInput('');
     const { value: passwordRegister, bind: bindPasswordRegister, reset: resetPasswordRegister } = useInput('');
     const { value: passConfRegister, bind: bindPassConfRegister, reset: resetPassConfRegister } = useInput('');
     const { value: email, bind: bindEmail, reset: resetEmail } = useInput('');
     const { value: name, bind: bindname, reset: resetname } = useInput('');
-    const { value: role, bind: bindrole, reset: resetrole } = useInput('');
+    const { value: role, bind: bindrole, reset: resetrole } = useInput('customer');
     /**
     * Product owner
     */
@@ -73,7 +75,7 @@ const Authentication = (props) => {
             }))
         }
     }
-    const [errors, setErrors] = useState([]);
+    const [error, seterror] = useState();
     const [avatarInput, setAvatarInput] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const handleAvatarChange = e => {
@@ -175,10 +177,10 @@ const Authentication = (props) => {
             if (
                 !['image/gif', 'image/jpeg', 'image/png'].includes(avatarInput.type)
             ) {
-                setErrors(['image is not valid ']);
+                // setErrors(['image is not valid ']);
                 return;
             } else if (avatarInput.size > 3e6) {
-                setErrors(['image is too large']);
+                // setErrors(['image is too large']);
                 return;
             }
         }
@@ -208,11 +210,11 @@ const Authentication = (props) => {
                 })
 
 
-                    .then(response => {
+                    .then((response) => {
                         console.log('====================================');
-                        console.log(response);
+                        console.log("response then ",response);
                         console.log('====================================');
-                        console.log(response.data.user._id);
+                        // console.log(response.data.user._id);
                         let userId = response.data.user._id
                         if (avatarInput) {
                             const formData = new FormData();
@@ -227,9 +229,13 @@ const Authentication = (props) => {
 
                             });
                         }
-                        if (response.status == 250) {
+                        if (response.status=250) {
+                            // setErrorsRegister(response.data.message)
 
-                            // setErrorsRegister(response.message)
+                            // toast(errorsRegister)
+
+console.log("response",response);
+                            
 
                         } else if (response.status == 200) {
 
@@ -237,23 +243,37 @@ const Authentication = (props) => {
 
                             //Should logged in first by history.push what is the route ?
 
-                            // history.push("/");
+                            history.push("/");
 
                             // window.location = "http://localhost:3000/home";
 
                         }
 
+                    },
+                    
+                    
+                    (error) => {
+                        console.log('====================================');
+                        console.log(error.message,"ERRROR");
+                        console.log(error);
+                        
+                        
+                        console.log('====================================');
+                            error.message=" Email address  is already taken";
+                          seterror(error.message)
+                          toast(error.message)
+                      }
+                      )
 
-
-                    })
+            }
 
 
                 // axios.post(avatarUrl,authHeader);
 
-            }
+            
 
             if (passwordRegister === passConfRegister && role === "productowner") {
-
+// set
                 const registerResult = await axios.post(registerUrl,
 
                     {
@@ -277,7 +297,7 @@ const Authentication = (props) => {
 
                     withCredentials: true,
 
-                }).then(response => {
+                }).then( (response) => {
 
                     console.log('====================================');
                     console.log(response.data.productOwner.user);
@@ -308,13 +328,26 @@ const Authentication = (props) => {
 
                         //Should logged in first by history.push what is the route ?
 
-                        // history.push("/products/list");
+                        history.push("/");
 
                         // window.location = "http://localhost:3000/home";
 
                     }
 
-                })
+                },     
+                (error) => {
+                    console.log('====================================');
+                    console.log(error.message,"ERRROserR");
+                    console.log(error);
+                    
+                    
+                    console.log('====================================');
+                        error.message=" Email address is already taken";
+                      seterror(error.message)
+                      toast(error.message)
+                  }
+                
+                )
 
             }
             if (passwordRegister === passConfRegister && role === "serviceowner") {
@@ -343,7 +376,7 @@ const Authentication = (props) => {
 
                     withCredentials: true,
 
-                }).then(response => {
+                }).then((response) => {
                     console.log('====================================');
                     console.log(response);
                     console.log('====================================');
@@ -374,13 +407,28 @@ const Authentication = (props) => {
 
                         //Should logged in first by history.push what is the route ?
 
-                        // history.push("/products/list");
+                        history.push("/");
 
                         // window.location = "http://localhost:3000/home";
 
                     }
 
-                })
+                },    
+                (error) => {
+                    console.log('====================================');
+                    console.log(error.message,"ERRROserR");
+                    console.log(error);
+                    
+                    
+                    console.log('====================================');
+                        error.message=" Email address is already taken";
+                      seterror(error.message)
+                      toast(error.message)
+                  }
+                
+                
+                
+                )
 
             }
 
@@ -397,12 +445,41 @@ const Authentication = (props) => {
     return (
 
         <div className='col-lg-4 col-md-4 col-sm-4 col-xs-4 ' style={{ margin: 'auto', marginTop: '39px' }}>
-
+ <div>
+      {
+        error?
+        <ToastContainer/>:null}
+    </div>
             <h4>Dont Have an Account? Create one</h4>
 
             <hr />
 
-            <Form onSubmit={handleRegisterSubmit} >
+            <Form onSubmit={handleRegisterSubmit}  
+//             style={
+//                 {
+//   width: 98% !important;
+//   display: inline-block !important;
+// }
+  
+//   } 
+            >
+
+            <FormGroup>
+            <p className="class1" style={{color: '#c8c0d5'}}> Choose Your Account :</p>
+
+<Input type="select" name="role" id="exampleSelect"
+
+    {...bindrole}
+
+>
+    <option>customer</option>
+    <option>serviceowner</option>
+    <option>productowner</option>
+
+</Input>
+
+</FormGroup>
+
                 <FormGroup>
 
                     <Input type="text" name="name" placeholder="name"
@@ -411,44 +488,14 @@ const Authentication = (props) => {
 
                         {...bindname}
 
-                    />
+                    />*
 
                 </FormGroup>
-
-                <div className="phones-card">
-                    {phones.map((phone, index) => {
-                        return (<div key={index}>
-                        <input className="form-input" placeholder="Phone" value={phone}
-                            onChange={handleChangePhone(index)} />
-                            {
-                                <Button size="sm" id={index} onClick={removePhone(index)} >Remove Phone </Button>}</div>)
-                    })}
-                    {
-                        <Button size="sm" onClick={() => {
-                            setphones(phones.concat([""]))
-                        }} >Add Phone</Button>}
-                </div>
-
-                <FormGroup>
-
-                    <Input type="select" name="role" id="exampleSelect"
-
-                        {...bindrole}
-
-                    >
-                        <option>customer</option>
-                        <option>serviceowner</option>
-                        <option>productowner</option>
-
-                    </Input>
-
-
-                </FormGroup>
-
+             
                 <FormGroup>
 
                     <Input type="text" name="username" placeholder="Username"
-
+required
                         pattern='[A-Za-z\\s]*'
 
                         {...bindUsernameRegister}
@@ -467,66 +514,8 @@ const Authentication = (props) => {
 
                 </FormGroup>
 
-                {
 
-                    console.log("Kareeem : ", address)
-                }
-
-
-                {address.length>0 && address.map((inputField, index) => (
-                    <Fragment key={`${inputField}~${index}`
-                    }>
-                        <FormGroup >
-                            <Label for="exampleAddress">Address</Label>
-                            <Input type="text" name="street" placeholder="street"
-                                pattern='[A-Za-z\\s]*'
-                                value={inputField.street}
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <Input type="text" name="city" placeholder="city"
-                                pattern='[A-Za-z\\s]*'
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <datalist id="from">
-                                <option key="source" value={city} />
-                            </datalist>
-                            <Input type="text" name="area" placeholder="area"
-                                pattern='[A-Za-z\\s]*'
-                                // {...bindaddress}
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <datalist id="from">
-                                <option key="source" value={area} />
-                            </datalist>
-                            <Input type="number" name="latitude" placeholder="latitude"
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <Input type="number" name="longitude" placeholder="longitude"
-                                onChange={event => handleInputChange(index, event)}
-                            />
-
-                        </FormGroup>
-
-                        <div className="form-group col-sm-2">
-                            <button
-                                className="btn btn-link"
-                                type="button"
-                                onClick={() => handleRemoveFields(index)}
-                            >
-                                removeAddress
-                </button>
-                        
-                        </div>
-                    </Fragment>
-                ))}
-
-                    <button
-                                className="btn btn-link"
-                                type="button"
-                                onClick={() => handleAddFields()}
-                            >
-                                addAddress
-                </button>
+            
                 <FormGroup>
                     <Input type="password" name="password" placeholder="password "
                         {...bindPasswordRegister}
@@ -588,6 +577,103 @@ const Authentication = (props) => {
                     </FormGroup>
                     : null
                 }
+                <p className="class1" style={{color: '#c8c0d5'}}> Add Optional Information :</p>
+
+                <FormGroup >
+                    {phones.map((phone, index) => {
+                        return (<div key={index}>
+                        <Input className="form-input" placeholder="Phone" value={phone}
+                            onChange={handleChangePhone(index)} />
+                            
+                            {
+                                <button
+                                   className="btn btn-link"
+                                   type="button"
+                                   onClick={removePhone(index)}
+                               >
+                                   Remove Phone
+                                 </button>
+                                                                
+                                
+                                }</div>
+                                
+                                
+                                )
+                    })}
+                    {
+                        // <Button size="sm" onClick={() => {
+                        //     setphones(phones.concat([""]))
+                        // }} >Add Phone</Button>
+                        
+                        <button
+                        className="btn btn-link"
+                        type="button"
+                        style={{height: '1px', width : '110px',padding:"0px"}}
+
+                        onClick={() =>  setphones(phones.concat([""]))}
+                    >
+                        Add Phone
+                      </button>
+                        }
+                </FormGroup>
+
+             
+                {address.length>0 && address.map((inputField, index) => (
+                    <Fragment key={`${inputField}~${index}`
+                    }>
+                        <FormGroup >
+                            <Label for="exampleAddress">Address</Label>
+                            <Input type="text" name="street" placeholder="street"
+                                pattern='[A-Za-z\\s]*'
+                                value={inputField.street}
+                                onChange={event => handleInputChange(index, event)}
+                            />
+                            <Input type="text" name="city" placeholder="city"
+                                pattern='[A-Za-z\\s]*'
+                                onChange={event => handleInputChange(index, event)}
+                            />
+                            <datalist id="from">
+                                <option key="source" value={city} />
+                            </datalist>
+                            <Input type="text" name="area" placeholder="area"
+                                pattern='[A-Za-z\\s]*'
+                                // {...bindaddress}
+                                onChange={event => handleInputChange(index, event)}
+                            />
+                            <datalist id="from">
+                                <option key="source" value={area} />
+                            </datalist>
+                            <Input type="number" name="latitude" placeholder="latitude"
+                                onChange={event => handleInputChange(index, event)}
+                            />
+                            <Input type="number" name="longitude" placeholder="longitude"
+                                onChange={event => handleInputChange(index, event)}
+                            />
+
+                        </FormGroup>
+
+                        <div className="form-group col-sm-2">
+                            <button
+                                className="btn btn-link"
+                                type="button"
+                                onClick={() => handleRemoveFields(index)}
+                            >
+                                removeAddress
+                </button>
+                        
+                        </div>
+                    </Fragment>
+                ))}
+
+                    <button
+                                className="btn btn-link"
+                                type="button"
+                                onClick={() => handleAddFields()}
+                                style={{height: '1px', width : '110px',padding:"0px"}}
+
+                            >
+                                Add Address
+                </button>
 
                 <FormGroup >
                     <Input style={{ display: "block" }} type="file" name="files" onChange={handleAvatarChange}
@@ -599,9 +685,9 @@ const Authentication = (props) => {
 
 
             </Form>
-            {errorsRegister ? <div className="errors-div">
+            {/* {errorsRegister ? <div className="errors-div">
                 <small> {errorsRegister}</small>
-            </div> : null}
+            </div> : null} */}
         </div>
     )
 }

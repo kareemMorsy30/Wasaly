@@ -3,6 +3,7 @@ import { Card } from 'react-bootstrap'
 import '../styles/card.scss'
 
 
+
 const CardWithImage=({image,text, width, height})=>{  
    
     return(

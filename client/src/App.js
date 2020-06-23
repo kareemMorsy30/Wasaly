@@ -13,6 +13,8 @@ import ListCatProducts from './components/product owner/CategoryProducts';
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import AdminLogin from "./components/admin/adminLogin";
+import ServiceOwnerProfile from "./components/service owner/serviceOwnerProfile";
+import UserNavBar from "./components/user/userNavBar";
 import UserAndCustomerNavBar from "./components/customer/navbar";
 /*** Service owners */
 import ServiceOwnerOrders from './components/service owner/orders';
@@ -44,7 +46,7 @@ function App() {
     <div style={{height:'100%', display:'flex', flexDirection:'column'}}>
       {/* <NavBar/> */}
 
-      {isUser() || isCustomer() ?
+      {isUser() || isCustomer() ||1?
         <UserAndCustomerNavBar/>:''  
       }
       <div style={{  flex: '1 0 auto', marginTop:'12vh'}}>
@@ -60,7 +62,8 @@ function App() {
       <Route exact path="/admin/categories" component={All} />
 
         <Switch>
-          <Route exact path="/products" component={ListProducts} />
+          <Route exact path="/serviceownerprofile/:id" component={ServiceOwnerProfile} />
+
           <Route exact path="/products/create" component={CreateProduct} />
           <Route exact path="/products/:id/edit" component={UpdateProduct} />
           <Route exact path="/admin">
@@ -75,7 +78,9 @@ function App() {
 
 
           <Route exact path="/search/:id" component={SearchResults}/>
+            <Route exact path="/categoryproducts/:id" component={ListCatProducts} />
             <div className="container">
+          <Route exact path="/products" component={ListProducts} />
             <Route exact path="/test" >
               < Category />
             </Route>
@@ -84,7 +89,6 @@ function App() {
 
             <Route exact path="/orders" component={Order} />
             <Route exact path="/orders/:id" component={OrderDetails} />
-            <Route exact path="/categoryproducts/:id" component={ListCatProducts} />
 
             <Route exact path="/:id/ownerinfo" component={ProductDetails} />
             <Route exact path="/cart" component={Cart} />

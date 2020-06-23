@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 let userController = {};
 
 
-  
+
 userController.regesiter = async (req, res, next) => {
 
     const { name, username, email, password, role, phones, address } = req.body;
@@ -15,85 +15,86 @@ userController.regesiter = async (req, res, next) => {
     const newUser = new User({
         name, username, email, password, phones, role, address
     });
-console.log('====================================');
-console.log("PHONES ",phones);
-console.log('====================================');
-    if(newUser.role==="admin"){
-        console.log("Are you mad ??? ");
+    console.log('====================================');
+    console.log("PHONES ", phones);
+    console.log('====================================');
+    if (newUser.role === "admin") {
 
-        res.send({message:"You Are Not Allowrd to be an Admin "})
+        res.send({ message: "You Are Not Allowrd to be an Admin " })
     }
+
     if (newUser._id != undefined && newUser.role === "customer") {
         try {
-            console.log("\n  new USER :::     ", newUser);
-            // if (newUser.role=="customer"){
-            const user = await newUser.save().catch(err=>console.log(err)
-            );
+            const user = await newUser.save()
             const token = jwt.sign(
                 {
-                  _id: user._id.toString(),
+                    _id: user._id.toString(),
                 },
                 process.env.secret
                 // , { expiresIn: '1h' }
-              );
-            console.log('================Tooookeeeen====================');
-            console.log(token);
-            console.log('====================================');
-            console.log("\n USER ::    :      :    ",user);
-            return res.send({ user,token });
-
+            );
+            return res.send({ user, token });
         }
-        catch (error) {
-            if (error.name === "MongoError" && error.code === 11000) {
-                next(new Error("email must be unique"));
-            } else {
+        catch (e) {
+            if (e.name === "MongoError" && e.code === 11000) {
+                const error = new Error(`Email address ${newUser.email} is already taken`);
+                error.status = 400
                 next(error);
+            } else {
+                next(e);
+
             }
         }
     }
 
     else if (newUser.role === "serviceowner") {
         const { user, distance, region, transportation } = req.body;
-        await newUser.save();
-
-        const newServiceOwner = new allModels.ServiceOwner({
-            user: newUser._id, distance, region, transportation
-        });
-        console.log("\n  new USER :::     ", newUser.role);
         try {
+
+            await newUser.save();
+
+            const newServiceOwner = new allModels.ServiceOwner({
+                user: newUser._id, distance, region, transportation
+            });
+            // console.log("\n  new USER :::     ", newUser.role);
             const serviceOwner = await newServiceOwner.save();
             console.log("\n Service owner ::    :      :    ".serviceOwner);
             console.log("i'm in role");
             return res.send({ serviceOwner, user });
         }
-        catch (error) {
-            if (error.name === "MongoError" && error.code === 11000) {
-                next(new Error("email must be unique"));
-            } else {
+        catch (e) {
+            if (e.name === "MongoError" && e.code === 11000) {
+                const error = new Error(`Email address ${newUser.email} is already taken`);
+                error.status = 400
                 next(error);
+            } else {
+                next(e);
+
             }
         }
     }
     else if (newUser.role === "productowner") {
         const { user, marketName, ownerName, marketPhone } = req.body;
-        await newUser.save();
-
-        const newProductOwner = new allModels.productOwner({
-            user: newUser._id, marketName, ownerName, marketPhone
-        });
-        console.log("\n  new  newProductOwner:::     ", newProductOwner.role);
-        console.log("\n  new newProductOwner.user :::     ", newProductOwner.user);
         try {
+            await newUser.save();
+            const newProductOwner = new allModels.productOwner({
+                user: newUser._id, marketName, ownerName, marketPhone
+            });
+            console.log("\n  new  newProductOwner:::     ", newProductOwner.role);
+            console.log("\n  new newProductOwner.user :::     ", newProductOwner.user);
             console.log("\n  new newProductOwner :::     ", newProductOwner);
             const productOwner = await newProductOwner.save();
             console.log("\n pOwner ::    :      :    ".productowner);
             console.log("i'm in role");
             res.send({ productOwner });
-        } catch (error) {
-            if (error.name === "MongoError" && error.code === 11000) {
-                next(new Error("email must be unique"));
-            } else {
+        } catch (e) {
+            if (e.name === "MongoError" && e.code === 11000) {
+                const error = new Error(`Email address ${newUser.email} is already taken`);
+                error.status = 400
                 next(error);
+            } else {
+                next(e);
+
             }
         }
     }
@@ -133,63 +134,64 @@ userController.login = async (request, response, next) => {
             }
         });
     } catch (error) {
+        // res.send(error)
         next(error);
     }
 };
 
 userController.uploadAvatar = async (req, res) => {
-User.findById(req.params.id,(err,user)=>{
+    User.findById(req.params.id, (err, user) => {
 
-    console.log('====================================');
-    console.log(user);
-    console.log('====================================');
+        console.log('====================================');
+        console.log(user);
+        console.log('====================================');
 
-    if (!user) {
-        res.status(404).send("user is not found")
+        if (!user) {
+            res.status(404).send("user is not found")
 
-        
-    }else{
-        user.avatar= '/uploads/users/images/' + req.file.filename;
-        user.save().then(user=>{
-            res.json("user updated");
-        }).catch(err=>{res.status(400).send("update not possiple")});
-    }
-})
+
+        } else {
+            user.avatar = '/uploads/users/images/' + req.file.filename;
+            user.save().then(user => {
+                res.json("user updated");
+            }).catch(err => { res.status(400).send("update not possiple") });
+        }
+    })
     // // const user = req.user;
-  
+
     // user.avatar = '/uploads/users/images/' + req.file.filename;
     // await user.save();
     // res.send();
-  
-  };
 
-userController.getAllUsers = async(req,res)=>{
-    try{
-        let user =await userModel.find()
+};
+
+userController.getAllUsers = async (req, res) => {
+    try {
+        let user = await userModel.find()
         console.log(user);
         res.send(user)
-    }catch(err){
+    } catch (err) {
         console.log(err);
         res.send(err);
     }
 }
-userController.getUser = async(req,res)=>{
-    try{
-    let user =await userModel.findById({_id: req.params.id})
-    res.send(user)
+userController.getUser = async (req, res) => {
+    try {
+        let user = await userModel.findById({ _id: req.params.id })
+        res.send(user)
     }
-    catch(err){
+    catch (err) {
         res.send(err);
         console.log(err);
     }
 
 }
-userController.updateUser = (req,res)=>{
-    userModel.findOneAndUpdate({_id: req.params.id},req.body,{new: true},(error,user)=>{
-        res.status(200).json({"data": user});
+userController.updateUser = (req, res) => {
+    userModel.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (error, user) => {
+        res.status(200).json({ "data": user });
     }).catch((err) => {
         console.log(err);
-        res.status(400).json({"error": err});
+        res.status(400).json({ "error": err });
     })
 }
 userController.saveReport= (req, res, next )=>{

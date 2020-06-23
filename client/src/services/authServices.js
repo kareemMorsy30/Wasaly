@@ -19,4 +19,8 @@ const isCustomer=()=>{
     const user= JSON.parse(localStorage.getItem('user'));
     return !user ? true:false;
 }
-export {isAdmin, isProductOwner, isServiceOwner, isUser, isCustomer}
+const isLoggedIn=()=>{
+    const user= JSON.parse(localStorage.getItem('user'));
+    return user ? true:false;
+}
+export {isAdmin, isProductOwner, isServiceOwner, isUser, isCustomer, isLoggedIn}

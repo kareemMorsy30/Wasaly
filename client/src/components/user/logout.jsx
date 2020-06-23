@@ -2,7 +2,6 @@ import React from 'react'
 import { Button } from 'reactstrap';
 
 const Logout = (props) => {
-
     const handleClick = () => {
         localStorage.setItem("token", "");
         localStorage.removeItem("user");

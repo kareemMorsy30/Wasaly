@@ -17,21 +17,24 @@ var upload = multer({ storage: storage }).array('file')
 exports.createProduct = async (req, res, next) => {
     try {
         const { name, price, quantity, description, category } = req.body
-        console.log(category)
-        const categoryID= await Category.findOne({name: category}).select('_id').exec()
+        const categoryy= await Category.findOne({name: category}).exec()
+        
+        let user = req.user._id
 
-        let owner = req.user._id
+        const owner= await productOwner.findOne({user}).select('_id').exec()
         let images = req.files
         images_path = images.map(image => image.filename)
-        product = await new Product({
+        const product = await new Product({
             name,
             owner,
             price,
             quantity,
             images_path,
             description,
-            category: categoryID
+            category: categoryy._id
         }).save()
+        categoryy.products.push(product._id)
+        categoryy.save()
         res.json("done")
     }
     catch (err) {
@@ -185,13 +188,13 @@ exports.productDetails=  async(req, res)=>{
     
 
 
-    exports.showCategoryProducts = async (req, res, next) => {
+    // exports.showCategoryProducts = async (req, res, next) => {
 
-        try {
-            const id = req.user._id
-            const products = await Product.find({ }).populate('category').populate('owner').exec()
-            res.json(products)
-        } catch (err) {
-            next(err)
-        }
-    }
+    //     try {
+    //         const id = req.user._id
+    //         const products = await Product.find({ }).populate('category').populate('owner').exec()
+    //         res.json(products)
+    //     } catch (err) {
+    //         next(err)
+    //     }
+    // }

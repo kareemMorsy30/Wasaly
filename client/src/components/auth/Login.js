@@ -9,11 +9,16 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+
 import Typography from '@material-ui/core/Typography';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import '../../styles/login.scss';
+
+import { ToastContainer, toast } from 'react-toastify';
 
 import { Jumbotron, Badge } from 'reactstrap';
 
@@ -56,6 +61,7 @@ export default function Login() {
     const [passwordInput, setPasswordInput] = useState('');
     const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [error, seterror] = useState('')
 
     const hanleEmailChange = (e) => {
         const { target: { value } } = e;
@@ -76,7 +82,10 @@ export default function Login() {
                 email: emailInput,
                 password: passwordInput
             }
-        }).then((response) => {
+        }).then(    (response) => {
+          console.log('====================================');
+          console.log(response);
+          console.log('====================================');
             const { token, user } = response.data;         
             localStorage.setItem("token", token);
 
@@ -84,7 +93,13 @@ export default function Login() {
             localStorage.setItem("user", JSON.stringify(user));
             window.location.href = "http://localhost:3000/";
         }, (error) => {
-            console.log(error);
+          console.log('====================================');
+          console.log(error.message,"ERRROR");
+          
+          console.log('====================================');
+error.message="Email or password are wrong";
+            seterror(error.message)
+            toast(error.message)
         });
 
         setEmailInput('');
@@ -92,37 +107,43 @@ export default function Login() {
     }
  
   const classes = useStyles();
-  useEffect(() => {
-    (async function () {
-        try {
-            let response = await axios.get(
-                `${domain}/users/logincheck`, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem("token")
-                }
-            }
-            ).then((response) => {
-                console.log('====================================');
-                console.log("Response  ::  ",response);
-                console.log('====================================');
-                if (response.status === 200) {
-                    setIsLoggedIn(true);
-                    sessionStorage.setItem("user", JSON.stringify(response.data.user));
-                    sessionStorage.setItem("loggedIn", JSON.stringify(true));
-                }
-            });
+//   useEffect(() => {
+//     (async function () {
+//         try {
+//             let response = await axios.get(
+//                 `${domain}/users/logincheck`, {
+//                 headers: {
+//                     'Authorization': 'Bearer ' + localStorage.getItem("token")
+//                 }
+//             }
+//             ).then((response) => {
+//                 console.log('====================================');
+//                 console.log("Response  ::  ",response);
+//                 console.log('====================================');
+//                 if (response.status === 200) {
+//                     setIsLoggedIn(true);
+//                     sessionStorage.setItem("user", JSON.stringify(response.data.user));
+//                     sessionStorage.setItem("loggedIn", JSON.stringify(true));
+//                 }
+//             });
 
 
-        } catch (error) {
-            console.log("error is ...", error);
-        }
-    })();
-}, []);
+//         } catch (error) {
+//             console.log("error is ...", error);
+//         }
+//     })();
+// }, []);
 
     // if (isLoggedIn == false) {
 
   return (
     <Container component="main" maxWidth="xs">
+    
+    <div>
+      {
+        error?
+        <ToastContainer/>:null}
+    </div>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>

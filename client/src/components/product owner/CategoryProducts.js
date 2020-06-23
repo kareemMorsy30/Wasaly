@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import axios from 'axios'
-import { Table, Button, Container, Row, Col } from 'react-bootstrap';
-import { Link ,useParams} from 'react-router-dom'
+import {  Spinner } from 'react-bootstrap';
+import { Link, useParams } from 'react-router-dom'
 import VerticallyCenteredModal from '../verticallCenteredModal'
 import { authHeader } from '../config/config'
 import CreateProduct from './createProduct'
 import UpdateProduct from './updateProduct';
 import ListcatProducts from './ListcatProducts'
+import ShowProducts from '../showProducts'
 /**
  * 
  * @param {*} props
@@ -17,74 +18,74 @@ const [product, setproduct] = useState({});
  */
 
 const ListCatProducts = (props) => {
-const id = useParams()['id'];
-
+    const id = useParams()['id'];
     const [products, setProducts] = useState([])
-    const [modalShow, setModalShow] = useState(false);
-    const [createModalShow, setCreateModalShow] = useState(false);
-    const [editModalShow, setEditModalShow] = useState(false);
-    const [productId, setProductID] = useState("")
-    const [deleted, setDeleted] = useState(false)
-    const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
-console.log('====================================');
-console.log(id);
-console.log('====================================');
-    useEffect(() => {
-        axios.get(`${domain}/product/categoryproducts`, authHeader)
-            .then(res => {
-                console.log(res)
-                console.log('====================================');
-                console.log("in effect");
-                console.log('====================================');
-                res.data.length >= 0 && setProducts(res.data)
-            }
-            ).catch(err => {
-                console.log(err)
-            })
-    }, [deleted, createModalShow, editModalShow])
-    const deleteProduct = () => {
-        axios.delete(`${domain}/product/${productId}`, authHeader)
-            .then(res => {
-                setDeleted((prevState) => !prevState)
-                setModalShow(false)
-            }
-            ).catch(err => {
-                console.log(err)
-            })
-    }
+    const [page, setPageNumber] = useState(1)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(false)
+    const [hasMore, setHasMore] = useState(false)
 
+    const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
+    useEffect(() => {
+        setProducts([])
+        setPageNumber(1)
+    }, [id])
+
+    useEffect(() => {
+        let cancel
+        axios.get(`${domain}/category/categoryproducts/${id}`, {
+            params: {
+                page,
+            },
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            cancelToken: new axios.CancelToken(c => cancel = c)
+        })
+            .then(response => {
+                console.log(response.data.products)
+                response.data.products.length > 0 && (
+                    setProducts(prevProducts => {
+                        return [...prevProducts, ...response.data.products]
+                    })
+                )
+                setHasMore(response.data.products.length > 0)
+                setLoading(false)
+            }
+            ).catch(err => {
+                if (axios.isCancel(error)) return
+                setError(error)
+                setProducts([])
+                console.log(err)
+            })
+    }, [page, id])
+
+    const observer = useRef()
+
+    const lastProductElementRef = useCallback(node => {
+        if (loading) return
+        if (observer.current) observer.current.disconnect()
+        observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && hasMore) {
+                setPageNumber(prevPageNumber => prevPageNumber + 1)
+            }
+        })
+        if (node) observer.current.observe(node)
+    }, [loading, hasMore])
 
     return (
         <>
-
-            <Button onClick={() => {setCreateModalShow(true) }}><a>Create Product</a></Button>
-            <ListcatProducts productsList={ products.filter((product) => product.category._id === id) } />
-
-            < VerticallyCenteredModal
-                show={modalShow}
-                title={"Delete Product"}
-                body={"Are you sure?"}
-                handleClose={()=>setModalShow(false)}             
-
-            >
-                <Button onClick={deleteProduct}>Delete</Button>
-                <Button onClick={() => setModalShow(false)}>Close</Button>
-            </ VerticallyCenteredModal>
-
-            < VerticallyCenteredModal
-                show={createModalShow}
-                title={"Create Product"}  
-                handleClose={()=>setCreateModalShow(false)}             
-            >
-            <CreateProduct/>
-            </ VerticallyCenteredModal>
-            < VerticallyCenteredModal
-                show={editModalShow}
-                title={"Edit Product"}  
-                handleClose={()=>setEditModalShow(false)}             
-            >
-            <UpdateProduct id={productId}/>
-            </ VerticallyCenteredModal>
+            <ShowProducts products={products} lastProductElementRef={lastProductElementRef} />
+            <div className="container" style={{ margin: 'auto', marginTop: '20vh', width: '20%' }}>
+                {
+                    loading &&
+                    <div className="row">
+                        <Spinner animation="border" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </Spinner>
+                    </div>
+                }
+            </div>
+           
+            {error}
         </>
     )
 
