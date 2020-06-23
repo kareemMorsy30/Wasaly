@@ -13,12 +13,13 @@ import {
 } from 'reactstrap';
 import { getGeoLocation } from '../../endpoints/geocoding';
 import { authHeader } from '../config/config'
+import { ToastContainer, toast } from 'react-toastify';
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`;
 
 const Authentication = (props) => {
     const history = useHistory();
-    const [errorsRegister, setErrorsRegister] = useState("");
+    // const [errorsRegister, setErrorsRegister] = useState("");
     const { value: usernameRegister, bind: bindUsernameRegister, reset: resetUsernameRegister } = useInput('');
     const { value: passwordRegister, bind: bindPasswordRegister, reset: resetPasswordRegister } = useInput('');
     const { value: passConfRegister, bind: bindPassConfRegister, reset: resetPassConfRegister } = useInput('');
@@ -74,7 +75,7 @@ const Authentication = (props) => {
             }))
         }
     }
-    const [errors, setErrors] = useState([]);
+    const [error, seterror] = useState();
     const [avatarInput, setAvatarInput] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const handleAvatarChange = e => {
@@ -176,10 +177,10 @@ const Authentication = (props) => {
             if (
                 !['image/gif', 'image/jpeg', 'image/png'].includes(avatarInput.type)
             ) {
-                setErrors(['image is not valid ']);
+                // setErrors(['image is not valid ']);
                 return;
             } else if (avatarInput.size > 3e6) {
-                setErrors(['image is too large']);
+                // setErrors(['image is too large']);
                 return;
             }
         }
@@ -209,11 +210,11 @@ const Authentication = (props) => {
                 })
 
 
-                    .then(response => {
+                    .then((response) => {
                         console.log('====================================');
-                        console.log(response);
+                        console.log("response then ",response);
                         console.log('====================================');
-                        console.log(response.data.user._id);
+                        // console.log(response.data.user._id);
                         let userId = response.data.user._id
                         if (avatarInput) {
                             const formData = new FormData();
@@ -228,9 +229,12 @@ const Authentication = (props) => {
 
                             });
                         }
-                        if (response.status == 250) {
+                        if (response.status=250) {
+                            // setErrorsRegister(response.data.message)
 
-                            // setErrorsRegister(response.message)
+                            // toast(errorsRegister)
+
+console.log("response",response);
                             
 
                         } else if (response.status == 200) {
@@ -245,17 +249,31 @@ const Authentication = (props) => {
 
                         }
 
+                    },
+                    
+                    
+                    (error) => {
+                        console.log('====================================');
+                        console.log(error.message,"ERRROR");
+                        console.log(error);
+                        
+                        
+                        console.log('====================================');
+                            error.message=" Email address  is already taken";
+                          seterror(error.message)
+                          toast(error.message)
+                      }
+                      )
 
-
-                    })
+            }
 
 
                 // axios.post(avatarUrl,authHeader);
 
-            }
+            
 
             if (passwordRegister === passConfRegister && role === "productowner") {
-
+// set
                 const registerResult = await axios.post(registerUrl,
 
                     {
@@ -279,7 +297,7 @@ const Authentication = (props) => {
 
                     withCredentials: true,
 
-                }).then(response => {
+                }).then( (response) => {
 
                     console.log('====================================');
                     console.log(response.data.productOwner.user);
@@ -310,13 +328,26 @@ const Authentication = (props) => {
 
                         //Should logged in first by history.push what is the route ?
 
-                        // history.push("/products/list");
+                        history.push("/");
 
                         // window.location = "http://localhost:3000/home";
 
                     }
 
-                })
+                },     
+                (error) => {
+                    console.log('====================================');
+                    console.log(error.message,"ERRROserR");
+                    console.log(error);
+                    
+                    
+                    console.log('====================================');
+                        error.message=" Email address is already taken";
+                      seterror(error.message)
+                      toast(error.message)
+                  }
+                
+                )
 
             }
             if (passwordRegister === passConfRegister && role === "serviceowner") {
@@ -345,7 +376,7 @@ const Authentication = (props) => {
 
                     withCredentials: true,
 
-                }).then(response => {
+                }).then((response) => {
                     console.log('====================================');
                     console.log(response);
                     console.log('====================================');
@@ -376,13 +407,28 @@ const Authentication = (props) => {
 
                         //Should logged in first by history.push what is the route ?
 
-                        // history.push("/products/list");
+                        history.push("/");
 
                         // window.location = "http://localhost:3000/home";
 
                     }
 
-                })
+                },    
+                (error) => {
+                    console.log('====================================');
+                    console.log(error.message,"ERRROserR");
+                    console.log(error);
+                    
+                    
+                    console.log('====================================');
+                        error.message=" Email address is already taken";
+                      seterror(error.message)
+                      toast(error.message)
+                  }
+                
+                
+                
+                )
 
             }
 
@@ -399,7 +445,11 @@ const Authentication = (props) => {
     return (
 
         <div className='col-lg-4 col-md-4 col-sm-4 col-xs-4 ' style={{ margin: 'auto', marginTop: '39px' }}>
-
+ <div>
+      {
+        error?
+        <ToastContainer/>:null}
+    </div>
             <h4>Dont Have an Account ? Create one</h4>
 
             <hr />
@@ -640,9 +690,9 @@ required
 
 
             </Form>
-            {errorsRegister ? <div className="errors-div">
+            {/* {errorsRegister ? <div className="errors-div">
                 <small> {errorsRegister}</small>
-            </div> : null}
+            </div> : null} */}
         </div>
     )
 }

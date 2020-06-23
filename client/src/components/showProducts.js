@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { Card, Button } from 'react-bootstrap'
 import {Typography, Slider} from '@material-ui/core';
-import InputRange from 'react-input-range';
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
