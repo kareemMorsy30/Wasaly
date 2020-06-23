@@ -16,6 +16,9 @@ import AdminLogin from "./components/admin/adminLogin";
 import UserAndCustomerNavBar from "./components/customer/navbar";
 /*** Service owners */
 import ServiceOwnerOrders from './components/service owner/orders';
+/**** Admin ****/
+import AdminServiceOwners from './components/admin/serviceOwners';
+import All from './components/admin/categories/all';
 /**
  * Admin NavBar Ya adham :)
  */
@@ -45,10 +48,16 @@ function App() {
         <UserAndCustomerNavBar/>:''  
       }
       <div style={{  flex: '1 0 auto', marginTop:'12vh'}}>
-   
+      {/* Product owner routes */}
+      <Route exact path="/product-owner/connections" component={Connections} />
+
+      {/* Service owner routes */}
       <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
       <Route exact path="/service-owner/connection" component={ProductOwnerDetails} />
-      <Route exact path="/product-owner/connections" component={Connections} />
+
+      {/* Admin routes */}
+      <Route exact path="/admin/service-owners" component={AdminServiceOwners} />
+      <Route exact path="/admin/categories" component={All} />
 
         <Switch>
           <Route exact path="/products" component={ListProducts} />
