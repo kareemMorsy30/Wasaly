@@ -398,7 +398,7 @@ const Authentication = (props) => {
 
         <div className='col-lg-4 col-md-4 col-sm-4 col-xs-4 ' style={{ margin: 'auto', marginTop: '39px' }}>
 
-            <h4>Dont Have an Account ? Create one</h4>
+            <h4>Dont Have an Account? Create one</h4>
 
             <hr />
 
@@ -436,12 +436,8 @@ const Authentication = (props) => {
                         {...bindrole}
 
                     >
-
-                        <option>serviceowner</option>
-
                         <option>customer</option>
-
-
+                        <option>serviceowner</option>
                         <option>productowner</option>
 
                     </Input>
