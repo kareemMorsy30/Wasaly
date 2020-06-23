@@ -41,7 +41,7 @@ function App() {
     <div style={{height:'100%', display:'flex', flexDirection:'column'}}>
       {/* <NavBar/> */}
 
-      {isUser() || isCustomer() ?
+      {isUser() || isCustomer() ||1?
         <UserAndCustomerNavBar/>:''  
       }
       <div style={{  flex: '1 0 auto', marginTop:'12vh'}}>
@@ -66,6 +66,7 @@ function App() {
 
 
           <Route exact path="/search/:id" component={SearchResults}/>
+            <Route exact path="/categoryproducts/:id" component={ListCatProducts} />
             <div className="container">
             <Route exact path="/test" >
               < Category />
@@ -75,7 +76,6 @@ function App() {
 
             <Route exact path="/orders" component={Order} />
             <Route exact path="/orders/:id" component={OrderDetails} />
-            <Route exact path="/categoryproducts/:id" component={ListCatProducts} />
 
             <Route exact path="/:id/ownerinfo" component={ProductDetails} />
             <Route exact path="/cart" component={Cart} />

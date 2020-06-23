@@ -6,7 +6,6 @@ const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 const ShowProducts = ({ products, lastProductElementRef }) => {
   // const {state:{products}}= useLocation()
   
-  console.log(products)
   return (
     <>
       <div className="container" style={{ width: '60%', marginTop: "50px" }}>

@@ -24,7 +24,7 @@ const Authentication = (props) => {
     const { value: passConfRegister, bind: bindPassConfRegister, reset: resetPassConfRegister } = useInput('');
     const { value: email, bind: bindEmail, reset: resetEmail } = useInput('');
     const { value: name, bind: bindname, reset: resetname } = useInput('');
-    const { value: role, bind: bindrole, reset: resetrole } = useInput('');
+    const { value: role, bind: bindrole, reset: resetrole } = useInput('customer');
     /**
     * Product owner
     */

@@ -21,7 +21,6 @@ export default function useProductSearch(query, pageNumber) {
             cancelToken: new axios.CancelToken(c=> cancel=c)
         })
         .then(function (response) {
-            console.log(response.data.products)
             setProducts(prevProducts=>{
                 return [...prevProducts, ...response.data.products]
             })

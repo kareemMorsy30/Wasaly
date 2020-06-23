@@ -13,9 +13,10 @@ import { Form, FormControl } from 'react-bootstrap';
 
 import { Link } from 'react-router-dom';
 import axios from "axios";
-// import Login from "../login";
+import Login from "../login";
 import Logout from "../user/logout";
 import Search from "../search"
+import {isLoggedIn} from '../../services/authServices'
 
 const NavBar = (props) => {
     const [searchInput, setSearchInput] = useState('');
@@ -38,7 +39,7 @@ const NavBar = (props) => {
     const toggle = () => setIsOpen(!isOpen);
 
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    // const [isLoggedIn, setIsLoggedIn] = useState(false);
     const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
 
@@ -68,6 +69,8 @@ const NavBar = (props) => {
     //         }
     //     })();
     // }, []);
+
+
     return (
         <Navbar color="light" light expand="md" >
                 <div className="container">
@@ -88,8 +91,10 @@ const NavBar = (props) => {
                         <NavItem>
                             <Link className="nav-link" to="/users">users</Link>
                         </NavItem>
+
+                        {console.log(isLoggedIn())}
                         {
-                            isLoggedIn == false ? (
+                            isLoggedIn() == false ? (
                                 <NavItem>
                                     {/* <Login /> */}
                                 </NavItem>
@@ -97,15 +102,7 @@ const NavBar = (props) => {
                         }
                     </Nav>
                      </Collapse>
-              
-
-
-            {/* <Form inline onSubmit={handleClick}>
-                <FormControl type="text" value={searchInput} onChange={handleSearchInput} placeholder="Search for product " className="mr-sm-2" />
-                <Link to={`/search/${searchInput}`}>
-                    <Button variant="outline-primary" onClick={handleClick}>Search</Button>
-                </Link>
-            </Form> */}
+       
             <Search/>
             </div>
         </Navbar>

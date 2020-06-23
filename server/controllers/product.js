@@ -17,21 +17,22 @@ var upload = multer({ storage: storage }).array('file')
 exports.createProduct = async (req, res, next) => {
     try {
         const { name, price, quantity, description, category } = req.body
-        console.log(category)
-        const categoryID= await Category.findOne({name: category}).select('_id').exec()
-
+        const categoryy= await Category.findOne({name: category}).exec()
+        
         let owner = req.user._id
         let images = req.files
         images_path = images.map(image => image.filename)
-        product = await new Product({
+        const product = await new Product({
             name,
             owner,
             price,
             quantity,
             images_path,
             description,
-            category: categoryID
+            category: categoryy._id
         }).save()
+        categoryy.products.push(product._id)
+        categoryy.save()
         res.json("done")
     }
     catch (err) {

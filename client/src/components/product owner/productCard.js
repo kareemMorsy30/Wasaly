@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 
 const ProductCard = ({ product ,match,handleClick}) => {
         
-   
+    console.log(product)
     return (
         <div>
             <Card width="318px" height="180px">

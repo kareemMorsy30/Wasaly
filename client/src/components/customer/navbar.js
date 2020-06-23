@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {Link} from 'react-router-dom'
+import {Link, NavLink} from 'react-router-dom'
 import UserNavBar from "../user/userNavBar";
 import axios from 'axios'
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
@@ -66,9 +66,12 @@ const NavBar = () => {
                        </NavText>
 
                         {categories.length > 0 && categories.map((category) =>
-                            <NavItem eventKey="charts/linechart" key={category.name}>
-                                <NavText>
+                              <NavItem eventKey="charts/linechart" key={category.name}>
+                              
+                              <NavText>
+                             <Link className="" to={category._id &&`/categoryproducts/${category._id}`} style={{ backgroundImage: "none" }}> 
                                     {category.name}
+                            </Link>
                                 </NavText>
                             </NavItem>
 

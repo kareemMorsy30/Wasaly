@@ -14,7 +14,6 @@ const ListcatProducts = ({ productsList }) => {
     };
 
     const paginatedproductList = paginate(productsList, currentPage, pageSize);
-
     return (
         <Container>
             <br />

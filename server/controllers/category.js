@@ -1,4 +1,4 @@
-const { Category } = require('../models/allModels');
+const { Category, Product } = require('../models/allModels');
 const fs = require('fs');
 
 const add = (req, res) => {
@@ -24,9 +24,22 @@ const remove = (req, res) => {
 
 }
 const showCategoryProducts=  async(req, res)=>{
+    const resPerPage = 8; // results per page
+    const{page}= req.query || 1;
+  
     try {
-        const products = await Prod.findById(req.params.id).populate('products');
-        res.send(products);
+        const products = await Product.find({category:req.params.id})
+        .skip((resPerPage * page)- resPerPage)
+        .limit(resPerPage)  
+        console.log(products)
+        const numOfProducts= products.length
+
+        res.json({
+            products,
+            currentPage:page,
+            pages: Math.ceil(numOfProducts / resPerPage), 
+            numOfResults: numOfProducts
+        })
     } catch (error) {
         // error=new Error("No products there ")
 
