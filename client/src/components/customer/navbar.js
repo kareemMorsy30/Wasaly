@@ -5,6 +5,7 @@ import axios from 'axios'
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import {isUser} from '../../services/authServices'
+import Auth from '../product owner/Cart/UserCart';
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 var styles={
@@ -25,7 +26,7 @@ const NavBar = () => {
 
     return (
         <>
-            <UserNavBar/>
+            <UserNavBar user={Auth} />
             <SideNav            
                 style={sideBarColor}
                 onToggle={(expanded)=>

@@ -15,6 +15,8 @@ console.log('====================================');
 
     const renderItems = () => (
         props.products && props.products.map(product => (
+            <table id="table">
+            <thead>
             <tr key={product._id}>
                 <td>
                     <img style={{ width: '70px' }} alt="product" 
@@ -26,6 +28,8 @@ console.log('====================================');
                 onClick={()=> props.removeItem(product._id)}
                 >Remove </button> </td>
             </tr>
+            </thead>
+            </table>
         ))
     )
 
