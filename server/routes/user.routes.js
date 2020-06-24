@@ -107,7 +107,7 @@ router.post('/admin', adminAuth,
     //get user by id
     router.get('/:id/',userController.getUser);
     router.post('/addToCart',userController.addToCart);
-router.post('/removeFromCart',userController.removeFromCart);
+router.delete('/removeFromCart',userController.removeFromCart);
 router.get('/userCartInfo',userController.userCartInfo);
 
 module.exports = router;

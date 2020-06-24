@@ -61,7 +61,11 @@ export function auth() {
 
 
 export function getCartItems(cartItems, userCart) {
-    const request = axios.get(`${process.env.REACT_APP_BACKEND_DOMAIN}/product/products_by_id?id=${cartItems}&type=array`,authHeader)
+    const request = axios.get(
+        
+        `${process.env.REACT_APP_BACKEND_DOMAIN}/product/products_by_id?id=${cartItems}&type=array`
+        
+        ,authHeader)
         .then(response => {
             console.log('============Get CART ========================');
             console.log(response);
@@ -99,7 +103,9 @@ console.log('====================================');
 
 
 export function removeCartItem(id) {
-    const request = axios.get(`/api/users/removeFromCart?_id=${id}`)
+    // `${process.env.REACT_APP_BACKEND_DOMAIN}/product/products_by_id?id=${cartItems}&type=array`
+    // 
+    const request = axios.delete(`${process.env.REACT_APP_BACKEND_DOMAIN}/users/removeFromCart?_id=${id}`,authHeader)
         .then(response => {
 
             response.data.cart.forEach(item => {

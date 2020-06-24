@@ -2,7 +2,7 @@ const User = require("../models/user");
 const allModels = require('../models/allModels');
 const userModel = require('../models/user');
 const Report = require('../models/report')
-
+const {Product}=allModels; 
 const jwt = require("jsonwebtoken");
 let userController = {};
 
