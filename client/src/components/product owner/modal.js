@@ -9,7 +9,7 @@ const Modal = ({ record, Flag, Description }) => {
         <ModalBody>
             <div className="body-section">
                 <div className="image-section">
-                    <img className="user-profile" src={record.user && record.user.image_path ? record.user.image_path : "../../img/user.png"}/>
+                    <img className="user-profile" src={record.user && record.user.avatar ? record.user.avatar : "../../img/user.png"}/>
                 </div>
                 <div className="details-section">
                     <label>Username</label>

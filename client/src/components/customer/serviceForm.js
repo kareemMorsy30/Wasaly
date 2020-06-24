@@ -81,12 +81,11 @@ const ServiceOrderForm = ({ setServiceOwners, setWaiting, setOrder }) => {
                 });
                 console.log(data.area);
                 if(input > toValue && data.area && !suggested.includes(data.area) && data.area.toLowerCase().includes(input)){
-                console.log('====================================');
-                console.log(data.area);
-                console.log('====================================');
-                    // setSuggested([...suggested, data.area]);
-                    setFromValue(data.city);
-                
+                    console.log('====================================');
+                    console.log(data.area);
+                    console.log('====================================');
+                    setSuggested([...suggested, data.area]);
+                    setFromValue(data.area);
                 }
             })
         }

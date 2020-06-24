@@ -11,5 +11,13 @@ const categorySchema = new mongoose.Schema({
     products: [{type: mongoose.Schema.Types.ObjectId, ref: 'Product'}],
 });
 
+// categorySchema.pre('save', function(next) {
+//     const err = new Error('Category image is required');
+//     // do stuff
+//     if(!this.image) next(err);
+
+//     next();
+// });
+
 
 module.exports = mongoose.model('Category', categorySchema);

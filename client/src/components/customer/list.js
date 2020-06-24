@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import ReactStars from 'react-rating-stars-component';
 import { Table } from 'reactstrap';
+import { useHistory } from "react-router-dom";
 import '../../styles/stripped-list.scss';
 import { submitOrder } from '../../endpoints/order';
 
 const List = ({ serviceOwners, order }) => {
+    let history = useHistory()
     useEffect(() => {
 
     }, [serviceOwners]);
@@ -14,7 +16,7 @@ const List = ({ serviceOwners, order }) => {
         console.log(order);
         submitOrder(order, owner)
         .then(order => {
-            console.log(order);
+            history.push(`/orders/${order._id}`);
         })
     }
 

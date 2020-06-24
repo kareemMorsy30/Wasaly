@@ -2,11 +2,41 @@ const { Category, Product } = require('../models/allModels');
 const fs = require('fs');
 
 const add = (req, res) => {
+    console.log(req.body);
     const { name } = req.body;
     const image = req.file && req.file.path.substring(6);
     console.log(image)
     const category = new Category({name, image});
-    category.save().then(category => res.status(200).json(category))
+    category.save()
+    .then(category => res.status(200).json(category))
+    .catch(error => {
+        console.log(error);
+        res.status(500).end()
+    });
+}
+
+const update = (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    const image = req.file && req.file.path.substring(6);
+    let category = null;
+
+    if(image) category = {name, image};
+    else category = {name};
+    
+    Category.findByIdAndUpdate(
+        id, 
+        category,
+        {new: true}
+    ).then(category => {
+        // if a new image is added remove old one
+        if(image){
+            const imgDir = `public${category.image}`;
+            if(fs.existsSync(imgDir)) fs.unlinkSync(imgDir);
+        }
+
+        res.status(200).json(category);
+    })
     .catch(error => res.status(500).end());
 }
 
@@ -49,7 +79,9 @@ const showCategoryProducts=  async(req, res)=>{
 
 const getAllCategories= async (req,res,next)=>{
     try{
-        categories= await Category.find({}).select('_id name image').exec()
+        categories= await Category.find({})
+        .sort({_id: 'desc'})
+        .select('_id name image').exec()
         res.json(categories)
     }catch(error){
         next(error)
@@ -60,5 +92,6 @@ module.exports = {
     add,
     remove,
     getAllCategories,
-    showCategoryProducts
+    showCategoryProducts,
+    update
 }

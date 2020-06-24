@@ -38,8 +38,11 @@ router.get('/service-owners', serviceOwnerController.all);
 // Delete a service owner
 router.delete('/service-owners/:id/delete', serviceOwnerController.remove);
 
-// add new category
+// Add new category
 router.post('/categories', upload.single('image'), categoryController.add);
+
+// Update an existing category
+router.put('/categories/:id', upload.single('image'), categoryController.update);
 
 // Get all categories
 router.get('/categories', categoryController.getAllCategories);
