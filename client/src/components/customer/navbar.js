@@ -17,7 +17,6 @@ const NavBar = () => {
     useEffect(() => {
         axios.get(`${domain}/customers/categories`).
             then((res) => {
-                console.log(res)
                 setCategories(res.data)
             }).catch(e => {
                 console.log(e)

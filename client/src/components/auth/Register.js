@@ -15,6 +15,7 @@ import { getGeoLocation } from '../../endpoints/geocoding';
 import { authHeader } from '../config/config'
 import { ToastContainer, toast } from 'react-toastify';
 
+
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`;
 
 const Authentication = (props) => {
