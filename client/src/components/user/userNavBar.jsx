@@ -17,10 +17,20 @@ import Login from "../login";
 import Logout from "../user/logout";
 import Search from "../search"
 import {isLoggedIn, isProductOwner} from '../../services/authServices'
+import { Badge,Menu } from "antd";
+import {ShoppingCartOutlined} from '@ant-design/icons';
+
+
+// import ShoppingCart from "@bit/mui-org.material-ui-icons.shopping-cart";
+
+
+
 
 const NavBar = (props) => {
     const [searchInput, setSearchInput] = useState('');
-
+console.log('====================================');
+// console.log("NAV BAR    ", props.user());
+console.log('====================================');
     const handleSearchInput = e => {
         console.log(e.target.value);
         
@@ -79,6 +89,13 @@ const NavBar = (props) => {
                     <Collapse isOpen={isOpen} navbar>
 
                     <Nav navbar>
+              
+             
+    
+
+
+
+
                         <NavItem>
                             <Link className="nav-link" to="/">Home</Link>
                         </NavItem>
@@ -94,7 +111,16 @@ const NavBar = (props) => {
                             <Link className="nav-link" to="/users">users</Link>
                         </NavItem>
 
-                        {
+
+                        <NavItem>
+                            <Link  style={{ marginRight: -9
+                             , color:'#667777'}} className="nav-link" to="/cart">
+
+                            <ShoppingCartOutlined type="shopping-cart" style={{ fontSize: 30, marginBottom: 3 }} />
+
+                            </Link>
+                        </NavItem>
+                    {
                             isLoggedIn() == false ? (
                                 <NavItem>
                                     {/* <Login /> */}
