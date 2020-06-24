@@ -18,6 +18,9 @@ import UserNavBar from "./components/user/userNavBar";
 import UserAndCustomerNavBar from "./components/customer/navbar";
 /*** Service owners */
 import ServiceOwnerOrders from './components/service owner/orders';
+/**** Admin ****/
+import AdminServiceOwners from './components/admin/serviceOwners';
+import All from './components/admin/categories/all';
 /**
  * Admin NavBar Ya adham :)
  */
@@ -47,13 +50,18 @@ function App() {
         <UserAndCustomerNavBar/>:''  
       }
       <div style={{  flex: '1 0 auto', marginTop:'12vh'}}>
-   
-      <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
-      <Route exact path="/service-owner/connection" component={ProductOwnerDetails} />
+      {/* Product owner routes */}
       <Route exact path="/product-owner/connections" component={Connections} />
 
+      {/* Service owner routes */}
+      <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
+      <Route exact path="/service-owner/connection" component={ProductOwnerDetails} />
+
+      {/* Admin routes */}
+      <Route exact path="/admin/service-owners" component={AdminServiceOwners} />
+      <Route exact path="/admin/categories" component={All} />
+
         <Switch>
-          <Route exact path="/products" component={ListProducts} />
           <Route exact path="/serviceownerprofile/:id" component={ServiceOwnerProfile} />
 
           <Route exact path="/products/create" component={CreateProduct} />
@@ -72,6 +80,7 @@ function App() {
           <Route exact path="/search/:id" component={SearchResults}/>
             <Route exact path="/categoryproducts/:id" component={ListCatProducts} />
             <div className="container">
+          <Route exact path="/products" component={ListProducts} />
             <Route exact path="/test" >
               < Category />
             </Route>

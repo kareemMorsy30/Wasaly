@@ -28,10 +28,9 @@ const showCategoryProducts=  async(req, res)=>{
     const{page}= req.query || 1;
   
     try {
-        const products = await Product.find({category:req.params.id})
+        const products = await Product.find({category:req.params.id}).populate('owner','marketName')
         .skip((resPerPage * page)- resPerPage)
         .limit(resPerPage)  
-        console.log(products)
         const numOfProducts= products.length
 
         res.json({

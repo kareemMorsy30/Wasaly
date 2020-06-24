@@ -67,7 +67,7 @@ const ProductOwnerDetails = (props) => {
                 </div>
             </>
             :
-            <Info />
+            <Info msg="You are not connected to any product owner yet!"/>
     )
 }
 

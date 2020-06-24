@@ -13,11 +13,9 @@ import AdminLogout from "./adminLogout";
 
 const NavBar = (props) => {
     const [isOpen, setIsOpen] = useState(false);
-
-    const toggle = () => setIsOpen(!isOpen);
-
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    const toggle = () => setIsOpen(!isOpen);
 
     useEffect(() => {
         (async function () {
@@ -39,6 +37,7 @@ const NavBar = (props) => {
     }, []);
 
     return (
+        <>
         <Navbar color="light" light expand="md">
             <NavbarBrand >Wasaly Admin</NavbarBrand>
             <NavbarToggler onClick={toggle} />
@@ -59,6 +58,8 @@ const NavBar = (props) => {
 
             </Collapse>
         </Navbar>
+        {props.children}
+        </>
     );
 };
 

@@ -82,7 +82,7 @@ export default function Login() {
                 email: emailInput,
                 password: passwordInput
             }
-        }).then((response) => {
+        }).then(    (response) => {
           console.log('====================================');
           console.log(response);
           console.log('====================================');

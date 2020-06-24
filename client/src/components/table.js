@@ -3,6 +3,7 @@ import '../styles/table.scss';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ReactStars from 'react-rating-stars-component';
+import Info from './alerts/info';
 import { Link } from 'react-router-dom';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
@@ -15,10 +16,10 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, Button, children }) 
     const toggle = (record) => {
         setModal(!modal)
         setRecord(record);
-        console.log(record);
     };
     
     return (
+        <>
         <table id="table">
             <thead>
                 <tr>
@@ -31,7 +32,7 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, Button, children }) 
                 </tr>
             </thead>
             <tbody>
-                {data.length && data.map((record) => {
+                {data.length > 0 && data.map((record) => {
                     return (
                         <tr key={record._id}>
                             {cols.map((col, id) => {
@@ -93,14 +94,18 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, Button, children }) 
                             </td>
                             :
                             <td className="actions">
-                                <Link to={{
-                                    pathname: editUrl,
-                                    state: {
-                                        record
-                                    }
-                                }} className="edit-record"><FontAwesomeIcon icon={faEdit}/></Link>
+                                {
+                                    editUrl
+                                    &&
+                                    <Link to={{
+                                        pathname: editUrl,
+                                        state: {
+                                            record
+                                        }
+                                    }} className="edit-record"><FontAwesomeIcon icon={faEdit}/></Link>
+                                }
                                 {del ?
-                                    <a onClick={() => del(record)} className="delete-record"><FontAwesomeIcon icon={faTrash}/></a>
+                                    <a onClick={() => del(record)} className="delete-record"><FontAwesomeIcon icon={faTrash} size="lg"/></a>
                                     :
                                     <Link to={{
                                         pathname: delUrl,
@@ -123,6 +128,12 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, Button, children }) 
                 }
             </tbody>
         </table>
+        {
+            data.length == 0
+            &&
+            <Info msg="No data available!"/>
+        }
+        </>
     );
 };
 
