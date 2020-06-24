@@ -9,16 +9,16 @@ const DropDown = (props) => {
     const { handleChange } = props
     const { fieldName } = props
     const { to } = props
-    const { ref, isComponentVisible } = useComponentVisible(true);
+    // const { ref, isComponentVisible } = useComponentVisible(true);
     useEffect(() => {
         setOptions(props.options)
     }, [props.options])
 
     return (
         <div className="dropdown" >
-            <input type="text" ref={ref} value={searchInput} onChange={handleChange} onClick={()=>setOptions(props.options)} />
+            <input type="text"  value={searchInput} onChange={handleChange} onClick={()=>setOptions(props.options)} />
             {
-                options.length >= 1 &&isComponentVisible &&
+                options.length >= 1  &&
                 <div className="dropdown-content" >
                     {options.map((option,i) => {
                         return (

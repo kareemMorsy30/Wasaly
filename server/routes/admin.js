@@ -41,6 +41,9 @@ router.delete('/service-owners/:id/delete', serviceOwnerController.remove);
 // add new category
 router.post('/categories', upload.single('image'), categoryController.add);
 
+// Get all categories
+router.get('/categories', categoryController.getAllCategories);
+
 // Delete a category
 router.delete('/categories/:id', categoryController.remove);
 

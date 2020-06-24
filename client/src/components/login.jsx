@@ -30,7 +30,6 @@ const Login = (props) => {
         }).then((response) => {
             const { token, user } = response.data;         
             localStorage.setItem("token", token);
-
             console.log(user)
             localStorage.setItem("user", JSON.stringify(user));
             window.location.href = "http://localhost:3000/";

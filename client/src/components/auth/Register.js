@@ -451,7 +451,7 @@ console.log("response",response);
         error?
         <ToastContainer/>:null}
     </div>
-            <h4>Dont Have an Account ? Create one</h4>
+            <h4>Dont Have an Account? Create one</h4>
 
             <hr />
 
@@ -474,15 +474,10 @@ console.log("response",response);
 
 >
     <option>customer</option>
-
     <option>serviceowner</option>
-
-
-
     <option>productowner</option>
 
 </Input>
-
 
 </FormGroup>
 

@@ -7,7 +7,7 @@ export default function useComponentVisible(initialIsVisible) {
         if (ref.current && !ref.current.contains(event.target) && isComponentVisible) {
             setIsComponentVisible(false);
         }
-        else setIsComponentVisible(true)
+        else if(isComponentVisible)setIsComponentVisible(true)
     };
 
     useEffect(() => {
