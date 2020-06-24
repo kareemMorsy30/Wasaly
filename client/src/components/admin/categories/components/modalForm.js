@@ -60,20 +60,20 @@ const ModalForm = ({ setModal, modal, unmountOnClose, data, setData, allData, se
                 <form onSubmit={handleSubmit}>
                     <ModalHeader toggle={toggle}>{title}</ModalHeader>
                     <ModalBody>
-                            <input type="text" placeholder="Category name" value={data.name} onChange={e => setData({...data,name: e.target.value})} style={{border: alert.type === 'error' && '1px red solid'}} required/>
-                            {data.image && (data.image[0] === 'h'
-                            ?
-                            <img src={data.image} />
-                            :
-                            <img src={`${process.env.REACT_APP_BACKEND_DOMAIN}${data.image}`} />)}
-                            <ImageUploader
-                                withIcon={true}
-                                buttonText='Choose images'
-                                onChange={onDrop}
-                                imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                                maxFileSize={5242880}
-                                style={{border: alert.type === 'error' && '1px red solid'}}
-                            />
+                        <input type="text" placeholder="Category name" value={data.name} onChange={e => setData({...data,name: e.target.value})} style={{border: alert.type === 'error' && '1px red solid'}} required/>
+                        {data.image && (data.image[0] === 'h'
+                        ?
+                        <img style={{height: '100%', width: '100%'}} src={data.image} />
+                        :
+                        <img style={{height: '100%', width: '100%'}} src={`${process.env.REACT_APP_BACKEND_DOMAIN}${data.image}`} />)}
+                        <ImageUploader
+                            withIcon={true}
+                            buttonText='Choose images'
+                            onChange={onDrop}
+                            imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                            maxFileSize={5242880}
+                            style={{border: alert.type === 'error' && '1px red solid'}}
+                        />
                     </ModalBody>
                     <ModalFooter>
                         <Button type="submit" style={{borderRadius: '15px', padding: '0 5% 0 5%'}} color="success">{button}</Button>{' '}

@@ -43,7 +43,7 @@ export const getCategories = () => {
 export const categoryData = (category) => {
     const formData = new FormData();
     formData.set('name', category.name);
-    if(category.image.length > 0) formData.append('image', category.image[0]);
+    if(category.image && category.image.length > 0) formData.append('image', category.image[0]);
     return formData;
 }
 
@@ -72,6 +72,20 @@ export const updateCategory = (category) => {
     })
     .then(res => {
         if(res.data) return res.data;
+    })
+    .catch(err => err);
+}
+
+export const removeCategory = (id) => {
+    const url = `${domain}/admin/categories/${id}`;
+
+    return axios.delete(url,
+    {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data)
+            return res.data;
     })
     .catch(err => err);
 }

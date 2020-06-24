@@ -19,10 +19,14 @@ const update = (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
     const image = req.file && req.file.path.substring(6);
+    let category = null;
+
+    if(image) category = {name, image};
+    else category = {name};
     
     Category.findByIdAndUpdate(
         id, 
-        {name, image},
+        category,
         {new: true}
     ).then(category => {
         // if a new image is added remove old one
