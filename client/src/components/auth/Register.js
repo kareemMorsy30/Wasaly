@@ -15,6 +15,7 @@ import { getGeoLocation } from '../../endpoints/geocoding';
 import { authHeader } from '../config/config'
 import { ToastContainer, toast } from 'react-toastify';
 
+
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`;
 
 const Authentication = (props) => {
@@ -229,12 +230,11 @@ const Authentication = (props) => {
 
                             });
                         }
-                        if (response.status=250) {
+                        if (response.status==250) {
                             // setErrorsRegister(response.data.message)
 
                             // toast(errorsRegister)
 
-console.log("response",response);
                             
 
                         } else if (response.status == 200) {

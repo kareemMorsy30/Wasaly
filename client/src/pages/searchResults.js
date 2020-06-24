@@ -13,6 +13,11 @@ const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 const SearchResults = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const { id } = useParams()
+
+  useEffect(()=>{
+    setPageNumber(1)
+  },[id])
+  
   const {
     products,
     hasMore,

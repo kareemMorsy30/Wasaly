@@ -182,6 +182,7 @@ const CreateProduct = (props) => {
 
                     <option></option>
                     {categories && categories.map(category =>
+                
                         <option id={category._id}>{category.name}</option>
                     )}
                 </Form.Control>
