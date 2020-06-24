@@ -25,16 +25,16 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, Button, children }) 
                 <tr>
                     {cols.map((col, id) => {
                         return (
-                            <th key={id}>{Array.isArray(col) ? col[0].toUpperCase() : col.toUpperCase()}</th>
+                            <th className="data-field" key={id}>{Array.isArray(col) ? col[0].toUpperCase() : col.toUpperCase()}</th>
                         );
                     })}
-                    <th>Actions</th>
+                    <th className="actions">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {data.length > 0 && data.map((record) => {
                     return (
-                        <tr key={record._id}>
+                        <tr className="data-field" key={record._id}>
                             {cols.map((col, id) => {
                                 return (
                                     <td key={id} onClick={() => toggle(record)}>
@@ -97,22 +97,28 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, Button, children }) 
                                 {
                                     editUrl
                                     &&
+                                    (
+                                    typeof editUrl === "string"
+                                    ?
                                     <Link to={{
                                         pathname: editUrl,
                                         state: {
                                             record
                                         }
-                                    }} className="edit-record"><FontAwesomeIcon icon={faEdit}/></Link>
+                                    }} className="edit-record"><FontAwesomeIcon icon={faEdit} size="lg"/></Link>
+                                    :
+                                    <Link><FontAwesomeIcon onClick={e => editUrl(e, record)} icon={faEdit} size="lg"/></Link>
+                                    )
                                 }
                                 {del ?
-                                    <a onClick={() => del(record)} className="delete-record"><FontAwesomeIcon icon={faTrash} size="lg"/></a>
+                                    <Link><FontAwesomeIcon onClick={() => del(record)} icon={faTrash} size="lg"/></Link>
                                     :
                                     <Link to={{
                                         pathname: delUrl,
                                         state: {
                                             record
                                         }
-                                    }} className="delete-record"><FontAwesomeIcon icon={faTrash}/></Link>
+                                    }} className="delete-record"><FontAwesomeIcon icon={faTrash} size="lg"/></Link>
                                 }
                             </td>
                             }
@@ -123,7 +129,7 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, Button, children }) 
                 && 
                 children && 
                 <Modal isOpen={modal} toggle={toggle} className="test">
-                        {React.cloneElement(children, { record })}
+                    {React.cloneElement(children, { record })}
                 </Modal>
                 }
             </tbody>
