@@ -1,10 +1,20 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { Card, Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
-const ShowProducts = ({ products, lastProductElementRef }) => {
+const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
   // const {state:{products}}= useLocation()
+  const addToCarthandler = () => {
+    addToCart(products.map(p=>p._id))
+    console.log('====================================');
+    console.log('====================================');
+    console.log(addToCart);
+    console.log('====================================');
+    console.log('====================================');
+    
+}
   
   return (
     <>
@@ -20,9 +30,16 @@ const ShowProducts = ({ products, lastProductElementRef }) => {
                     <Card.Text>
                       {product.description}
                     </Card.Text>
+                    <Card.Text>
+                      {product.price}$
+                    </Card.Text>
+                    <Card.Text>
+                      {product.quantity}
+                    </Card.Text>
+                 
                     <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
-                      <Button variant="danger" className="btn-card" >View</Button>
-                      <Button variant="danger" className="btn-card">Add to Cart</Button>
+                    <Link variant="danger" to={`/${product._id}/ownerinfo`} className="btn-card" >View</Link>
+                      <Button variant="danger" onClick={addToCarthandler} className="btn-card">Add to Cart</Button>
                     </div>
                   </Card.Body>
                 </Card>
@@ -39,8 +56,8 @@ const ShowProducts = ({ products, lastProductElementRef }) => {
                       {product.description}
                     </Card.Text>
                     <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
-                      <Button variant="danger" className="btn-card" >View</Button>
-                      <Button variant="danger" className="btn-card">Add to Cart</Button>
+                    <Link variant="danger" to={`${product._id}/ownerinfo`} className="btn-card" >View</Link>
+                      <Button variant="danger" onClick={addToCarthandler}  className="btn-card">Add to Cart</Button>
                     </div>
                   </Card.Body>
                 </Card>
@@ -55,3 +72,4 @@ const ShowProducts = ({ products, lastProductElementRef }) => {
 }
 
 export default ShowProducts
+

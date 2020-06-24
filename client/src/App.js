@@ -24,12 +24,13 @@ import ServiceOwnerOrders from './components/service owner/orders';
 import NavBar from "./components/admin/adminNavBar";
 import ServiceOrderForm from './components/customer/serviceForm';
 // import Delivery from './components/customer/delivery';
-import Category from './components/Category';
 import Delivery from './components/customer/delivery';
 import Order from './components/user/orders';
 import OrderDetails from './components/user/orderDetails'
 import ProductDetails from './components/product owner/Cart/ProductDetails';
-import Cart from './components/product owner/Cart/Cart';
+// import Cart from './components/product owner/Cart/Cart';
+import CartPage from './components/product owner/Cart/CartPage';
+
 
 // import MainCart  from './components/product owner/Cart/AddCart';
 import LandingPage from './pages/landingPage'
@@ -70,21 +71,22 @@ function App() {
 
 
           <Route exact path="/search/:id" component={SearchResults}/>
+          {/* CategoryProducts.js */}
             <Route exact path="/categoryproducts/:id" component={ListCatProducts} />
             <div className="container">
             <Route exact path="/test" >
-              < Category />
             </Route>
             <Route exact path="/sO" component={ServiceOrderForm} />
             {/* <Route exact path="/" component={Delivery} /> */}
 
             <Route exact path="/orders" component={Order} />
             <Route exact path="/orders/:id" component={OrderDetails} />
-
+            {/* http://localhost:3000/5ef231d4a5a9572baa78364f/ownerinfo */}
             <Route exact path="/:id/ownerinfo" component={ProductDetails} />
-            <Route exact path="/cart" component={Cart} />
+            {/* <Route exact path="/cart" component={Cart} /> */}
             <Route exact path="/login" component={Login} />
           
+          <Route exact path="/user/cart" component={CartPage} />
            
            {/* <div className="menu-items">
                 

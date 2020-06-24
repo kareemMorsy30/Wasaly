@@ -1,7 +1,7 @@
 const Product = require('../models/product')
 const multer = require('multer')
 const fs = require("fs")
-const { Category,productOwner } = require('../models/allModels')
+const { Category,productOwner,Cart } = require('../models/allModels')
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'public')
@@ -169,31 +169,3 @@ exports.productDetails=  async(req, res)=>{
     }
    
 }
-// exports.showCategoryProducts=  async(req, res)=>{
-//         // try {
-//             const products = await Product.find({}).exec((err,data)=>{
-//                 if (err) {
-//                     return res.send(err);
-//                 }
-//             });
-//             res.send(products);
-//         // } catch (error) {
-//         //     // error=new Error("No products there ")
-    
-//         //  res.send({error}).status(400);   
-//         // }
-       
-//     }
-    
-
-
-    // exports.showCategoryProducts = async (req, res, next) => {
-
-    //     try {
-    //         const id = req.user._id
-    //         const products = await Product.find({ }).populate('category').populate('owner').exec()
-    //         res.json(products)
-    //     } catch (err) {
-    //         next(err)
-    //     }
-    // }
