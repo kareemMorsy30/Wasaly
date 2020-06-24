@@ -107,11 +107,11 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, Button, children }) 
                                         }
                                     }} className="edit-record"><FontAwesomeIcon icon={faEdit} size="lg"/></Link>
                                     :
-                                    <Link><FontAwesomeIcon onClick={e => editUrl(e, record)} icon={faEdit} size="lg"/></Link>
+                                    <FontAwesomeIcon className="edit-icon" onClick={e => editUrl(e, record)} icon={faEdit} size="lg"/>
                                     )
                                 }
                                 {del ?
-                                    <Link><FontAwesomeIcon onClick={() => del(record)} icon={faTrash} size="lg"/></Link>
+                                    <FontAwesomeIcon className="delete-icon" onClick={() => del(record)} icon={faTrash} size="lg"/>
                                     :
                                     <Link to={{
                                         pathname: delUrl,
