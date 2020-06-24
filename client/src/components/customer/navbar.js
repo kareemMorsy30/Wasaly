@@ -52,7 +52,7 @@ const NavBar = () => {
                                 <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em' }} />
                             </NavIcon>
                             <NavText>
-                               <Link to='orders'> Track Orders</Link>
+                               <Link to='/orders'> Track Orders</Link>
                         </NavText>
                         </NavItem>
                     }
