@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import axios from 'axios'
-import { Table, Button, Container, Row, Col } from 'react-bootstrap';
+import {  Spinner } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom'
 import VerticallyCenteredModal from '../verticallCenteredModal'
 import { authHeader } from '../config/config'
@@ -32,12 +32,12 @@ const ListCatProducts = (props) => {
 
 
     const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
-    useEffect(()=>{
+    useEffect(() => {
         setProducts([])
         setPageNumber(1)
-    },[id])
+    }, [id])
 
-    useEffect(() => {    
+    useEffect(() => {
         let cancel
         axios.get(`${domain}/category/categoryproducts/${id}`, {
             params: {
@@ -46,8 +46,8 @@ const ListCatProducts = (props) => {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
             cancelToken: new axios.CancelToken(c => cancel = c)
         })
-            .then(response => {   
-                console.log(response.data.products)          
+            .then(response => {
+                console.log(response.data.products)
                 response.data.products.length > 0 && (
                     setProducts(prevProducts => {
                         return [...prevProducts, ...response.data.products]
@@ -62,7 +62,7 @@ const ListCatProducts = (props) => {
                 setProducts([])
                 console.log(err)
             })
-    }, [page,id])
+    }, [page, id])
 
     const observer = useRef()
     const addToCartHandler = (productId) => {
@@ -100,9 +100,20 @@ const ListCatProducts = (props) => {
     }, [loading, hasMore])
 
     return (
+        
         <>
-            <ShowProducts products={products} addToCart={addToCartHandler} lastProductElementRef={lastProductElementRef} />
-            {loading}
+            <ShowProducts products={products} addToCart={addToCartHandler}  lastProductElementRef={lastProductElementRef} />
+            <div className="container" style={{ margin: 'auto', marginTop: '20vh', width: '20%' }}>
+                {
+                    loading &&
+                    <div className="row">
+                        <Spinner animation="border" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </Spinner>
+                    </div>
+                }
+            </div>
+           
             {error}
         </>
     )

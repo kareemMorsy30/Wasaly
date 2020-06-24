@@ -18,6 +18,9 @@ import UserNavBar from "./components/user/userNavBar";
 import UserAndCustomerNavBar from "./components/customer/navbar";
 /*** Service owners */
 import ServiceOwnerOrders from './components/service owner/orders';
+/**** Admin ****/
+import AdminServiceOwners from './components/admin/serviceOwners';
+import All from './components/admin/categories/all';
 /**
  * Admin NavBar Ya adham :)
  */
@@ -34,48 +37,73 @@ import CartPage from './components/product owner/Cart/CartPage';
 
 // import MainCart  from './components/product owner/Cart/AddCart';
 import LandingPage from './pages/landingPage'
-import {isUser, isCustomer} from './services/authServices'
+import { isUser, isCustomer, isProductOwner, isServiceOwner } from './services/authServices'
 import SearchResults from './pages/searchResults'
 import FooterPage from './components/footer'
+import ProductOwnerRoute from './components/routes/productOwnerRoute'
+import UserRoute from './components/routes/UserRoute'
+
+
 
 function App() {
   return (
 
-    <div style={{height:'100%', display:'flex', flexDirection:'column'}}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       {/* <NavBar/> */}
 
-      {isUser() || isCustomer() ||1?
-        <UserAndCustomerNavBar/>:''  
+      {isUser() || isCustomer() || isProductOwner() || isServiceOwner() ?
+        <UserAndCustomerNavBar /> : ''
       }
       <div style={{  flex: '1 0 auto', marginTop:'12vh'}}>
-   
-      <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
-      <Route exact path="/service-owner/connection" component={ProductOwnerDetails} />
+      {/* Product owner routes */}
       <Route exact path="/product-owner/connections" component={Connections} />
 
+      {/* Service owner routes */}
+      <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
+      <Route exact path="/service-owner/connection" component={ProductOwnerDetails} />
+
+      {/* Admin routes */}
+      <Route exact path="/admin/service-owners" component={AdminServiceOwners} />
+      <Route exact path="/admin/categories" component={All} />
+
         <Switch>
-          <Route exact path="/products" component={ListProducts} />
           <Route exact path="/serviceownerprofile/:id" component={ServiceOwnerProfile} />
 
-          <Route exact path="/products/create" component={CreateProduct} />
-          <Route exact path="/products/:id/edit" component={UpdateProduct} />
+
           <Route exact path="/admin">
             <NavBar />
             <AdminLogin />
           </Route>
+
+
           <Route exact path="/register" component={Register} />
 
           <Route exact path="/" component={LandingPage} />
-            {/* <UserNavBar /> */}
-            {/* <Route exact path="/" component={Delivery} /> */}
+          {/* <UserNavBar /> */}
+          {/* <Route exact path="/" component={Delivery} /> */}
 
 
-          <Route exact path="/search/:id" component={SearchResults}/>
-          {/* CategoryProducts.js */}
-            <Route exact path="/categoryproducts/:id" component={ListCatProducts} />
-            <div className="container">
-            <Route exact path="/test" >
-            </Route>
+          <Route exact path="/search/:id" component={SearchResults} />
+          <Route exact path="/categoryproducts/:id" component={ListCatProducts} />
+
+
+          <div className="container">
+            <ProductOwnerRoute exact path="/products/create">
+                <CreateProduct />
+            </ProductOwnerRoute>
+
+            <ProductOwnerRoute exact path="/products/:id/edit">
+                <UpdateProduct />
+            </ProductOwnerRoute>
+
+            <ProductOwnerRoute exact path="/products">
+              <ListProducts />
+            </ProductOwnerRoute>
+
+
+            {/* <Route exact path="/test" >
+              < Category />
+            </Route> */}
             <Route exact path="/sO" component={ServiceOrderForm} />
             {/* <Route exact path="/" component={Delivery} /> */}
 
@@ -83,26 +111,27 @@ function App() {
             <Route exact path="/orders/:id" component={OrderDetails} />
             {/* http://localhost:3000/5ef231d4a5a9572baa78364f/ownerinfo */}
             <Route exact path="/:id/ownerinfo" component={ProductDetails} />
-            {/* <Route exact path="/cart" component={Cart} /> */}
+            <UserRoute exact path="/cart">
+               <Cart />
+            </UserRoute>
             <Route exact path="/login" component={Login} />
-          
-          <Route exact path="/user/cart" component={CartPage} />
-           
-           {/* <div className="menu-items">
+
+
+            {/* <div className="menu-items">
                 
               {products.map(item => <Products item={item} key={item.itemId} handleClick={this.handleClick} {...props} />)}
        
        </div> 
        
-           }/> */} 
-        
-          </div>
-          </Switch>
-          </div>
-           <FooterPage/>
-      </div>
+           }/> */}
 
-   
+          </div>
+        </Switch>
+      </div>
+      <FooterPage />
+    </div>
+
+
 
   );
 }

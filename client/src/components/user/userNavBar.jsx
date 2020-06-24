@@ -16,7 +16,7 @@ import axios from "axios";
 import Login from "../login";
 import Logout from "../user/logout";
 import Search from "../search"
-import {isLoggedIn} from '../../services/authServices'
+import {isLoggedIn, isProductOwner} from '../../services/authServices'
 
 const NavBar = (props) => {
     const [searchInput, setSearchInput] = useState('');
@@ -82,9 +82,11 @@ const NavBar = (props) => {
                         <NavItem>
                             <Link className="nav-link" to="/">Home</Link>
                         </NavItem>
-                        <NavItem>
-                            <Link className="nav-link" to="/products/list">Products</Link>
-                        </NavItem>
+                        {isProductOwner()&&
+                            <NavItem>
+                                <Link className="nav-link" to="/products">Products</Link>
+                            </NavItem>
+                        }
                         <NavItem>
                             <Link className="nav-link" to="/services">Services</Link>
                         </NavItem>
@@ -92,7 +94,6 @@ const NavBar = (props) => {
                             <Link className="nav-link" to="/users">users</Link>
                         </NavItem>
 
-                        {console.log(isLoggedIn())}
                         {
                             isLoggedIn() == false ? (
                                 <NavItem>
@@ -104,6 +105,7 @@ const NavBar = (props) => {
                      </Collapse>
        
             <Search/>
+            {!isLoggedIn() && <div><Link to="/login">Login</Link></div>}
             </div>
         </Navbar>
     );

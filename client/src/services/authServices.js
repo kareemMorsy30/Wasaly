@@ -5,11 +5,11 @@ const isAdmin=()=>{
 }
 const isProductOwner=()=>{
     const user=JSON.parse(localStorage.getItem('user')) ;
-    return user.role=="productowner"? true: false;
+    return user?user.role=="productowner"? true: false: false;
 }
 const isServiceOwner=()=>{
     const user= JSON.parse(localStorage.getItem('user'));
-    return user.role=="serviceowner" ? true : false;
+    return user.role? user.role=="serviceowner" ? true : false:false;
 }
 const isUser=()=>{
     const user= JSON.parse(localStorage.getItem('user'));

@@ -247,13 +247,30 @@ userController.updateUser = (req, res) => {
         res.status(400).json({ "error": err });
     })
 }
-userController.saveReport = async (req, res, next) => {
+userController.saveReport= (req, res, next )=>{
     try {
-        const { report } = req.body
-        const { user } = req.params
-        const customer = req.user._id
-        await new Report({ report, user, customer }).save()
-        res.json("Reported Successfully")
+        const {report} = req.body
+        const {id}= req.params
+        const customer = req.user._id;
+        allModels.ServiceOwner.findOneAndUpdate({ 
+            user: id
+        }, {
+            $push: {
+                reports: {'message': report, user: customer}
+            }
+        }).catch(err => console.log(err));
+        res.json("Reported Successfully");
+
+        // Report.findOneAndUpdate({ 
+        //     user: id,
+        // }, {
+        //     report, 
+        //     user: id,
+        //     customer
+        // }, {
+        //     upsert: true,
+        //     useFindAndModify: false
+        // }).catch(err => console.log(err));
     }
     catch (err) {
         next(err)

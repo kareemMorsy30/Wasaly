@@ -33,6 +33,7 @@ const changeStatus = async(req,res)=>{
 const getServiceOwner = async(req,res)=>{
     try{
         let user =await ServiceOwner.findById({_id: req.params.id})
+        .populate('user');
         res.send(user)
         }
         catch(err){
@@ -41,9 +42,12 @@ const getServiceOwner = async(req,res)=>{
         }
 }
 const updateServiceOwner = (req,res)=>{
+    console.log(req.body);
     ServiceOwner.findOneAndUpdate({_id: req.params.id},req.body,{new: true},(error,user)=>{
         res.status(200).json({"data": user});
-    }).catch((err) => {
+    })
+    .populate('user')
+    .catch((err) => {
         console.log(err);
         res.status(400).json({"error": err});
     })
@@ -107,6 +111,7 @@ const all = (req, res) => {
 
     ServiceOwner.find({}, null, { skip: perPage * (page-1), limit: perPage })
     .populate('user')
+    .populate('reports.user')
     .then(owners => {
         ServiceOwner.countDocuments().exec((err, count) => {
             if (err) res.status(500).end();
@@ -254,4 +259,5 @@ module.exports = {
     getProductOwnerDetails,
     filteredServiceOwners,
     deliverNewProduct
+    
 }

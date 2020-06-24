@@ -19,7 +19,7 @@ router.get('/reviews', serviceOwnerController.reviews);
 router.get('/product-owner', productOwnerController.productOwnerDetails);
 
 //get specific service owner by id
-router.get('/:id/',serviceOwnerController.getServiceOwner)
+router.get('/:id/',serviceOwnerController.getServiceOwner);
 
 //update service owner data
 router.patch('/:id', serviceOwnerController.updateServiceOwner);

@@ -20,7 +20,6 @@ const Search = () => {
                 }
             })
                 .then(function (response) {
-                    console.log(response);
                     setSuggestedProducts(response.data)
                 })
                 .catch(function (error) {

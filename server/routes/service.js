@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { serviceController,serviceOwnerController } = require('./../controllers/allControllers');
+const { serviceController,serviceOwnerController, userController } = require('./../controllers/allControllers');
 const { Auth } = require('../middlewares/Auth');
 
 // Get all transportation methods
@@ -26,6 +26,9 @@ router.patch('/:serviceOwnerID/rates', serviceController.saveRate);
 router.get('/:id/reviews', serviceOwnerController.reviews);
 
 router.get('/:id/rate', serviceController.getUserRateForOrder);
+
+// Submit service owner report
+router.put('/service-owners/:id/report', userController.saveReport);
 
 
 module.exports = router;

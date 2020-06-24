@@ -15,6 +15,7 @@ import { getGeoLocation } from '../../endpoints/geocoding';
 import { authHeader } from '../config/config'
 import { ToastContainer, toast } from 'react-toastify';
 
+
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`;
 
 const Authentication = (props) => {
@@ -449,7 +450,7 @@ const Authentication = (props) => {
         error?
         <ToastContainer/>:null}
     </div>
-            <h4>Dont Have an Account ? Create one</h4>
+            <h4>Dont Have an Account? Create one</h4>
 
             <hr />
 
@@ -472,15 +473,10 @@ const Authentication = (props) => {
 
 >
     <option>customer</option>
-
     <option>serviceowner</option>
-
-
-
     <option>productowner</option>
 
 </Input>
-
 
 </FormGroup>
 
