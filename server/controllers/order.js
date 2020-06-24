@@ -46,7 +46,7 @@ exports.getOrder= async(req,res,next)=>{
     try {
         const id = req.user._id
         const {orderId}= req.params
-        const orders = await Order.findOne({_id:orderId, customer:id}).populate('products').exec()
+        const orders = await Order.findOne({_id:orderId, customer:id}).populate('products').populate('productOwner','marketName').populate('products.product').populate('service', 'name').exec()
         res.json(orders)
     }catch (err) {
         next(err)
