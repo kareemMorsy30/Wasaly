@@ -12,7 +12,7 @@ const Modal = ({ record }) => {
             <>
             <div className="body-section">
                 <div className="image-section">
-                    <img className="user-profile" src={record.customer && record.customer.image_path ? record.customer.image_path : "../../img/user.png"}/>
+                    <img className="user-profile" src={record.customer && record.customer.avatar ? record.customer.avatar : "../../img/user.png"}/>
                 </div>
                 <div className="details-section">
                     <label>Username</label>
