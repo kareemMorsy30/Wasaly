@@ -66,10 +66,10 @@ const ListCatProducts = (props) => {
 
     const observer = useRef()
     const addToCartHandler = (productId) => {
-        console.log('====================================');
-        console.log(productId);
-        console.log('====================================');
-        axios.post(`${domain}/users/addToCart?productId=${productId}`
+       console.log('====================================');
+       console.log(productId);
+       console.log('====================================');      
+         axios.post(`${domain}/users/addToCart?productId=${productId}`
         ,authHeader
         ,
 

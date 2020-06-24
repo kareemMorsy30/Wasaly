@@ -2,7 +2,9 @@ import React from 'react'
 
 function UserCardBlock(props) {
 
-
+console.log('====================================');
+console.log(props);
+console.log('====================================');
 
     const renderCartImage = (images) => {
         if(images.length > 0) {
@@ -16,7 +18,7 @@ function UserCardBlock(props) {
             <tr key={product._id}>
                 <td>
                     <img style={{ width: '70px' }} alt="product" 
-                    src={renderCartImage(product.images)} />
+                    src={renderCartImage(product.images_path)} />
                 </td> 
                 <td>{product.quantity} EA</td>
                 <td>$ {product.price} </td>

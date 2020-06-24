@@ -42,7 +42,7 @@ import SearchResults from './pages/searchResults'
 import FooterPage from './components/footer'
 import ProductOwnerRoute from './components/routes/productOwnerRoute'
 import UserRoute from './components/routes/UserRoute'
-
+import Auth from './components/product owner/Cart/UserCart';
 
 
 function App() {
@@ -111,9 +111,8 @@ function App() {
             <Route exact path="/orders/:id" component={OrderDetails} />
             {/* http://localhost:3000/5ef231d4a5a9572baa78364f/ownerinfo */}
             <Route exact path="/:id/ownerinfo" component={ProductDetails} />
-            <UserRoute exact path="/cart">
-               <Cart />
-            </UserRoute>
+            <Route exact path="/cart" component={Auth(CartPage, true)} />
+
             <Route exact path="/login" component={Login} />
 
 

@@ -25,6 +25,31 @@ router.get('/:id/ownerinfo', productDetails)
 
 Auth(router);
 // router.get('/categoryproducts',showCategoryProducts);
+router.get("/products_by_id", (req, res) => {
+    let type = req.query.type
+    let productIds = req.query.id
+
+    console.log("req.query.id", req.query.id)
+
+    if (type === "array") {
+        let ids = req.query.id.split(',');
+        productIds = [];
+        productIds = ids.map(item => {
+            return item
+        })
+    }
+
+    console.log("productIds", productIds)
+
+
+    //we need to find the product information that belong to product Id 
+    Product.find({ '_id': { $in: productIds } })
+        .populate('user')
+        .exec((err, product) => {
+            if (err) return res.status(400).send(err)
+            return res.status(200).send(product)
+        })
+});
 
 
 Auth(router, productOwner);
@@ -85,30 +110,5 @@ router.post('/:productID/images/', saveImage)
 // //product_id/addToCart
 // router.post(':id/addToCart',addToCart)
 // product
-router.get("/products_by_id", (req, res) => {
-    let type = req.query.type
-    let productIds = req.query.id
-
-    console.log("req.query.id", req.query.id)
-
-    if (type === "array") {
-        let ids = req.query.id.split(',');
-        productIds = [];
-        productIds = ids.map(item => {
-            return item
-        })
-    }
-
-    console.log("productIds", productIds)
-
-
-    //we need to find the product information that belong to product Id 
-    Product.find({ '_id': { $in: productIds } })
-        .populate('user')
-        .exec((err, product) => {
-            if (err) return res.status(400).send(err)
-            return res.status(200).send(product)
-        })
-});
 
 module.exports = router

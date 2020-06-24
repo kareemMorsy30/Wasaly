@@ -1,55 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-<<<<<<< HEAD
-import { Card, Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-=======
 import { Card, Button, Spinner } from 'react-bootstrap'
->>>>>>> 6f08aacea979eb8ffc04da586027a55a2bb9f2ce
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
 const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
   // const {state:{products}}= useLocation()
-<<<<<<< HEAD
-  const addToCarthandler = () => {
-    addToCart(products.map(p=>p._id))
-    console.log('====================================');
-    console.log('====================================');
-    console.log(addToCart);
-    console.log('====================================');
-    console.log('====================================');
-    
-}
-  
-  return (
-    <>
-      <div className="container" style={{ width: '60%', marginTop: "50px" }}>
-        <div className="row">
-          {products && products.map((product, index) => {
-            if (products.length === index + 1) {
-              return (
-                <Card style={{ width: '20rem', marginTop: '10px' }} key={product._id} ref={lastProductElementRef}>
-                  <Card.Img variant="top" src={`${domain}/${product.images_path[0]}`} style={{ width: '90%', margin: 'auto', marginTop: '10px' }} />
-                  <Card.Body>
-                    <Card.Title>{product.name}</Card.Title>
-                    <Card.Text>
-                      {product.description}
-                    </Card.Text>
-                    <Card.Text>
-                      {product.price}$
-                    </Card.Text>
-                    <Card.Text>
-                      {product.quantity}
-                    </Card.Text>
-                 
-                    <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
-                    <Link variant="danger" to={`/${product._id}/ownerinfo`} className="btn-card" >View</Link>
-                      <Button variant="danger" onClick={addToCarthandler} className="btn-card">Add to Cart</Button>
-                    </div>
-                  </Card.Body>
-                </Card>
-              )
-=======
   const [filteredProducts, setFilteredProducts] = useState(products)
   const [productName, setProductName] = useState('')
   const [brandName, setBrandName] = useState('')
@@ -80,6 +35,14 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
     } else setFilteredProducts(products)
   }
 
+  const addToCarthandler = (id) => {
+    console.log('====================================');
+    console.log("id ", id);
+    console.log('====================================');
+    addToCart(id)
+    
+    
+}
   // const filterByPrice=(event,name)=>{    
   //   let value = event.target.value;
   //   if(name === "second"){        
@@ -103,7 +66,6 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
       <div className="container" style={{ width: '60%', marginTop: "50px" }}>
            {filteredProducts.length>0?
         <div className='row'>    
->>>>>>> 6f08aacea979eb8ffc04da586027a55a2bb9f2ce
 
             <input className="form-control" style={{ width: '20%', margin: '5px' }} value={productName} onChange={filterByName} placeholder="Enter Product Name" />
             <input className="form-control" style={{ width: '20%', margin: '5px' }} value={brandName} onChange={filterbyBrandName} placeholder="Enter Brand Name" />
@@ -120,27 +82,6 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
             :<h4 style={{margin:'auto 0'}}>There are no Products</h4>
             
             }
-<<<<<<< HEAD
-            else {
-              return(
-                <Card style={{ width: '20rem', marginTop: '10px' }} key={product._id}>
-                  <Card.Img variant="top" src={`${domain}/${product.images_path[0]}`} style={{ width: '90%', margin: 'auto', marginTop: '10px' }} />
-                  <Card.Body>
-                    <Card.Title>{product.name}</Card.Title>
-                    <Card.Text>
-                      {product.description}
-                    </Card.Text>
-                    <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
-                    <Link variant="danger" to={`${product._id}/ownerinfo`} className="btn-card" >View</Link>
-                      <Button variant="danger" onClick={addToCarthandler}  className="btn-card">Add to Cart</Button>
-                    </div>
-                  </Card.Body>
-                </Card>
-              )
-            }
-          })}
-        </div>
-=======
           <div className="row">
             {filteredProducts && filteredProducts.map((product, index) => {
               if (products.length === index + 1) {
@@ -152,9 +93,15 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
                       <Card.Text style={{ color: '#006fcc' }}>
                         {product.price} <span style={{ fontSize: '10px' }}>EGP</span>
                       </Card.Text>
+                      <Card.Text>
+                      {product.quantity}
+                    </Card.Text>
+                    <Card.Text>
+                      {product._id}
+                    </Card.Text>
                       <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
                         <Button variant="danger" className="btn-card" >View</Button>
-                        <Button variant="danger" className="btn-card">Add to Cart</Button>
+                        <Button variant="danger" onClick={()=>addToCarthandler(product._id)} className="btn-card">Add to Cart</Button>
                       </div>
                     </Card.Body>
                   </Card>
@@ -172,7 +119,7 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
                       </Card.Text>
                       <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
                         <Button variant="danger" className="btn-card" >View</Button>
-                        <Button variant="danger" className="btn-card">Add to Cart</Button>
+                        <Button variant="danger" onClick={()=>addToCarthandler(product._id)}  className="btn-card">Add to Cart</Button>
                       </div>
                     </Card.Body>
                   </Card>
@@ -180,7 +127,6 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
               }
             })}
           </div>
->>>>>>> 6f08aacea979eb8ffc04da586027a55a2bb9f2ce
       </div>
     </>
   )

@@ -30,7 +30,7 @@ import { authHeader } from '../../../config/config'
 const USER_SERVER=process.env.REACT_APP_BACKEND_DOMAIN;
 
 export function auth() {
-    const request = axios.get(`${USER_SERVER}/users/auth`)
+    const request = axios.get(`${USER_SERVER}/users/auth`,authHeader)
         .then(response => response.data);
 
     return {
@@ -39,21 +39,24 @@ export function auth() {
     }
 }
 
-export function addToCart(_id) {
-    axios.post(`${USER_SERVER}/users/addToCart?productId=${_id}`
-    ,authHeader,
+// export function addToCart(_id) {
+//       axios.post(`${domain}/users/addToCart?productId=${productId}`
+//         ,authHeader,
 
-
-
-).then(response=>       response.data
+//     {   
+//                  headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+// }
     
-   
-).catch(e=>console.log(e)
-)
+    
+//     ).then(response=>       response.data
+        
+       
+//     ).catch(e=>console.log(e)
+//     )
 
 
 
-}
+//     }
 
 
 
