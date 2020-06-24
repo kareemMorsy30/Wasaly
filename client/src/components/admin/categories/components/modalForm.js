@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup } from 'reactstrap';
 import ImageUploader from 'react-images-upload';
-import { faRecordVinyl } from '@fortawesome/free-solid-svg-icons';
+import Danger from '../../../alerts/danger';
 import { handleSuccess, handleError } from '../../../../errors/handleAlerts';
 
 const ModalForm = ({ setModal, modal, unmountOnClose, data, setData, allData, setAllData, addEndpoint, editEndpoint, title, button }) => {
@@ -13,11 +13,9 @@ const ModalForm = ({ setModal, modal, unmountOnClose, data, setData, allData, se
 
     const handleSubmit = event => {
         event.preventDefault();
-        if(!data.name && !data.image){
-            setAlert({
-                message: 'Check required inputs',
-                type: 'error'
-            })
+        console.log(data);
+        if(!data.name || !data.image){
+            handleError(setAlert, "Check required inputs!", 3000);
             return;
         }
 
@@ -60,7 +58,8 @@ const ModalForm = ({ setModal, modal, unmountOnClose, data, setData, allData, se
                 <form onSubmit={handleSubmit}>
                     <ModalHeader toggle={toggle}>{title}</ModalHeader>
                     <ModalBody>
-                        <input type="text" placeholder="Category name" value={data.name} onChange={e => setData({...data,name: e.target.value})} style={{border: alert.type === 'error' && '1px red solid'}} required/>
+                        {alert.type === "error" && <Danger msg="Check required inputs!"/>}
+                        <input type="text" placeholder="Category name" value={data.name} onChange={e => setData({...data,name: e.target.value})} style={{border: alert.type === 'error' && '1px red solid'}}/>
                         {data.image && (data.image[0] === 'h'
                         ?
                         <img style={{height: '100%', width: '100%'}} src={data.image} />

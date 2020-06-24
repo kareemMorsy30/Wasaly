@@ -1,6 +1,7 @@
 export const handleError = (setState, message, time = 5000, callback = () => {}) => {
     setState({
         errors: true,
+        type: 'error',
         message: message
     });
     setTimeout(() => {
