@@ -3,7 +3,7 @@ import { Card, Button, Spinner } from 'react-bootstrap'
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
-const ShowProducts = ({ products, lastProductElementRef }) => {
+const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
   // const {state:{products}}= useLocation()
   const [filteredProducts, setFilteredProducts] = useState(products)
   const [productName, setProductName] = useState('')
@@ -35,6 +35,14 @@ const ShowProducts = ({ products, lastProductElementRef }) => {
     } else setFilteredProducts(products)
   }
 
+  const addToCarthandler = (id) => {
+    console.log('====================================');
+    console.log("id ", id);
+    console.log('====================================');
+    addToCart(id)
+    
+    
+}
   // const filterByPrice=(event,name)=>{    
   //   let value = event.target.value;
   //   if(name === "second"){        
@@ -85,9 +93,15 @@ const ShowProducts = ({ products, lastProductElementRef }) => {
                       <Card.Text style={{ color: '#006fcc' }}>
                         {product.price} <span style={{ fontSize: '10px' }}>EGP</span>
                       </Card.Text>
+                      <Card.Text>
+                      {product.quantity}
+                    </Card.Text>
+                    <Card.Text>
+                      {product._id}
+                    </Card.Text>
                       <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
                         <Button variant="danger" className="btn-card" >View</Button>
-                        <Button variant="danger" className="btn-card">Add to Cart</Button>
+                        <Button variant="danger" onClick={()=>addToCarthandler(product._id)} className="btn-card">Add to Cart</Button>
                       </div>
                     </Card.Body>
                   </Card>
@@ -105,7 +119,7 @@ const ShowProducts = ({ products, lastProductElementRef }) => {
                       </Card.Text>
                       <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
                         <Button variant="danger" className="btn-card" >View</Button>
-                        <Button variant="danger" className="btn-card">Add to Cart</Button>
+                        <Button variant="danger" onClick={()=>addToCarthandler(product._id)}  className="btn-card">Add to Cart</Button>
                       </div>
                     </Card.Body>
                   </Card>
@@ -120,3 +134,4 @@ const ShowProducts = ({ products, lastProductElementRef }) => {
 }
 
 export default ShowProducts
+
