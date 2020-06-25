@@ -59,7 +59,6 @@ const Connections = (props) => {
                 :
                 <>
                     <h5>Service owner connections</h5>
-                    <Link to="/admin/books/add" className="addIcon"><FontAwesomeIcon icon={faPlusCircle}/></Link>
                 </>
             }
         </div>

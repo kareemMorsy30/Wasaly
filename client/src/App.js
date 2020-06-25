@@ -57,7 +57,13 @@ function App() {
       {/* <NavBar/> */}
       <Route
         exact
-        path={["/service-owner/orders", "/service-owner/connection"]}
+        path={[
+          "/service-owner/orders", 
+          "/service-owner/connection",
+          "/product-owner/connections",
+          "/admin/service-owners",
+          "/admin/categories"
+        ]}
       >
         <Layout>
           <Route
@@ -70,22 +76,22 @@ function App() {
             path="/service-owner/connection"
             component={ProductOwnerDetails}
           />
+          {/* Product owner routes */}
+          <Route
+            exact
+            path="/product-owner/connections"
+            component={Connections}
+          />
+
+          {/* Admin routes */}
+          <Route
+            exact
+            path="/admin/service-owners"
+            component={AdminServiceOwners}
+          />
+          <Route exact path="/admin/categories" component={All} />
         </Layout>
       </Route>
-        {/* Product owner routes */}
-        <Route
-          exact
-          path="/product-owner/connections"
-          component={Connections}
-        />
-
-        {/* Admin routes */}
-        <Route
-          exact
-          path="/admin/service-owners"
-          component={AdminServiceOwners}
-        />
-        <Route exact path="/admin/categories" component={All} />
 
         <Switch>
           <Route
