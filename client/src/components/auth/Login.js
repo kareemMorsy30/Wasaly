@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -57,93 +57,101 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login() {
 
-     const [emailInput, setEmailInput] = useState('');
-    const [passwordInput, setPasswordInput] = useState('');
-    const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [error, seterror] = useState('')
+  const [emailInput, setEmailInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
+  const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [error, seterror] = useState('')
 
-    const hanleEmailChange = (e) => {
-        const { target: { value } } = e;
-        setEmailInput(value);
-    }
+  const hanleEmailChange = (e) => {
+    const { target: { value } } = e;
+    setEmailInput(value);
+  }
 
-    const hanlePasswordChange = (e) => {
-        const { target: { value } } = e;
-        setPasswordInput(value);
-    }
+  const hanlePasswordChange = (e) => {
+    const { target: { value } } = e;
+    setPasswordInput(value);
+  }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        axios({
-            method: 'post',
-            url: `${domain}/users/login`,
-            data: {
-                email: emailInput,
-                password: passwordInput
-            }
-        }).then(    (response) => {
-          console.log('====================================');
-          console.log(response);
-          console.log('====================================');
-            const { token, user } = response.data;         
-            localStorage.setItem("token", token);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios({
+      method: 'post',
+      url: `${domain}/users/login`,
+      data: {
+        email: emailInput,
+        password: passwordInput
+      }
+    }).then((response, err) => {
+      console.log('====================================');
+      console.log(response);
+      console.log('====================================');
+      const { token, user } = response.data;
+      localStorage.setItem("token", token);
+      console.log(err)
+      console.log(user)
+      localStorage.setItem("user", JSON.stringify(user));
+      setEmailInput('');
+      setPasswordInput('');
+      window.location.href = "http://localhost:3000/";
+    }, (error) => {
+      console.log('====================================');
+      console.log(error.response.data.msg, "ERRROR");
 
-            console.log(user)
-            localStorage.setItem("user", JSON.stringify(user));
-            window.location.href = "http://localhost:3000/";
-        }, (error) => {
-          console.log('====================================');
-          console.log(error.message,"ERRROR");
-          
-          console.log('====================================');
-error.message="Email or password are wrong";
-            seterror(error.message)
-            toast(error.message)
-        });
+      console.log('====================================');
 
-        setEmailInput('');
-        setPasswordInput('');
-    }
- 
+      if (error.response.data.msg == "Please Confirm your email to login") {
+        seterror("Please Confirm your email to login");
+        error.message = "Please Confirm your email to login";
+      }
+      else {      
+        error.message = "Email or password are wrong";
+        seterror(error.message)
+      }
+      toast(error.message)
+    });
+
+
+  }
+
   const classes = useStyles();
-//   useEffect(() => {
-//     (async function () {
-//         try {
-//             let response = await axios.get(
-//                 `${domain}/users/logincheck`, {
-//                 headers: {
-//                     'Authorization': 'Bearer ' + localStorage.getItem("token")
-//                 }
-//             }
-//             ).then((response) => {
-//                 console.log('====================================');
-//                 console.log("Response  ::  ",response);
-//                 console.log('====================================');
-//                 if (response.status === 200) {
-//                     setIsLoggedIn(true);
-//                     sessionStorage.setItem("user", JSON.stringify(response.data.user));
-//                     sessionStorage.setItem("loggedIn", JSON.stringify(true));
-//                 }
-//             });
+  //   useEffect(() => {
+  //     (async function () {
+  //         try {
+  //             let response = await axios.get(
+  //                 `${domain}/users/logincheck`, {
+  //                 headers: {
+  //                     'Authorization': 'Bearer ' + localStorage.getItem("token")
+  //                 }
+  //             }
+  //             ).then((response) => {
+  //                 console.log('====================================');
+  //                 console.log("Response  ::  ",response);
+  //                 console.log('====================================');
+  //                 if (response.status === 200) {
+  //                     setIsLoggedIn(true);
+  //                     sessionStorage.setItem("user", JSON.stringify(response.data.user));
+  //                     sessionStorage.setItem("loggedIn", JSON.stringify(true));
+  //                 }
+  //             });
 
 
-//         } catch (error) {
-//             console.log("error is ...", error);
-//         }
-//     })();
-// }, []);
+  //         } catch (error) {
+  //             console.log("error is ...", error);
+  //         }
+  //     })();
+  // }, []);
 
-    // if (isLoggedIn == false) {
+  // if (isLoggedIn == false) {
 
   return (
     <Container component="main" maxWidth="xs">
-    
-    <div>
-      {
-        error?
-        <ToastContainer/>:null}
-    </div>
+
+      <div>
+        {
+          error ?
+            <ToastContainer /> : null}
+      </div>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -187,7 +195,7 @@ error.message="Email or password are wrong";
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleSubmit} 
+            onClick={handleSubmit}
           >
             Sign In
           </Button>
@@ -210,16 +218,16 @@ error.message="Email or password are wrong";
       </Box>
     </Container>
   );
-    // }
-// else{return (
-//                 <div className="container">
-//                     <Jumbotron>
-//                         <h1 style={{ textAlign: "center" }}><Badge color="secondary" >Welcome to Admin Panel</Badge></h1>
-//                     </Jumbotron>
-    
-//                 </div>
-//             );
+  // }
+  // else{return (
+  //                 <div className="container">
+  //                     <Jumbotron>
+  //                         <h1 style={{ textAlign: "center" }}><Badge color="secondary" >Welcome to Admin Panel</Badge></h1>
+  //                     </Jumbotron>
 
-// }
+  //                 </div>
+  //             );
+
+  // }
 
 }

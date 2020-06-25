@@ -12,6 +12,7 @@ const passport = require('passport');
 
 const upload = imageUploader('public/uploads/users/images');
 
+
 /*
 //regesiterServiceOWnerTEST
 
@@ -24,6 +25,9 @@ const upload = imageUploader('public/uploads/users/images');
 // Customize auth message Protect the  routes
 // and prevent copy paste {passport.authenticate('jwt', { session: false }),}
 router.post('/register', userController.regesiter);
+
+router.get('/confirmation/:token', userController.confirmationPost);
+router.post('/resend', userController.resendTokenPost);
 
 router.post(
   '/profile/avatar/:id',

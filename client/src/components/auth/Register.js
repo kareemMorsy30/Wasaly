@@ -242,8 +242,8 @@ const Authentication = (props) => {
                             console.log("good");
 
                             //Should logged in first by history.push what is the route ?
-
-                            history.push("/");
+                            
+                            history.push("/welcome");
 
                             // window.location = "http://localhost:3000/home";
 
@@ -328,7 +328,7 @@ const Authentication = (props) => {
 
                         //Should logged in first by history.push what is the route ?
 
-                        history.push("/");
+                        history.push("/welcome");
 
                         // window.location = "http://localhost:3000/home";
 
@@ -407,7 +407,7 @@ const Authentication = (props) => {
 
                         //Should logged in first by history.push what is the route ?
 
-                        history.push("/");
+                        history.push("/welcome");
 
                         // window.location = "http://localhost:3000/home";
 
@@ -608,7 +608,6 @@ required
                         <button
                         className="btn btn-link"
                         type="button"
-                        style={{height: '1px', width : '110px',padding:"0px"}}
 
                         onClick={() =>  setphones(phones.concat([""]))}
                     >
@@ -669,7 +668,6 @@ required
                                 className="btn btn-link"
                                 type="button"
                                 onClick={() => handleAddFields()}
-                                style={{height: '1px', width : '110px',padding:"0px"}}
 
                             >
                                 Add Address

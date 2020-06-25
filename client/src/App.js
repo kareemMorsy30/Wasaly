@@ -43,7 +43,7 @@ import FooterPage from './components/footer'
 import ProductOwnerRoute from './components/routes/productOwnerRoute'
 import UserRoute from './components/routes/UserRoute'
 import Auth from './components/product owner/Cart/UserCart';
-
+import {Welcome} from './components/user/welcome'
 
 function App() {
   return (
@@ -55,6 +55,9 @@ function App() {
         <UserAndCustomerNavBar /> : ''
       }
       <div style={{  flex: '1 0 auto', marginTop:'12vh'}}>
+        
+      <Route exact path="/welcome" component={Welcome} />
+
       {/* Product owner routes */}
       <Route exact path="/product-owner/connections" component={Connections} />
 

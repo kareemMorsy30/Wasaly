@@ -38,6 +38,8 @@ const userSchema = new mongoose.Schema({
         type: Array,
         default: []
     },
+    isVerified: { type: Boolean, default: false },
+
 })
 userSchema.pre('save', async function (next) {
     console.log("this::", this);
