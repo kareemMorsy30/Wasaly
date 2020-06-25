@@ -10,15 +10,17 @@ import {
     FormGroup,
     Input, FormText,
     Label,
+    FormFeedback,
 } from 'reactstrap';
 import { getGeoLocation } from '../../endpoints/geocoding';
 import { authHeader } from '../config/config'
 import { ToastContainer, toast } from 'react-toastify';
-
+import { AvForm, AvField, AvGroup, AvInput, AvFeedback, AvRadioGroup, AvRadio, AvCheckboxGroup, AvCheckbox } from 'availity-reactstrap-validation';
+import ImageIcon from '@material-ui/icons/Image';
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`;
-
 const Authentication = (props) => {
+
     const history = useHistory();
     // const [errorsRegister, setErrorsRegister] = useState("");
     const { value: usernameRegister, bind: bindUsernameRegister, reset: resetUsernameRegister } = useInput('');
@@ -49,8 +51,10 @@ const Authentication = (props) => {
     const avatarUrl = `${domain}/users/profile/avatar`;
     const [address, setInputFields] = useState([ ]);
     const [phones, setphones] = useState([])
-   
-  
+    const [validate, setvalidate] = useState({})
+    const [state, setState] = useState({validate})
+	const [errorsRegister,setErrorsRegister]=useState("");
+
 
     const removePhone = (id) => {
         return (e) => {
@@ -59,7 +63,6 @@ const Authentication = (props) => {
             }))
         }
     }
-
 
 
 
@@ -76,7 +79,7 @@ const Authentication = (props) => {
             }))
         }
     }
-    const [error, seterror] = useState();
+    const [error, seterror] = useState('');
     const [avatarInput, setAvatarInput] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const handleAvatarChange = e => {
@@ -178,10 +181,11 @@ const Authentication = (props) => {
             if (
                 !['image/gif', 'image/jpeg', 'image/png'].includes(avatarInput.type)
             ) {
-                // setErrors(['image is not valid ']);
+                // seterror('image is not valid ');
                 return;
             } else if (avatarInput.size > 3e6) {
-                // setErrors(['image is too large']);
+                // seterror('image is too large');
+                // toast(error)
                 return;
             }
         }
@@ -213,7 +217,7 @@ const Authentication = (props) => {
 
                     .then((response) => {
                         console.log('====================================');
-                        console.log("response then ",response);
+                        console.log("response then ",response.data);
                         console.log('====================================');
                         // console.log(response.data.user._id);
                         let userId = response.data.user._id
@@ -228,10 +232,15 @@ const Authentication = (props) => {
                                 }
 
 
+                            }).then(res => { 
+                                toast.success('upload success')
+                            })
+                            .catch(err => { 
+                                toast.error('upload fail')
                             });
                         }
                         if (response.status==250) {
-                            // setErrorsRegister(response.data.message)
+                            setErrorsRegister(response.data.message)
 
                             // toast(errorsRegister)
 
@@ -260,6 +269,8 @@ const Authentication = (props) => {
                         
                         console.log('====================================');
                             error.message=" Email address  is already taken";
+                            setErrorsRegister(error.message)
+
                           seterror(error.message)
                           toast(error.message)
                       }
@@ -315,12 +326,18 @@ const Authentication = (props) => {
                             }
 
 
+                        }).then(res => { 
+                            toast.success('upload success')
+                        })
+                        .catch(err => { 
+                            
+                            toast.error('upload fail')
                         });
                     }
 
                     if (response.status == 250) {
 
-                        // setErrorsRegister(response.message)
+                        setErrorsRegister(response.data.message)
 
                     } else if (response.status == 200) {
 
@@ -343,7 +360,9 @@ const Authentication = (props) => {
                     
                     console.log('====================================');
                         error.message=" Email address is already taken";
-                      seterror(error.message)
+                        setErrorsRegister(error.message)
+                      
+                        seterror(error.message)
                       toast(error.message)
                   }
                 
@@ -399,7 +418,7 @@ const Authentication = (props) => {
 
                     if (response.status == 250) {
 
-                        // setErrorsRegister(response.message)
+                        setErrorsRegister(response.data.message)
 
                     } else if (response.status == 200) {
 
@@ -422,7 +441,9 @@ const Authentication = (props) => {
                     
                     console.log('====================================');
                         error.message=" Email address is already taken";
-                      seterror(error.message)
+                        setErrorsRegister(error.message)
+                    
+                        seterror(error.message)
                       toast(error.message)
                   }
                 
@@ -445,16 +466,17 @@ const Authentication = (props) => {
     return (
 
         <div className='col-lg-4 col-md-4 col-sm-4 col-xs-4 ' style={{ margin: 'auto', marginTop: '39px' }}>
- <div>
-      {
-        error?
-        <ToastContainer/>:null}
-    </div>
+
             <h4>Dont Have an Account? Create one</h4>
 
             <hr />
 
-            <Form onSubmit={handleRegisterSubmit}  
+            <div>
+      {
+        error?
+        <ToastContainer/>:null}
+    </div>
+            <AvForm onSubmit={handleRegisterSubmit}  
 //             style={
 //                 {
 //   width: 98% !important;
@@ -462,6 +484,7 @@ const Authentication = (props) => {
 // }
   
 //   } 
+noValidate
             >
 
             <FormGroup>
@@ -482,11 +505,16 @@ const Authentication = (props) => {
 
                 <FormGroup>
 
-                    <Input type="text" name="name" placeholder="name"
+                    <AvField type="text" name="name" placeholder="name" label="Name"
 
-                        pattern='[A-Za-z\\s]*'
-
-                        {...bindname}
+                        // pattern='[A-Za-z\\s]*'
+                        validate={{
+            required: {value: true,errorMessage: 'Please enter a name'},
+            pattern: {value: '^[A-Za-z][A-Za-z0-9]*$', errorMessage: 'Your name must be composed only with letters first and numbers'},
+            minLength: {value: 6, errorMessage: 'Your name must be between 6 and 16 characters'},
+            maxLength: {value: 16, errorMessage: 'Your name must be between 6 and 16 characters'}
+          }}                       
+            {...bindname}
 
                     />*
 
@@ -494,9 +522,15 @@ const Authentication = (props) => {
              
                 <FormGroup>
 
-                    <Input type="text" name="username" placeholder="Username"
-required
-                        pattern='[A-Za-z\\s]*'
+                    <AvField type="text" name="username" placeholder="Username"  label="UserName"
+// required
+validate={{
+            required: {value: true,errorMessage: 'Please enter a name'},
+            pattern: {value: '^[A-Za-z][A-Za-z0-9]*$', errorMessage: 'Your UserName must be composed only with letter first and numbers'},
+            minLength: {value: 6, errorMessage: 'Your name must be between 6 and 16 characters'},
+            maxLength: {value: 16, errorMessage: 'Your name must be between 6 and 16 characters'}
+          }}           
+                        // pattern='[A-Za-z\\s]*'
 
                         {...bindUsernameRegister}
 
@@ -506,10 +540,18 @@ required
 
                 <FormGroup>
 
-                    <Input type="email" name="email" placeholder="E-mail"
+                    <AvField type="email" name="email" placeholder="E-mail"  label="E-mail"
+                    
+validate={{
+    
+    required: {value: true,errorMessage: 'Please enter a Email'},
 
+
+pattern: {value: '/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/', errorMessage: 'Email is  invalid '},
+
+}}
                         {...bindEmail}
-
+                        
                     />
 
                 </FormGroup>
@@ -517,12 +559,18 @@ required
 
             
                 <FormGroup>
-                    <Input type="password" name="password" placeholder="password "
+                    <AvField type="password" name="password" placeholder="password " label="Password"
+                    validate={{ 
+                        minLength: {value: 8, errorMessage: 'Your name must be 8 characters '},
+                     }}
                         {...bindPasswordRegister}
                     />
                 </FormGroup>
                 <FormGroup>
-                    <Input type="password" name="password" placeholder="passwordConfirmation"
+                    <AvField type="password" name="password" placeholder="Password-Confirmation"  label="Password-Confirmation"
+                        validate={{ 
+                        minLength: {value: 8, errorMessage: 'Your name must be 8 characters and match the original password '},
+                     }}
                         {...bindPassConfRegister}
                     />
                 </FormGroup>
@@ -534,18 +582,25 @@ required
                         <Label >productowner</Label>
 
 
-                        <Input type="text" name="marketName" placeholder="marketName"
-
-                            {...bindMn}
+                        <AvField type="text" name="marketName" placeholder="Brand-Name" label="Brand-Name"
+                        validate={{
+            required: {value: true,errorMessage: 'Please enter a name'},
+            pattern: {value: '^[A-Za-z][A-Za-z0-9]*$', errorMessage: 'Your name must be composed only with letters first and numbers'},
+           
+          }}                              {...bindMn}
 
                         />
-                        <Input type="text" name="marketPhone" placeholder="marketPhone"
+                        <AvField type="text" name="marketPhone" placeholder="marketPhone" label="Market-Phone"
 
                             {...bindMp}
 
                         />
-                        <Input type="text" name="ownerName" placeholder="ownerName"
-
+                        <AvField type="text" name="ownerName" placeholder="ownerName"
+           validate={{
+            required: {value: true,errorMessage: 'Please enter a name'},
+            pattern: {value: '^[A-Za-z][A-Za-z0-9]*$', errorMessage: 'Your name must be composed only with letters first and numbers'},
+           
+          }}     
                             {...bindOn}
 
                         />
@@ -616,27 +671,29 @@ required
                       </button>
                         }
                 </FormGroup>
-
              
                 {address.length>0 && address.map((inputField, index) => (
+
                     <Fragment key={`${inputField}~${index}`
                     }>
+<br/>
+
                         <FormGroup >
                             <Label for="exampleAddress">Address</Label>
                             <Input type="text" name="street" placeholder="street"
-                                pattern='[A-Za-z\\s]*'
+                                // pattern='[A-Za-z\\s]*'
                                 value={inputField.street}
                                 onChange={event => handleInputChange(index, event)}
                             />
                             <Input type="text" name="city" placeholder="city"
-                                pattern='[A-Za-z\\s]*'
+                                // pattern='[A-Za-z\\s]*'
                                 onChange={event => handleInputChange(index, event)}
                             />
                             <datalist id="from">
                                 <option key="source" value={city} />
                             </datalist>
                             <Input type="text" name="area" placeholder="area"
-                                pattern='[A-Za-z\\s]*'
+                                // pattern='[A-Za-z\\s]*'
                                 // {...bindaddress}
                                 onChange={event => handleInputChange(index, event)}
                             />
@@ -669,25 +726,26 @@ required
                                 className="btn btn-link"
                                 type="button"
                                 onClick={() => handleAddFields()}
-                                style={{height: '1px', width : '110px',padding:"0px"}}
+                                // style={{height: '1px', width : '110px',padding:"0px"}}
 
                             >
                                 Add Address
                 </button>
 
                 <FormGroup >
+<ImageIcon/>
+
                     <Input style={{ display: "block" }} type="file" name="files" onChange={handleAvatarChange}
 
                     />
-
                 </FormGroup>
                 <Button onSubmit={handleRegisterSubmit}> Sign up</Button>
 
 
-            </Form>
-            {/* {errorsRegister ? <div className="errors-div">
+            </AvForm>
+            {errorsRegister ? <div className="errors-div">
                 <small> {errorsRegister}</small>
-            </div> : null} */}
+            </div> : null}
         </div>
     )
 }
