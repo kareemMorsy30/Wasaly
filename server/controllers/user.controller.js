@@ -5,6 +5,11 @@ const Report = require('../models/report')
 const {Product}=allModels; 
 const jwt = require("jsonwebtoken");
 let userController = {};
+const port= process.env.PORT
+const nodemailer =require('nodemailer');
+const crypto = require('crypto');
+const Token = require('../models/tokenVerification')
+
 
 
 
@@ -26,16 +31,11 @@ userController.regesiter = async (req, res, next) => {
     if (newUser._id != undefined && newUser.role === "customer") {
         try {
             const user = await newUser.save()
-            const token = jwt.sign(
-                {
-                    _id: user._id.toString(),
-                },
-                process.env.secret
-                // , { expiresIn: '1h' }
-            );
-            return res.send({ user, token });
+            
+            sendEmail(req,res,user)
         }
         catch (e) {
+            console.log(e)
             if (e.name === "MongoError" && e.code === 11000) {
                 const error = new Error(`Email address ${newUser.email} is already taken`);
                 error.status = 400
@@ -60,7 +60,7 @@ userController.regesiter = async (req, res, next) => {
             const serviceOwner = await newServiceOwner.save();
             console.log("\n Service owner ::    :      :    ".serviceOwner);
             console.log("i'm in role");
-            return res.send({ serviceOwner, user });
+            sendEmail(newUser)
         }
         catch (e) {
             if (e.name === "MongoError" && e.code === 11000) {
@@ -86,7 +86,7 @@ userController.regesiter = async (req, res, next) => {
             const productOwner = await newProductOwner.save();
             console.log("\n pOwner ::    :      :    ".productowner);
             console.log("i'm in role");
-            res.send({ productOwner });
+            sendEmail(newUser)
         } catch (e) {
             if (e.name === "MongoError" && e.code === 11000) {
                 const error = new Error(`Email address ${newUser.email} is already taken`);
@@ -100,6 +100,78 @@ userController.regesiter = async (req, res, next) => {
     }
 };
 
+const sendEmail=(req,res,user)=>{
+    try{
+        var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
+ 
+        // Save the verification token
+        token.save(function (err) {
+            if (err) { return res.status(500).send({ msg: err.message }); }
+            
+            // Send the email
+            var transporter = nodemailer.createTransport({ service: 'Gmail', auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS } });
+            var mailOptions = { from: process.env.GMAIL_USER, to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + token.token + '.\n' };
+            transporter.sendMail(mailOptions, function (err) {
+                // if (err) { return res.status(500).send({ msg: err.message }); }
+                if(err) console.log(err)
+                res.status(200).send({user,message:'A verification email has been sent to ' + user.email + '.'});
+            });
+        })
+
+    }catch(err){
+        console.log(err)
+    }
+
+}
+
+
+userController.confirmationPost = function (req, res, next) {
+  
+    // Find a matching token
+    Token.findOne({ token: String(req.params.token) }, function (err, token) {
+        if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
+ 
+        // If we found a token, find a matching user
+        User.findOne({ _id: String(token._userId)}, function (err, user) {
+            if (!user) return res.status(400).send({ msg: 'We were unable to find a user for this token.' });
+            if (user.isVerified) return res.status(400).send({ type: 'already-verified', msg: 'This user has already been verified.' });
+ 
+            // Verify and save the user
+            user.isVerified = true;
+            user.save(function (err) {
+                if (err) { return res.status(500).send({ msg: err.message }); }
+                res.status(200).send("The account has been verified. Please log in.");
+            });
+        });
+    });
+};
+
+userController.resendTokenPost = function (req, res, next) {
+    
+ 
+    User.findOne({ email: req.body.email }, function (err, user) {
+        if (!user) return res.status(400).send({ msg: 'We were unable to find a user with that email.' });
+        if (user.isVerified) return res.status(400).send({ msg: 'This account has already been verified. Please log in.' });
+ 
+        // Create a verification token, save it, and send email
+        var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
+ 
+        // Save the token
+        token.save(function (err) {
+            if (err) { return res.status(500).send({ msg: err.message }); }
+ 
+            // Send the email
+            var transporter = nodemailer.createTransport({ service: 'Gmail', auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS } });
+            var mailOptions = {from: process.env.GMAIL_USER, to: user.email, to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + 'localhost:8000/users' + '\/confirmation\/' + token.token + '.\n' };
+            transporter.sendMail(mailOptions, function (err) {
+                if (err) { return res.status(500).send({ msg: err.message }); }
+                res.status(200).send('A verification email has been sent to ' + user.email + '.');
+            });
+        });
+ 
+    });
+};
+
 userController.login = async (request, response, next) => {
     const { email, password } = request.body;
     try {
@@ -109,6 +181,9 @@ userController.login = async (request, response, next) => {
             err.status = 401;
             return next(err);
         }
+        // throw new Error('Please Confirm your email to login');
+
+        if(!user.isVerified) return response.status(500).send({ msg: 'Please Confirm your email to login' });
         // console.log("User", user);
         user.isPasswordMatch(password, user.password, (err, matched) => {
             if (matched) {

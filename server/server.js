@@ -28,6 +28,7 @@ const {
 const passport = require('passport');
 const morgan = require('morgan');
 
+
 app.use(cors({origin: true, credentials: true}));
 app.use(express.json())
 app.use(express.static('public'));
@@ -70,6 +71,7 @@ app.use(express.static("./public"));
 //___________________________Routes_____________________
 
 app.use('/users',userRoutes);
+
 /* --------------- Customer routes -------------------------*/
 app.use('/services', serviceRouter);
 // app.use('/users',userRouter);

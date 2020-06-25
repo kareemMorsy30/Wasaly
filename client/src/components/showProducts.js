@@ -64,7 +64,7 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
   return (
     <>
       <div className="container" style={{ width: '60%', marginTop: "50px" }}>
-           {filteredProducts.length>0?
+           {products.length>0?
         <div className='row'>    
 
             <input className="form-control" style={{ width: '20%', margin: '5px' }} value={productName} onChange={filterByName} placeholder="Enter Product Name" />

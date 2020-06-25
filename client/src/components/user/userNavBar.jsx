@@ -16,9 +16,9 @@ import axios from "axios";
 import Login from "../login";
 import Logout from "../user/logout";
 import Search from "../search"
-import {isLoggedIn, isProductOwner} from '../../services/authServices'
-import { Badge,Menu } from "antd";
-import {ShoppingCartOutlined} from '@ant-design/icons';
+import { isLoggedIn, isProductOwner } from '../../services/authServices'
+import { Badge, Menu } from "antd";
+import { ShoppingCartOutlined } from '@ant-design/icons';
 
 
 // import ShoppingCart from "@bit/mui-org.material-ui-icons.shopping-cart";
@@ -28,29 +28,29 @@ import {ShoppingCartOutlined} from '@ant-design/icons';
 
 const NavBar = (props) => {
     const [searchInput, setSearchInput] = useState('');
-console.log('====================================');
-// console.log("NAV BAR    ", props.user());
-console.log('====================================');
+    console.log('====================================');
+    // console.log("NAV BAR    ", props.user());
+    console.log('====================================');
     const handleSearchInput = e => {
         console.log(e.target.value);
-        
-      setSearchInput(e.target.value);
+
+        setSearchInput(e.target.value);
     };
-  
+
     function handleClick(e) {
         console.log("CLICKED");
-            
-      e.preventDefault();    
-      window.location.assign('/search/?q='+searchInput);
-      // console.log('The link was clicked.'); 
-     }
+
+        e.preventDefault();
+        window.location.assign('/search/?q=' + searchInput);
+        // console.log('The link was clicked.'); 
+    }
     const [isOpen, setIsOpen] = useState(false);
 
     const toggle = () => setIsOpen(!isOpen);
 
 
     // const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const domain= `${process.env.REACT_APP_BACKEND_DOMAIN}`
+    const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
 
     // useEffect(() => {
@@ -83,15 +83,15 @@ console.log('====================================');
 
     return (
         <Navbar color="light" light expand="md" >
-                <div className="container">
-                    <NavbarBrand href="/">wasaly</NavbarBrand>
-                    <NavbarToggler onClick={toggle} />
-                    <Collapse isOpen={isOpen} navbar>
+            <div className="container">
+                <NavbarBrand href="/">wasaly</NavbarBrand>
+                <NavbarToggler onClick={toggle} />
+                <Collapse isOpen={isOpen} navbar>
 
                     <Nav navbar>
-              
-             
-    
+
+
+
 
 
 
@@ -99,7 +99,7 @@ console.log('====================================');
                         <NavItem>
                             <Link className="nav-link" to="/">Home</Link>
                         </NavItem>
-                        {isProductOwner()&&
+                        {isProductOwner() &&
                             <NavItem>
                                 <Link className="nav-link" to="/products">Products</Link>
                             </NavItem>
@@ -113,14 +113,19 @@ console.log('====================================');
 
 
                         <NavItem>
-                            <Link  style={{ marginRight: -9
-                             , color:'#667777'}} className="nav-link" to="/cart">
+                            {
+                                isLoggedIn()&&
+                                <Link style={{
+                                    marginRight: -9
+                                    , color: '#667777'
+                                }} className="nav-link" to="/cart">
 
-                            <ShoppingCartOutlined type="shopping-cart" style={{ fontSize: 30, marginBottom: 3 }} />
+                                    <ShoppingCartOutlined type="shopping-cart" style={{ fontSize: 30, marginBottom: 3 }} />
 
-                            </Link>
+                                </Link>
+                            }
                         </NavItem>
-                    {
+                        {
                             isLoggedIn() == false ? (
                                 <NavItem>
                                     {/* <Login /> */}
@@ -128,10 +133,10 @@ console.log('====================================');
                             ) : <Logout />
                         }
                     </Nav>
-                     </Collapse>
-       
-            <Search/>
-            {!isLoggedIn() && <div><Link to="/login">Login</Link></div>}
+                </Collapse>
+
+                <Search />
+                {!isLoggedIn() &&( <div style={{fontSize:'14px', fontWeight:500, marginLeft:'15px'}}>  <Link to="/login">Login</Link> <Link to="/register">Register</Link></div> )}
             </div>
         </Navbar>
     );
