@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faUserFriends, faWindowClose, faUserSlash } from '@fortawesome/free-solid-svg-icons';
-import {Link} from "react-router-dom";
 import Table from '../table';
 import Modal from './modal';
 import { getUnConnectedOwners, connectAndDisconnect } from '../../endpoints/productOwners';
@@ -59,7 +58,6 @@ const Connections = (props) => {
                 :
                 <>
                     <h5>Service owner connections</h5>
-                    <Link to="/admin/books/add" className="addIcon"><FontAwesomeIcon icon={faPlusCircle}/></Link>
                 </>
             }
         </div>

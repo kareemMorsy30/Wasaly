@@ -93,7 +93,10 @@ export default function Login() {
       localStorage.setItem("user", JSON.stringify(user));
       setEmailInput('');
       setPasswordInput('');
-      window.location.href = "http://localhost:3000/";
+      if(user.role === 'customer') window.location.href = "http://localhost:3000/";
+      else if(user.role === 'admin') window.location.href = "http://localhost:3000/admin/landing";
+      else if(user.role === 'serviceowner') window.location.href = "http://localhost:3000/service-owner/landing";
+      else if(user.role === 'productowner') window.location.href = "http://localhost:3000/product-owner/landing";
     }, (error) => {
       console.log('====================================');
       console.log(error.response.data.msg, "ERRROR");

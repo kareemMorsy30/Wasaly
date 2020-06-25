@@ -4,7 +4,7 @@ import { ModalHeader, ModalBody } from 'reactstrap';
 const Modal = ({ record }) => {
     return (
         <>
-        <ModalHeader>{record.customer && record.customer.name}</ModalHeader>
+        <ModalHeader className="modal-layout">{record.customer && record.customer.name}</ModalHeader>
         <ModalBody>
             {
             !['Pending', 'Canceled', 'Rejected'].includes(record.status) 
