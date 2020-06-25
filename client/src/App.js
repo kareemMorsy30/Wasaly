@@ -44,6 +44,7 @@ import ProductOwnerRoute from './components/routes/productOwnerRoute'
 import UserRoute from './components/routes/UserRoute'
 import Auth from './components/product owner/Cart/UserCart';
 import {Welcome} from './components/user/welcome'
+import table from './components/table'
 
 function App() {
   return (
@@ -117,6 +118,7 @@ function App() {
             <Route exact path="/cart" component={Auth(CartPage, true)} />
 
             <Route exact path="/login" component={Login} />
+            <Route exact path="/table" component={table} />
 
 
             {/* <div className="menu-items">

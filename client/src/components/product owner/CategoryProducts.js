@@ -10,6 +10,7 @@ import ListcatProducts from './ListcatProducts'
 import ShowProducts from '../showProducts'
 import { addToCart, auth } from '../../components/product owner/Cart/actions/user_actions';
 import { useDispatch } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
 
 /**
  * 
@@ -81,7 +82,10 @@ const ListCatProducts = (props) => {
     ).then(response=>       response.data
         
        
-    ).catch(e=>console.log(e)
+    ).catch((e)=>{e.message="please Signin"
+        toast(e.message);
+        
+    }
     )
 
 
@@ -113,7 +117,7 @@ const ListCatProducts = (props) => {
                     </div>
                 }
             </div>
-           
+            <ToastContainer/>
             {error}
         </>
     )

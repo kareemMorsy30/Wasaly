@@ -30,10 +30,24 @@
     background-color: $color_accent;
     color: white;
 }
-  
-.actions{
-    display: flex;
-    justify-content: space-around;
+
+#table tr > td {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.actions {
+    padding: 0px;
+}
+
+.edit-icon {
+    padding: 0px;
+    margin: 0 10px 0 10px;
+}
+
+.delete-icon {
+    padding: 0px;
+    margin: 0 10px 0 10px;
 }
 
 .rating {

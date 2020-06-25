@@ -39,3 +39,53 @@ export const getCategories = () => {
     })
     .catch(err => err);
 }
+
+export const categoryData = (category) => {
+    const formData = new FormData();
+    formData.set('name', category.name);
+    if(category.image && category.image.length > 0) formData.append('image', category.image[0]);
+    return formData;
+}
+
+export const addCategory = (category) => {
+    const url = `${domain}/admin/categories`;
+    const formData = categoryData(category);
+
+    return axios.post(url, formData,
+    {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data)
+            return res.data;
+    })
+    .catch(err => err);
+}
+
+export const updateCategory = (category) => {
+    const url = `${domain}/admin/categories/${category._id}`;
+    const formData = categoryData(category);
+
+    return axios.put(url, formData,
+    {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data) return res.data;
+    })
+    .catch(err => err);
+}
+
+export const removeCategory = (id) => {
+    const url = `${domain}/admin/categories/${id}`;
+
+    return axios.delete(url,
+    {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data)
+            return res.data;
+    })
+    .catch(err => err);
+}
