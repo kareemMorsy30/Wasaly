@@ -19,6 +19,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
+import Card from '../../layouts/dashboard/card';
 
 function Copyright() {
   return (
@@ -175,7 +176,13 @@ export default function Dashboard({children}) {
           <Grid container spacing={3}>
             {/* Chart */}
             <Grid item xs={12} md={8} lg={12}>
-                  {children}
+              {
+              children 
+              ?
+              children
+              :
+              <Card>Landing Page</Card>
+              }
             </Grid>
           </Grid>
           <Box pt={4}>

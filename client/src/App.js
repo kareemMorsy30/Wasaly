@@ -21,6 +21,7 @@ import ServiceOwnerOrders from "./components/service owner/orders";
 /**** Admin ****/
 import AdminServiceOwners from "./components/admin/serviceOwners";
 import All from "./components/admin/categories/all";
+import Landing from "./components/layouts/dashboard/landing";
 /**
  * Admin NavBar Ya adham :)
  */
@@ -58,6 +59,9 @@ function App() {
       <Route
         exact
         path={[
+          "/service-owner/landing",
+          "/product-owner/landing",
+          "/admin/landing",
           "/service-owner/orders", 
           "/service-owner/connection",
           "/product-owner/connections",
@@ -68,10 +72,18 @@ function App() {
           "/service-owner/product-orders",
           "/product-owner/products/create",
           "/product-owner/products/:id/edit",
-          "/product-owner/products"
+          "/product-owner/products",
+          "/product-owner/orders"
         ]}
       >
         <Layout>
+          <Route exact path={[
+            "/service-owner/landing",
+            "/product-owner/landing",
+            "/admin/landing"
+          ]}
+          component={Landing}
+          />
           <Route
             exact
             path="/service-owner/orders"
