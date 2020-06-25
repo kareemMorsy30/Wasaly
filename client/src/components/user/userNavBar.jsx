@@ -91,11 +91,6 @@ const NavBar = (props) => {
                     <Nav navbar>
 
 
-
-
-
-
-
                         <NavItem>
                             <Link className="nav-link" to="/">Home</Link>
                         </NavItem>

@@ -4,7 +4,6 @@ const express = require('express')
 const mongoose= require('mongoose')
 const cors= require('cors')
 const bodyParser = require("body-parser");
-
 const app = express()
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
@@ -69,7 +68,15 @@ app.use(bodyParser.json());
 app.use(express.static("./public")); 
 
 //___________________________Routes_____________________
+app.get('/google',
+  passport.authenticate('google', { scope: ['profile','email'] }));
 
+app.get('/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
 app.use('/users',userRoutes);
 
 /* --------------- Customer routes -------------------------*/
