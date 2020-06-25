@@ -43,7 +43,8 @@ import FooterPage from './components/footer'
 import ProductOwnerRoute from './components/routes/productOwnerRoute'
 import UserRoute from './components/routes/UserRoute'
 import Auth from './components/product owner/Cart/UserCart';
-import table from './components/table'
+import table from './components/table';
+import Layout from './components/dashboard/layout';
 
 function App() {
   return (
@@ -51,16 +52,22 @@ function App() {
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       {/* <NavBar/> */}
 
-      {isUser() || isCustomer() || isProductOwner() || isServiceOwner() ?
+      {isUser() || isCustomer() || isProductOwner() ?
         <UserAndCustomerNavBar /> : ''
+      }
+      {
+        isServiceOwner() ? 
+        <Layout >
+          {/* Service owner routes */}
+          <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
+          <Route exact path="/service-owner/connection" component={ProductOwnerDetails} />
+        </Layout>
+        :
+        ''
       }
       <div style={{  flex: '1 0 auto', marginTop:'12vh'}}>
       {/* Product owner routes */}
       <Route exact path="/product-owner/connections" component={Connections} />
-
-      {/* Service owner routes */}
-      <Route exact path="/service-owner/orders" component={ServiceOwnerOrders} />
-      <Route exact path="/service-owner/connection" component={ProductOwnerDetails} />
 
       {/* Admin routes */}
       <Route exact path="/admin/service-owners" component={AdminServiceOwners} />
@@ -128,7 +135,11 @@ function App() {
           </div>
         </Switch>
       </div>
-      <FooterPage />
+      {isUser() || isCustomer() || isProductOwner() ?
+        <FooterPage />
+        :
+        <></>
+      }
     </div>
 
 

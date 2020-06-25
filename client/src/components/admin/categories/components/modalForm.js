@@ -54,7 +54,7 @@ const ModalForm = ({ setModal, modal, unmountOnClose, data, setData, allData, se
         <div>
             <Form inline onSubmit={handleSubmit}>
             </Form>
-            <Modal isOpen={modal} toggle={toggle} unmountOnClose={unmountOnClose}>
+            <Modal style={{marginTop: '6%'}} isOpen={modal} toggle={toggle} unmountOnClose={unmountOnClose}>
                 <form onSubmit={handleSubmit}>
                     <ModalHeader toggle={toggle}>{title}</ModalHeader>
                     <ModalBody>
