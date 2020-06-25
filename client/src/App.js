@@ -62,7 +62,13 @@ function App() {
           "/service-owner/connection",
           "/product-owner/connections",
           "/admin/service-owners",
-          "/admin/categories"
+          "/admin/categories",
+          "/admin/product-owners",
+          "/service-owner/reviews",
+          "/service-owner/product-orders",
+          "/product-owner/products/create",
+          "/product-owner/products/:id/edit",
+          "/product-owner/products"
         ]}
       >
         <Layout>
@@ -90,6 +96,18 @@ function App() {
             component={AdminServiceOwners}
           />
           <Route exact path="/admin/categories" component={All} />
+
+          <ProductOwnerRoute exact path="/product-owner/products/create">
+            <CreateProduct />
+          </ProductOwnerRoute>
+
+          <ProductOwnerRoute exact path="/product-owner/products/:id/edit">
+            <UpdateProduct />
+          </ProductOwnerRoute>
+
+          <ProductOwnerRoute exact path="/product-owner/products">
+            <ListProducts />
+          </ProductOwnerRoute>
         </Layout>
       </Route>
 
@@ -140,17 +158,6 @@ function App() {
                 component={ListCatProducts}
               />
               <div className="container">
-                <ProductOwnerRoute exact path="/products/create">
-                  <CreateProduct />
-                </ProductOwnerRoute>
-
-                <ProductOwnerRoute exact path="/products/:id/edit">
-                  <UpdateProduct />
-                </ProductOwnerRoute>
-
-                <ProductOwnerRoute exact path="/products">
-                  <ListProducts />
-                </ProductOwnerRoute>
 
                 {/* <Route exact path="/test" >
               < Category />

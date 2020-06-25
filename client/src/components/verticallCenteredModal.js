@@ -11,6 +11,7 @@ function VerticallyCenteredModal(props) {
         aria-labelledby="contained-modal-title-vcenter"
         centered
         onHide={props.handleClose}
+        className="modal-product-layout"
       >
         <div onClick={e => e.stopPropagation()}>
         <Modal.Header closeButton={true}>
