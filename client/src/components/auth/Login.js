@@ -21,7 +21,7 @@ import '../../styles/login.scss';
 import { ToastContainer, toast } from 'react-toastify';
 
 import { Jumbotron, Badge } from 'reactstrap';
-
+import GoogleBtn from '../googleBtn'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -151,6 +151,7 @@ export default function Login() {
     <Container component="main" maxWidth="xs">
 
       <div>
+       
         {
           error ?
             <ToastContainer /> : null}
@@ -203,7 +204,10 @@ export default function Login() {
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs>
+          <Grid item xs>
+          <GoogleBtn />
+          </Grid>
+            <Grid item s>
               <Link href="#" variant="body2">
                 Forgot password?
               </Link>

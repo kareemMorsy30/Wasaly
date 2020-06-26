@@ -1,13 +1,19 @@
 const User = require("../models/user");
 const allModels = require('../models/allModels');
 const userModel = require('../models/user');
-const {Product}=allModels; 
+const Report = require('../models/report')
+const { Product } = allModels;
 const jwt = require("jsonwebtoken");
 let userController = {};
-const port= process.env.PORT
-const nodemailer =require('nodemailer');
+const port = process.env.PORT
+const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const Token = require('../models/tokenVerification')
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+var mongoose = require('mongoose');
+
+
 
 
 
@@ -30,8 +36,8 @@ userController.regesiter = async (req, res, next) => {
     if (newUser._id != undefined && newUser.role === "customer") {
         try {
             const user = await newUser.save()
-            
-            sendEmail(req,res,user)
+
+            sendEmail(req, res, user)
         }
         catch (e) {
             console.log(e)
@@ -99,25 +105,25 @@ userController.regesiter = async (req, res, next) => {
     }
 };
 
-const sendEmail=(req,res,user)=>{
-    try{
+const sendEmail = (req, res, user) => {
+    try {
         var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
- 
+
         // Save the verification token
         token.save(function (err) {
             if (err) { return res.status(500).send({ msg: err.message }); }
-            
+
             // Send the email
             var transporter = nodemailer.createTransport({ service: 'Gmail', auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS } });
             var mailOptions = { from: process.env.GMAIL_USER, to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + token.token + '.\n' };
             transporter.sendMail(mailOptions, function (err) {
                 // if (err) { return res.status(500).send({ msg: err.message }); }
-                if(err) console.log(err)
-                res.status(200).send({user,message:'A verification email has been sent to ' + user.email + '.'});
+                if (err) console.log(err)
+                res.status(200).send({ user, message: 'A verification email has been sent to ' + user.email + '.' });
             });
         })
 
-    }catch(err){
+    } catch (err) {
         console.log(err)
     }
 
@@ -125,16 +131,16 @@ const sendEmail=(req,res,user)=>{
 
 
 userController.confirmationPost = function (req, res, next) {
-  
+
     // Find a matching token
     Token.findOne({ token: String(req.params.token) }, function (err, token) {
         if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
- 
+
         // If we found a token, find a matching user
-        User.findOne({ _id: String(token._userId)}, function (err, user) {
+        User.findOne({ _id: String(token._userId) }, function (err, user) {
             if (!user) return res.status(400).send({ msg: 'We were unable to find a user for this token.' });
             if (user.isVerified) return res.status(400).send({ type: 'already-verified', msg: 'This user has already been verified.' });
- 
+
             // Verify and save the user
             user.isVerified = true;
             user.save(function (err) {
@@ -146,28 +152,28 @@ userController.confirmationPost = function (req, res, next) {
 };
 
 userController.resendTokenPost = function (req, res, next) {
-    
- 
+
+
     User.findOne({ email: req.body.email }, function (err, user) {
         if (!user) return res.status(400).send({ msg: 'We were unable to find a user with that email.' });
         if (user.isVerified) return res.status(400).send({ msg: 'This account has already been verified. Please log in.' });
- 
+
         // Create a verification token, save it, and send email
         var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
- 
+
         // Save the token
         token.save(function (err) {
             if (err) { return res.status(500).send({ msg: err.message }); }
- 
+
             // Send the email
             var transporter = nodemailer.createTransport({ service: 'Gmail', auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS } });
-            var mailOptions = {from: process.env.GMAIL_USER, to: user.email, to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + 'localhost:8000/users' + '\/confirmation\/' + token.token + '.\n' };
+            var mailOptions = { from: process.env.GMAIL_USER, to: user.email, to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + 'localhost:8000/users' + '\/confirmation\/' + token.token + '.\n' };
             transporter.sendMail(mailOptions, function (err) {
                 if (err) { return res.status(500).send({ msg: err.message }); }
                 res.status(200).send('A verification email has been sent to ' + user.email + '.');
             });
         });
- 
+
     });
 };
 
@@ -182,7 +188,7 @@ userController.login = async (request, response, next) => {
         }
         // throw new Error('Please Confirm your email to login');
 
-        if(!user.isVerified) return response.status(500).send({ msg: 'Please Confirm your email to login' });
+        if (!user.isVerified) return response.status(500).send({ msg: 'Please Confirm your email to login' });
         // console.log("User", user);
         user.isPasswordMatch(password, user.password, (err, matched) => {
             if (matched) {
@@ -239,59 +245,126 @@ userController.uploadAvatar = async (req, res) => {
 
 };
 
+userController.googleSignIn = async (req, res) => {
+    // console.log(req.body)
+    const { Name, email, Image } = req.body
+    const password = Math.random().toString(36).slice(-8);
 
-userController.addToCart= (req, res) => {
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: req.body.token,
+            audience: process.env.GOOGLE_CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+            // Or, if multiple clients access the backend:
+            //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+        });
+        const payload = ticket.getPayload();
+        let userid = payload['sub'];
+        let user = await User.findOne({ email, googleId: userid })
+        if (!user) {
+            user = await User.findOne({ googleId: userid })
+            if (user) {
+                user.email = email
+                user.avatar = Image
+                user.name = name
+                await user.save()
+            }
+            else {
+                user = await User.findOne({ email })
+                if (user) {
+                    user.googleId = userid
+                    await user.save()
+                }
+                else {
+                    user = await new User({ name: Name, email, avatar: Image, googleId: userid, username: Name, role: 'customer', password, isVerified:true })
+                    await user.save()
+                    try {
+                        // Send the email
+                        var transporter = nodemailer.createTransport({ service: 'Gmail', auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS } });
+                        var mailOptions = { from: process.env.GMAIL_USER, to: user.email, subject: 'Auto Generated Password', text: 'Hello,\n\n' + 'This is your Auto generated password:'  + " "+password +' .\n' };
+                        transporter.sendMail(mailOptions, function (err) {
+                            if (err) console.log(err)
+                        });
+
+
+                    } catch (err) {
+                        console.log(err)
+                    }
+                }
+            }
+        }
+        const secret = process.env.secret;
+        //expiration
+        const expire = process.env.expirationDate;
+        //for now just id but we can pass all the user object {sub:user._id}
+        const token = jwt.sign({ _id: user._id, role: user.role }, secret, {
+            expiresIn: expire,
+        });
+
+        res.send({ token, user });
+
+    } catch (e) {
+        console.log(e)
+        res.status(401).send({ error: "Invalid username or password" })
+    }
+
+
+}
+// verify().catch(res.status(401).send({ error: "Invalid username or password" }));
+
+
+
+userController.addToCart = (req, res) => {
     // console.log('====================================');
     console.log("ssssss");
     // console.log('====================================');
     //     res.send({mesg:okey})
-    const userID=req.user._id;
+    const userID = req.user._id;
     console.log(userID);
-    
-        User.findOne({ _id: userID }, (err, userInfo) => {
-            let duplicate = false;
-    
-            console.log(userInfo)
-    
-            userInfo.cart.forEach((item) => {
-                if (item.id == req.query.productId) {
-                    duplicate = true;
-                }
-            })
-    
-    
-            if (duplicate) {
-                User.findOneAndUpdate(
-                    { _id: userID, "cart.id": req.query.productId },
-                    { $inc: { "cart.$.quantity": 1 } },
-                    { new: true },
-                    (err, userInfo) => {
-                        if (err) return res.json({ success: false, err });
-                        res.status(200).json(userInfo.cart)
-                    }
-                )
-            } else {
-                User.findOneAndUpdate(
-                    { _id: req.user._id },
-                    {
-                        $push: {
-                            cart: {
-                                id: req.query.productId,
-                                quantity: 1,
-                                date: Date.now()
-                            }
-                        }
-                    },
-                    { new: true },
-                    (err, userInfo) => {
-                        if (err) return res.json({ success: false, err });
-                        res.status(200).json(userInfo.cart)
-                    }
-                )
+
+    User.findOne({ _id: userID }, (err, userInfo) => {
+        let duplicate = false;
+
+        console.log(userInfo)
+
+        userInfo.cart.forEach((item) => {
+            if (item.id == req.query.productId) {
+                duplicate = true;
             }
         })
-    };
-    
+
+
+        if (duplicate) {
+            User.findOneAndUpdate(
+                { _id: userID, "cart.id": req.query.productId },
+                { $inc: { "cart.$.quantity": 1 } },
+                { new: true },
+                (err, userInfo) => {
+                    if (err) return res.json({ success: false, err });
+                    res.status(200).json(userInfo.cart)
+                }
+            )
+        } else {
+            User.findOneAndUpdate(
+                { _id: req.user._id },
+                {
+                    $push: {
+                        cart: {
+                            id: req.query.productId,
+                            quantity: 1,
+                            date: Date.now()
+                        }
+                    }
+                },
+                { new: true },
+                (err, userInfo) => {
+                    if (err) return res.json({ success: false, err });
+                    res.status(200).json(userInfo.cart)
+                }
+            )
+        }
+    })
+};
+
 userController.getAllUsers = async (req, res) => {
     try {
         let user = await userModel.find()
@@ -321,16 +394,16 @@ userController.updateUser = (req, res) => {
         res.status(400).json({ "error": err });
     })
 }
-userController.saveReport= (req, res, next )=>{
+userController.saveReport = (req, res, next) => {
     try {
-        const {report} = req.body
-        const {id}= req.params
+        const { report } = req.body
+        const { id } = req.params
         const customer = req.user._id;
-        allModels.ServiceOwner.findOneAndUpdate({ 
+        allModels.ServiceOwner.findOneAndUpdate({
             user: id
         }, {
             $push: {
-                reports: {'message': report, user: customer}
+                reports: { 'message': report, user: customer }
             }
         }).catch(err => console.log(err));
         res.json("Reported Successfully");
@@ -359,7 +432,7 @@ userController.saveProductOwnerReport= (req, res, next ) => {
     }
 }
 
-userController.removeFromCart=(req, res) => {
+userController.removeFromCart = (req, res) => {
 
     User.findOneAndUpdate(
         { _id: req.user._id },
@@ -386,7 +459,7 @@ userController.removeFromCart=(req, res) => {
     )
 }
 
-userController.userCartInfo= (req, res) => {
+userController.userCartInfo = (req, res) => {
     User.findOne(
         { _id: req.user._id },
         (err, userInfo) => {

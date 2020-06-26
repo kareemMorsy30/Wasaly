@@ -28,7 +28,7 @@ router.post('/register', userController.regesiter);
 
 router.get('/confirmation/:token', userController.confirmationPost);
 router.post('/resend', userController.resendTokenPost);
-
+router.post('/googlesigin',userController.googleSignIn)
 router.post(
   '/profile/avatar/:id',
   // AAuth,
