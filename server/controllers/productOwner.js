@@ -34,7 +34,7 @@ const disconnect = (req, res) => {
 const remove = (req, res) => {
     const { id } = req.params;
 
-    ServiceOwner.findOneAndDelete({user: id})
+    productOwner.findOneAndDelete({user: id})
     .then(owner => {
         User.findByIdAndDelete(id)
         .then(user => res.status(200).json(user))

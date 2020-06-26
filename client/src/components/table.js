@@ -57,7 +57,7 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, Button, details, chi
                                             :
                                             Array.isArray(col)
                                                 ? 
-                                                record[col[0]][col[1]]
+                                                record[col[0]] && record[col[0]][col[1]]
                                                 : 
                                                 record[col] == 0 ? "-" : record[col]
                                         }

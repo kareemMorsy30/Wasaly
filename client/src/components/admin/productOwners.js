@@ -5,12 +5,12 @@ import Table from '../table';
 import Modal from '../product owner/modal';
 import Info from '../alerts/info';
 import Moment from 'react-moment';
-import { allProductOwners, deleteServiceOwner } from '../../endpoints/admin';
+import { allProductOwners, deleteProductOwner } from '../../endpoints/admin';
 import { handleSuccess } from '../../errors/handleAlerts';
 import Alert from '../alerts/alert';
 
 const AdminProductOwners = (props) => {
-    const cols = ["marketName", ["user", "name"], "rating"];
+    const cols = ["marketName", ["user", "name"], "marketPhone"];
     const [productOwners, setProductOwners] = useState([]);
     const [ alert, setAlert ] = useState({
         errors: false,
@@ -37,7 +37,7 @@ const AdminProductOwners = (props) => {
     }
 
     const deleteRecord = (record) => {
-        deleteServiceOwner(record.user._id)
+        deleteProductOwner(record.user._id)
         .then(deletedOwner => {
             setProductOwners(productOwners.filter(owner => owner.user._id !== deletedOwner._id));
             handleSuccess(setAlert, `User ${deletedOwner.name} deleted successfully`, 5000);
