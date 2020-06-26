@@ -9,6 +9,7 @@ import UpdateProduct from "./components/product owner/updateProduct";
 import ListProducts from "./components/product owner/listProducts";
 import Connections from "./components/product owner/connection";
 import ProductOwnerDetails from "./components/product owner/productOwnerDetails";
+import AdminProductOwners from "./components/admin/productOwners";
 import ListCatProducts from "./components/product owner/CategoryProducts";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
@@ -122,6 +123,10 @@ function App() {
           <ProductOwnerRoute exact path="/product-owner/products">
             <ListProducts />
           </ProductOwnerRoute>
+
+          <Route exact path="/admin/product-owners/">
+            <AdminProductOwners />
+          </Route>
         </Layout>
       </Route>
 

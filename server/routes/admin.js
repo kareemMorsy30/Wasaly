@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { serviceOwnerController, categoryController } = require('./../controllers/allControllers');
+const { serviceOwnerController, categoryController, productOwnerController } = require('./../controllers/allControllers');
 const { Auth } = require('../middlewares/Auth');
 const adminAuth = require('../config/adminAuth');
 const multer  = require('multer');
@@ -35,8 +35,14 @@ fileFilter
 // Retrieve all service owners
 router.get('/service-owners', serviceOwnerController.all);
 
+// get all product owners
+router.get('/product-owners', productOwnerController.getAllproductsOwner);
+
 // Delete a service owner
 router.delete('/service-owners/:id/delete', serviceOwnerController.remove);
+
+// Delete a product owner
+router.delete('/product-owners/:id/delete', productOwnerController.remove);
 
 // Add new category
 router.post('/categories', upload.single('image'), categoryController.add);
