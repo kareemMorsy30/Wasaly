@@ -17,6 +17,7 @@
     "formik": "^2.1.4",
     "mdbreact": "^4.27.0",
     "node-sass": "^4.14.1",
+    "object-to-formdata": "^3.0.9",
     "push.js": "^1.0.12",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",

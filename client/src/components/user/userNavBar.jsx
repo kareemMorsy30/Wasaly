@@ -91,7 +91,9 @@ const NavBar = (props) => {
                         <NavItem>
                             <Link className="nav-link" to="/users">users</Link>
                         </NavItem>
-
+                        <NavItem>
+                            <Link className="nav-link" to="/serviceownerprofile/5ef284d743ed7e1916f4aa22">My profile</Link>
+                        </NavItem>
                         {console.log(isLoggedIn())}
                         {
                             isLoggedIn() == false ? (
