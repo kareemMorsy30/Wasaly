@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/table.scss';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import ReactStars from 'react-rating-stars-component';
 import Info from './alerts/info';
 import { Link } from 'react-router-dom';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import Details from './product owner/productOwnerDetails/details';
 
-const Table = ({ cols, data, editUrl, delUrl, del, options, Button, children }) => {
+const Table = ({ cols, data, editUrl, delUrl, del, options, Button, details, children }) => {
     const [modal, setModal] = useState(false);
     const [record, setRecord] = useState(null);
 
@@ -60,7 +61,7 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, Button, children }) 
                                                 : 
                                                 record[col] == 0 ? "-" : record[col]
                                         }
-
+                                        {col === 'cost' && ' EGP'}
                                     </td>
                                 );
                             })}
@@ -113,12 +114,7 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, Button, children }) 
                                 {del ?
                                     <FontAwesomeIcon className="delete-icon" onClick={() => del(record)} icon={faTrash} size="lg"/>
                                     :
-                                    <Link to={{
-                                        pathname: delUrl,
-                                        state: {
-                                            record
-                                        }
-                                    }} className="delete-record"><FontAwesomeIcon icon={faTrash} size="lg"/></Link>
+                                    <FontAwesomeIcon className="details-icon" onClick={e => details(e, record)} icon={faInfoCircle} size="2x"/>
                                 }
                             </td>
                             }

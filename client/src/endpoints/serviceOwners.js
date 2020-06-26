@@ -39,3 +39,15 @@ export const updateConnection = (status) => {
     })
     .catch(err => err);
 }
+
+export const allRatings = () => {
+    const url = `${domain}/service-owners/reviews`;
+
+    return axios.get(url, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data) return res.data;
+    })
+    .catch(err => console.log(err));
+}

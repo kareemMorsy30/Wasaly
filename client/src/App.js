@@ -18,6 +18,7 @@ import UserNavBar from "./components/user/userNavBar";
 import UserAndCustomerNavBar from "./components/layouts/site/navbar";
 /*** Service owners */
 import ServiceOwnerOrders from "./components/service owner/orders";
+import Reviews from "./components/service owner/reviews/reviews";
 /**** Admin ****/
 import AdminServiceOwners from "./components/admin/serviceOwners";
 import All from "./components/admin/categories/all";
@@ -94,6 +95,7 @@ function App() {
             path="/service-owner/connection"
             component={ProductOwnerDetails}
           />
+          <Route exact path="/service-owner/reviews" component={Reviews} />
           {/* Product owner routes */}
           <Route
             exact
