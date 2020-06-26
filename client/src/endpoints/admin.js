@@ -28,6 +28,32 @@ export const deleteServiceOwner = (id) => {
     .catch(err => err);
 }
 
+export const allProductOwners = () => {
+    const url = `${domain}/admin/product-owners`;
+    return axios.get(url, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data)
+            return res.data;
+    })
+    .catch(err => err);
+}
+
+export const deleteProductOwner = (id) => {
+    const url = `${domain}/admin/product-owners/${id}/delete`;
+
+    return axios.delete(url,
+    {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data)
+            return res.data;
+    })
+    .catch(err => err);
+}
+
 export const getCategories = () => {
     const url = `${domain}/admin/categories`;
     return axios.get(url, {
