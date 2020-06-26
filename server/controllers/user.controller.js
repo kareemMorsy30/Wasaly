@@ -1,7 +1,6 @@
 const User = require("../models/user");
 const allModels = require('../models/allModels');
 const userModel = require('../models/user');
-const Report = require('../models/report')
 const {Product}=allModels; 
 const jwt = require("jsonwebtoken");
 let userController = {};
@@ -335,24 +334,30 @@ userController.saveReport= (req, res, next )=>{
             }
         }).catch(err => console.log(err));
         res.json("Reported Successfully");
-
-        // Report.findOneAndUpdate({ 
-        //     user: id,
-        // }, {
-        //     report, 
-        //     user: id,
-        //     customer
-        // }, {
-        //     upsert: true,
-        //     useFindAndModify: false
-        // }).catch(err => console.log(err));
     }
     catch (err) {
         next(err)
     }
 }
 
-
+userController.saveProductOwnerReport= (req, res, next ) => {
+    try {
+        const {report} = req.body
+        const {id}= req.params
+        const customer = req.user._id;
+        allModels.productOwner.findOneAndUpdate({ 
+            user: id
+        }, {
+            $push: {
+                reports: {'message': report, user: customer}
+            }
+        }).catch(err => console.log(err));
+        res.json("Reported Successfully");
+    }
+    catch (err) {
+        next(err)
+    }
+}
 
 userController.removeFromCart=(req, res) => {
 
