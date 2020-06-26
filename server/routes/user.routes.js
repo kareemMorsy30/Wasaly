@@ -99,6 +99,7 @@ router.post('/admin', adminAuth,
     (req, res, next) => {
         return res.send({ msg: "okey you are authorized user now :)", user: req.user });
     });
+    router.get('/userCartInfo',userController.userCartInfo);
 
 
 
@@ -112,6 +113,5 @@ router.post('/admin', adminAuth,
     router.get('/:id/',userController.getUser);
     router.post('/addToCart',userController.addToCart);
 router.delete('/removeFromCart',userController.removeFromCart);
-router.get('/userCartInfo',userController.userCartInfo);
 
 module.exports = router;

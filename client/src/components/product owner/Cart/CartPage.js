@@ -7,11 +7,14 @@ import {
 import UserCardBlock from './Sections/UserCardBlock';
 import { Result, Empty } from 'antd';
 import Axios from 'axios';
+import OrderForm from '../../customer/orderForm';
+
 function CartPage(props) {
     const dispatch = useDispatch();
     const [Total, setTotal] = useState(0)
     const [ShowTotal, setShowTotal] = useState(false)
     const [ShowSuccess, setShowSuccess] = useState(false)
+    const [owner, setowner] = useState([])
     console.log('================Cart Page====================');
     console.log(props);
     console.log('====================================');
@@ -19,6 +22,7 @@ function CartPage(props) {
     useEffect(() => {
 
         let cartItems = [];
+        // const responsePayload={};
         if (props.user.userData && props.user.userData.cart) {
             console.log("props",props.user.userData.cart.length);
             
@@ -28,14 +32,21 @@ function CartPage(props) {
                 });
                 dispatch(getCartItems(cartItems, props.user.userData.cart))
                     .then((response) => {
+                        console.log('================RESPONSEEEE====================');
+                        console.log(response);
+                        // setowner(response.payload)
+
+                        console.log('====================================');
                         if (response.payload.length > 0) {
                             calculateTotal(response.payload)
+                            // owner(response.payload)s
                         }
                     })
             }
         }
 
     }, [props.user.userData])
+  
 
     const calculateTotal = (cartDetail) => {
         let total = 0;
@@ -64,7 +75,17 @@ function CartPage(props) {
             })
     }
 
+const addOrder = ()=>{
+    // dispatch(addtoOrder())
+    
 
+}
+
+
+
+console.log('=================Props from Cart page===================');
+console.log(props);
+console.log('====================================');
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
             <h1>My Cart</h1>
@@ -72,11 +93,11 @@ function CartPage(props) {
 
                 <UserCardBlock
                     products={props.user.cartDetail}
+                    owner={owner}
                     removeItem={removeFromCart}
+                    addOrder={addOrder}
                 />
-
-
-                {ShowTotal ?
+   {ShowTotal ?
                     <div style={{ marginTop: '3rem' }}>
                         <h2>Total amount: ${Total} </h2>
                     </div>
@@ -96,6 +117,8 @@ function CartPage(props) {
 
                         </div>
                 }
+<OrderForm    props={props}/>
+             
             </div>
 
 
@@ -106,3 +129,4 @@ function CartPage(props) {
 }
 
 export default CartPage
+

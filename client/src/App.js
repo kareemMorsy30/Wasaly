@@ -26,6 +26,7 @@ import All from './components/admin/categories/all';
  */
 import NavBar from "./components/admin/adminNavBar";
 import ServiceOrderForm from './components/customer/serviceForm';
+import orderForm from './components/customer/orderForm';
 // import Delivery from './components/customer/delivery';
 import Delivery from './components/customer/delivery';
 import Order from './components/user/orders';
@@ -108,9 +109,12 @@ function App() {
             {/* <Route exact path="/test" >
               < Category />
             </Route> */}
+         
             <Route exact path="/sO" component={ServiceOrderForm} />
+            <UserRoute>
+            <Route exact path="/addOrder" component={Auth(orderForm, true)} />
             {/* <Route exact path="/" component={Delivery} /> */}
-
+</UserRoute>
             <Route exact path="/orders" component={Order} />
             <Route exact path="/orders/:id" component={OrderDetails} />
             {/* http://localhost:3000/5ef231d4a5a9572baa78364f/ownerinfo */}

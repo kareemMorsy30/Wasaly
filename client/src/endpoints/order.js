@@ -47,3 +47,21 @@ export const submitOrder = (order, owner) => {
     })
     .catch(err => err);
 }
+
+//For a Customer
+export const MakeOrder = (order) => {
+    const url = `${domain}/orders/addOrder`;
+
+    return axios.post(url, {
+        ...order,
+        // serviceOwnerId: owner._id
+    },
+    {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data)
+            return res.data;
+    })
+    .catch(err => err);
+}

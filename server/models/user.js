@@ -39,6 +39,7 @@ const userSchema = new mongoose.Schema({
         default: []
     },
     isVerified: { type: Boolean, default: false },
+    
 
 })
 userSchema.pre('save', async function (next) {
@@ -74,5 +75,8 @@ userSchema.methods.toJSON = function () {
     // delete userObject.token;
     return userObject;
 }
+
+
+
 
 module.exports= mongoose.model('User', userSchema)

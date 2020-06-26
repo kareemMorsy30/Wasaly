@@ -292,7 +292,6 @@ userController.addToCart= (req, res) => {
             }
         })
     };
-    
 userController.getAllUsers = async (req, res) => {
     try {
         let user = await userModel.find()
@@ -370,7 +369,7 @@ userController.removeFromCart=(req, res) => {
             })
 
             Product.find({ '_id': { $in: array } })
-                .populate('writer')
+                .populate('user')
                 .exec((err, cartDetail) => {
                     return res.status(200).json({
                         cartDetail,
@@ -381,8 +380,12 @@ userController.removeFromCart=(req, res) => {
     )
 }
 
-userController.userCartInfo= (req, res) => {
-    User.findOne(
+userController.userCartInfo= async (req, res) => {
+    console.log('====================================');
+    console.log("5555555555555555555555555");
+    console.log('====================================');
+
+    await    User.findOne(
         { _id: req.user._id },
         (err, userInfo) => {
             let cart = userInfo.cart;
@@ -390,17 +393,19 @@ userController.userCartInfo= (req, res) => {
                 return item.id
             })
 
-
             Product.find({ '_id': { $in: array } })
-                .populate('user')
-                .exec((err, cartDetail) => {
+                .populate('owner')
+                .exec( (err, cartDetail) => {
+                    console.log("ssssssss",cartDetail);
+                    
                     if (err) return res.status(400).send(err);
-                    return res.status(200).json({ success: true, cartDetail, cart })
+                    return res.status(200).send({ success: true, cartDetail, cart })
                 })
 
         }
     )
 }
+
 
 
 
