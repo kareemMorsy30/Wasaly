@@ -1,4 +1,5 @@
 import React from 'react';
+import { logout } from '../../../endpoints/logout';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -19,6 +20,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Card from '../../layouts/dashboard/card';
 
 function Copyright() {
@@ -129,6 +131,8 @@ export default function Dashboard({children}) {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+  const handleLogout = () => logout();
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -144,12 +148,15 @@ export default function Dashboard({children}) {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            <h3 style={{color: 'black'}}>Dashboard</h3>
+            <h3>Dashboard</h3>
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="primary">
-              <NotificationsIcon style={{color: 'black'}}/>
+              <NotificationsIcon />
             </Badge>
+          </IconButton>
+          <IconButton color="inherit">
+              <ExitToAppIcon onClick={handleLogout} />
           </IconButton>
         </Toolbar>
       </AppBar>

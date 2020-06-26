@@ -41,16 +41,25 @@ const getServiceOwner = async(req,res)=>{
             console.log(err);
         }
 }
-const updateServiceOwner = (req,res)=>{
-    console.log(req.body);
-    ServiceOwner.findOneAndUpdate({_id: req.params.id},req.body,{new: true},(error,user)=>{
-        res.status(200).json({"data": user});
-    })
-    .populate('user')
-    .catch((err) => {
+const updateServiceOwner = async(req,res)=>{
+    
+    console.log(req.body.distance);
+    // const serviceOwnerId = req.params.id;
+    const url = req.protocol + '://' + req.get('host')
+    // const image = req.file && req.file.path;
+    let image_path = url + '/public/uploads/users/images/' +req.file.filename ;
+    console.log(req.file);
+    // let {image_path,...owner}=req.body;
+    try{
+    let service = 
+    await ServiceOwner.findOneAndUpdate({_id: req.params.id},{$set:req.body},{new: true}).populate('user')
+    await User.findOneAndUpdate({_id:service.user._id},{'avatar':image_path})
+    let newServiceObj = await (await ServiceOwner.findOne({_id:req.params.id})).populate('user')
+    res.status(200).json({"data": newServiceObj});
+}catch(err) {
         console.log(err);
         res.status(400).json({"error": err});
-    })
+    }
 } 
 
 const getAllConnectedServiceOwner = (req,res)=>{
@@ -84,7 +93,9 @@ const reviews = (req, res) => {
     const page = perPage ? parseInt(req.query.page) : 0; // Check if there is a query string for page number
 
     ServiceOwner.findOne({ user: id }, null, { skip: perPage * (page-1), limit: perPage })
+    .sort({_id: 'desc'})
     .populate('user')
+    .populate('rates.order')
     .populate('rates.user')
     .then(owner => {
         

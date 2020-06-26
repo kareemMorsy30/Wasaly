@@ -5,6 +5,32 @@ const { Auth } = require('../middlewares/Auth');
 const serviceOwner = require('../config/serviceOwner');
 
 Auth(router, serviceOwner);
+const multer  = require('multer');
+
+
+const storage = multer.diskStorage({
+destination: (req, file, cb) => {
+    cb(null, 'public/uploads/users/images');
+},
+filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+}
+});
+
+// Set filters to image upload
+const fileFilter = (req, file, cb) => {
+if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg'){
+    cb(null,true)
+} else {
+    cb(new Error('only allowed types are jpeg, png, jpg'), false)
+}
+}
+
+// Apply multer option to image upload
+const upload = multer({
+storage,
+fileFilter
+});
 
 // Check all incoming requests of customers
 router.get('/orders', serviceOwnerController.allIncomingOrders);
@@ -22,7 +48,7 @@ router.get('/product-owner', productOwnerController.productOwnerDetails);
 router.get('/:id/',serviceOwnerController.getServiceOwner);
 
 //update service owner data
-router.patch('/:id', serviceOwnerController.updateServiceOwner);
+router.put('/:id', upload.single('avatar'),serviceOwnerController.updateServiceOwner);
 
 //change status of service owner
 router.get('/:id/status',serviceOwnerController.changeStatus);

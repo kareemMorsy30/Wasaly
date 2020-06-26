@@ -4,6 +4,7 @@ const express = require('express')
 const mongoose= require('mongoose')
 const cors= require('cors')
 const bodyParser = require("body-parser");
+var path = require('path'); 
 const app = express()
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
@@ -30,7 +31,8 @@ const morgan = require('morgan');
 
 app.use(cors({origin: true, credentials: true}));
 app.use(express.json())
-app.use(express.static('public'));
+// app.use(express.static('public'));
+app.use('/public', express.static(path.join(__dirname, 'public'))) ;
 app.use(express.urlencoded({ extended: true }))
 app.get('/', (req, res) =>{ 
     console.log(`\n\nnew request, its method: ${req.method}`);

@@ -22,7 +22,7 @@ const Modal = ({ record }) => {
                     <label>Phone</label>
                     <input type="text" placeholder="Phone" value={record.customer && record.customer.phones[0]} readOnly/>
                     <label>Address</label>
-                    <input type="text" placeholder="Address" value={record.customer && record.customer.address.length > 0 && record.customer.address[0].area && `${record.customer.address[0].area} ${record.customer.address[0].city}`} readOnly/>
+                    <input type="text" placeholder="Address" value={record.customer && record.customer.address.length > 0 ? record.customer.address[0].area && `${record.customer.address[0].area} ${record.customer.address[0].city}` : ''} readOnly/>
                 </div>
             </div>
         
