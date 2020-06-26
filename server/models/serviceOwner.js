@@ -16,7 +16,7 @@ const rate = new mongoose.Schema({
         required: true,
         ref: 'User'
     },
-    order:{  type: mongoose.Schema.Types.ObjectId}
+    order:{  type: mongoose.Schema.Types.ObjectId, ref: 'Order'}
 });
 
 const serviceOwnerSchema = new mongoose.Schema({
