@@ -18,7 +18,7 @@ const Review = (props) => {
         const data = { review, order }
         axios.patch(`${domain}/services/${serviceId}/reviews/`, data, authHeader)
             .then(response => {
-                console.log(response); // Service Rating Object
+                console.log(response); // Service Review Object
             })
             .catch(err => {
                 console.log(err)
