@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { authHeader } from '../config/config'
 import RateService from '../rateService'
+import Review from '../review'
+import Report from '../report'
 
 const fontStyle = {
     fontSize: '12px',
@@ -17,7 +19,6 @@ const Order = (props) => {
     useEffect(() => {
         axios.get(`${domain}/orders/${id}`, authHeader).
             then((res) => {
-                console.log(res.data)
                 setOrder(res.data)
                 calculateTotalCost()
             }).catch(e => {
@@ -79,8 +80,13 @@ const Order = (props) => {
                                     Rate this service
                          </p>}
                             {
-                                order.rate &&
-                                <RateService serviceId={order.service && order.service._id} rate={order.rate && order.rate.rating || 0} order={order._id} />
+                                order.rate &&  (
+                                    <>
+                                <RateService serviceId={order.service && order.service._id} rate={order.rate && order.rate.rating || 0} order={order._id} /> {"   "}
+                                <Review  serviceId={order.service && order.service._id} order={order._id}/>
+                                <Report serviceId={order.service && order.service._id} order={order._id} />
+                                </>
+                                )
                             }
                         </div>
 
