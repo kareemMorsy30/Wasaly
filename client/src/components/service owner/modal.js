@@ -4,7 +4,7 @@ import { ModalHeader, ModalBody } from 'reactstrap';
 const Modal = ({ record }) => {
     return (
         <>
-        <ModalHeader>{record.customer && record.customer.name}</ModalHeader>
+        <ModalHeader className="modal-layout">{record.customer && record.customer.name}</ModalHeader>
         <ModalBody>
             {
             !['Pending', 'Canceled', 'Rejected'].includes(record.status) 
@@ -22,7 +22,7 @@ const Modal = ({ record }) => {
                     <label>Phone</label>
                     <input type="text" placeholder="Phone" value={record.customer && record.customer.phones[0]} readOnly/>
                     <label>Address</label>
-                    <input type="text" placeholder="Address" value={record.customer && record.customer.address.length > 0 && record.customer.address[0].area && `${record.customer.address[0].area} ${record.customer.address[0].city}`} readOnly/>
+                    <input type="text" placeholder="Address" value={record.customer && record.customer.address.length > 0 ? record.customer.address[0].area && `${record.customer.address[0].area} ${record.customer.address[0].city}` : ''} readOnly/>
                 </div>
             </div>
         

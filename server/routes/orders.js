@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {  listOrders, changeOrderStatus,addOrder, getOrder,listCustomerOrders } = require('../controllers/order')
+const {  listOrders, changeOrderStatus, addOrder,listCustomerOrders,getOrder, cancelOrder } = require('../controllers/order')
 const { route } = require('./search')
 const productOwner= require('../config/productOwner')
 const passport = require('passport');
@@ -13,6 +13,9 @@ router.post("/addOrder",addOrder)
 
 // list product owner's orders
 router.get('/',productOwner, listOrders)
+
+//user can cancel order if pending
+router.post('/:orderId/cancel', cancelOrder)
 
 //change order status
 router.post('/:id/status', changeOrderStatus)

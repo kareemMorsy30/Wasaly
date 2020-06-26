@@ -4,6 +4,34 @@ const productOwner= require('../config/productOwner')
 const { Auth } = require('../middlewares/Auth');
 const { serviceOwnerController, productOwnerController } = require('../controllers/allControllers');
 
+const multer  = require('multer');
+
+
+const storage = multer.diskStorage({
+destination: (req, file, cb) => {
+    cb(null, 'public/uploads/');
+},
+filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+}
+});
+
+// Set filters to image upload
+const fileFilter = (req, file, cb) => {
+if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg'){
+    cb(null,true)
+} else {
+    cb(new Error('only allowed types are jpeg, png, jpg'), false)
+}
+}
+
+// Apply multer option to image upload
+const upload = multer({
+storage,
+fileFilter
+});
+
+
 // call authentication and authorization for product owner routes
 Auth(router, productOwner);
 
@@ -29,6 +57,6 @@ router.get('/:id', productOwnerController.getProductOwner);
 router.get('/:id/status',productOwnerController.changeStatus);
 
 //update data of product owner
-router.patch('/:id',productOwnerController.updateProducteOwner);
+router.patch('/:id',upload.single('avatar'),productOwnerController.updateProducteOwner);
 
 module.exports = router;

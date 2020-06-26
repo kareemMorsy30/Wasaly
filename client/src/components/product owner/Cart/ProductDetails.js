@@ -54,7 +54,7 @@ function ProductDetails(props) {
     return (
         <div className="menu-items">
                             
-       <Products  detail={Product}   addToCart={addToCartHandler} />)
+       <Products  detail={Product}   addToCart={addToCartHandler} />
        
        </div>  
        )

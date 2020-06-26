@@ -5,7 +5,7 @@ import ReactStars from 'react-rating-stars-component';
 const Modal = ({ record, Flag, Description }) => {
     return (
         <>
-        <ModalHeader><div className="modal-title">{record.user && record.user.name}</div><div className="modal-flag"><Flag record={record}/></div></ModalHeader>
+        <ModalHeader className="modal-layout"><div className="modal-title">{record.user && record.user.name}</div><div className="modal-flag"><Flag record={record}/></div></ModalHeader>
         <ModalBody>
             <div className="body-section">
                 <div className="image-section">

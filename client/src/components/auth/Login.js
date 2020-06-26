@@ -21,7 +21,7 @@ import '../../styles/login.scss';
 import { ToastContainer, toast } from 'react-toastify';
 
 import { Jumbotron, Badge } from 'reactstrap';
-
+import GoogleBtn from '../googleBtn'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -93,7 +93,10 @@ export default function Login() {
       localStorage.setItem("user", JSON.stringify(user));
       setEmailInput('');
       setPasswordInput('');
-      window.location.href = "http://localhost:3000/";
+      if(user.role === 'customer') window.location.href = "http://localhost:3000/";
+      else if(user.role === 'admin') window.location.href = "http://localhost:3000/admin/landing";
+      else if(user.role === 'serviceowner') window.location.href = "http://localhost:3000/service-owner/landing";
+      else if(user.role === 'productowner') window.location.href = "http://localhost:3000/product-owner/landing";
     }, (error) => {
       console.log('====================================');
       console.log(error.response.data.msg, "ERRROR");
@@ -148,6 +151,7 @@ export default function Login() {
     <Container component="main" maxWidth="xs">
 
       <div>
+       
         {
           error ?
             <ToastContainer /> : null}
@@ -200,7 +204,10 @@ export default function Login() {
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs>
+          <Grid item xs>
+          <GoogleBtn />
+          </Grid>
+            <Grid item s>
               <Link href="#" variant="body2">
                 Forgot password?
               </Link>

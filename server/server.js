@@ -4,7 +4,7 @@ const express = require('express')
 const mongoose= require('mongoose')
 const cors= require('cors')
 const bodyParser = require("body-parser");
-
+var path = require('path'); 
 const app = express()
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
@@ -28,10 +28,13 @@ const {
 const passport = require('passport');
 const morgan = require('morgan');
 
+// const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+const stripe = require("stripe")("sk_test_51GyFlZASd8wCD66zQnZ6lVzneK62YhprG2iBtZdVmN4lknDDp5idlD5BA0vW0SCHtULgyabjPghW4lLlLpyFhQGp00yQmrYy3G");
 
 app.use(cors({origin: true, credentials: true}));
 app.use(express.json())
-app.use(express.static('public'));
+// app.use(express.static('public'));
+app.use('/public', express.static(path.join(__dirname, 'public'))) ;
 app.use(express.urlencoded({ extended: true }))
 app.get('/', (req, res) =>{ 
     console.log(`\n\nnew request, its method: ${req.method}`);
@@ -41,7 +44,8 @@ app.get('/', (req, res) =>{
 
 mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useFindAndModify: false 
 }, async (err) => {
   if (!err) {
     console.log(`Started connection to mongo ::  ${DB_DATABASE}`);
@@ -69,7 +73,15 @@ app.use(bodyParser.json());
 app.use(express.static("./public")); 
 
 //___________________________Routes_____________________
+app.get('/google',
+  passport.authenticate('google', { scope: ['profile','email'] }));
 
+app.get('/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
 app.use('/users',userRoutes);
 
 /* --------------- Customer routes -------------------------*/
@@ -86,6 +98,22 @@ app.use('/orders', OrderRouter)
 app.use('/category', CategoryRouter)
 app.use('/customers', CustomerRouter)
 
+
+/*-------------payment---------------------------*/
+const SERVER_CONFIGS = require('./constants/backend');
+
+const configureServer = require('./index');
+const configureRoutes = require('./routes/paymentIndex');
+
+// const app = express();
+
+configureServer(app);
+configureRoutes(app);
+
+// app.listen(SERVER_CONFIGS.PORT, error => {
+//   if (error) throw error;
+//   console.log('Server running on port: ' + SERVER_CONFIGS.PORT);
+// });
 
 /* --------------- Product owner routes -------------------------*/
 app.use('/product-owners', productOwnerRouter);

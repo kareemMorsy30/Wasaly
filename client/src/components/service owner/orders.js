@@ -48,7 +48,6 @@ const ServiceOwnerOrders = (props) => {
                 :
                 <>
                     <h5>All Incoming orders</h5>
-                    <Link to="/admin/books/add" className="addIcon"><FontAwesomeIcon icon={faPlusCircle}/></Link>
                 </>
             }
             </div>

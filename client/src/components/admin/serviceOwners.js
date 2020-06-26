@@ -81,8 +81,7 @@ const AdminServiceOwners = (props) => {
                 <Alert alert={alert}/>
                 :
                 <>
-                    <h5>Service owner connections</h5>
-                    <Link to="/admin/books/add" className="addIcon"></Link>
+                    <h5>All service owners</h5>
                 </>
             }
         </div>

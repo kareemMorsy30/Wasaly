@@ -87,19 +87,15 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
               if (products.length === index + 1) {
                 return (
                   <Card style={{ width: '20rem', marginTop: '10px' }} key={product._id} ref={lastProductElementRef}>
-                    <Card.Img variant="top" src={`${domain}/${product.images_path[0]}`} style={{ width: '90%', margin: 'auto', marginTop: '10px' }} />
-                    <Card.Body>
+                    <Card.Img variant="top" src={`${domain}/${product.images_path[0]}`} style={{ width: '90%', margin: 'auto', marginTop: '10px', flex: '1 0 auto' , height:'10rem'}} />
+                    <Card.Body style={{  flexShrink: 0}}>
                       <Card.Title>{product.name}</Card.Title>
                       <Card.Text style={{ color: '#006fcc' }}>
                         {product.price} <span style={{ fontSize: '10px' }}>EGP</span>
                       </Card.Text>
-                      <Card.Text>
-                      {product.quantity}
-                    </Card.Text>
-                    <Card.Text>
-                      {product._id}
-                    </Card.Text>
-                      <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
+                    
+            
+                      <div style={{ display: 'flex', 'justifyContent': 'space-around', flexShrink: 0 }}>
                         <Button variant="danger" className="btn-card" >View</Button>
                         <Button variant="danger" onClick={()=>addToCarthandler(product._id)} className="btn-card">Add to Cart</Button>
                       </div>
@@ -111,8 +107,8 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
               else {
                 return (
                   <Card style={{ width: '20rem', marginTop: '10px' }} key={product._id}>
-                    <Card.Img variant="top" src={`${domain}/${product.images_path[0]}`} style={{ width: '90%', margin: 'auto', marginTop: '10px' }} />
-                    <Card.Body>
+                    <Card.Img variant="top" src={`${domain}/${product.images_path[0]}`} style={{ width: '90%', margin: 'auto', marginTop: '10px',   flex: '1 0 auto',height:'10rem'}} />
+                    <Card.Body style={{  flexShrink: 0}}>
                       <Card.Title>{product.name}</Card.Title>
                       <Card.Text style={{ color: '#006fcc' }}>
                         {product.price} <span style={{ fontSize: '10px' }}>EGP</span>

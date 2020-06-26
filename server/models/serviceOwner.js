@@ -8,15 +8,15 @@ const rate = new mongoose.Schema({
         default: 1
     },
     reviews: [{
-        type: String,
-        default: null
+        review: {type: String,default: null},
+        createdAt: { type: Date, default: new Date() }
     }],
     user: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
     },
-    order:{  type: mongoose.Schema.Types.ObjectId}
+    order:{  type: mongoose.Schema.Types.ObjectId, ref: 'Order'}
 });
 
 const serviceOwnerSchema = new mongoose.Schema({
