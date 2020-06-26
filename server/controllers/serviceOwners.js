@@ -84,6 +84,7 @@ const reviews = (req, res) => {
     const page = perPage ? parseInt(req.query.page) : 0; // Check if there is a query string for page number
 
     ServiceOwner.findOne({ user: id }, null, { skip: perPage * (page-1), limit: perPage })
+    .sort({_id: 'desc'})
     .populate('user')
     .populate('rates.order')
     .populate('rates.user')
