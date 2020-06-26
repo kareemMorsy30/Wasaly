@@ -148,15 +148,15 @@ export default function Dashboard({children}) {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            <h3 style={{color: 'black'}}>Dashboard</h3>
+            <h3>Dashboard</h3>
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="primary">
-              <NotificationsIcon style={{color: 'black'}}/>
+              <NotificationsIcon />
             </Badge>
           </IconButton>
           <IconButton color="inherit">
-              <ExitToAppIcon onClick={handleLogout} style={{color: 'black'}}/>
+              <ExitToAppIcon onClick={handleLogout} />
           </IconButton>
         </Toolbar>
       </AppBar>
