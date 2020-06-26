@@ -4,7 +4,7 @@ import { ModalHeader, ModalBody } from 'reactstrap';
 const Modal = ({ record }) => {
     return (
         <>
-        <ModalHeader>{record.customer && record.customer.name}</ModalHeader>
+        <ModalHeader className="modal-layout">{record.customer && record.customer.name}</ModalHeader>
         <ModalBody>
             {
             !['Pending', 'Canceled', 'Rejected'].includes(record.status) 
@@ -12,7 +12,7 @@ const Modal = ({ record }) => {
             <>
             <div className="body-section">
                 <div className="image-section">
-                    <img className="user-profile" src={record.customer && record.customer.image_path ? record.customer.image_path : "../../img/user.png"}/>
+                    <img className="user-profile" src={record.customer && record.customer.avatar ? record.customer.avatar : "../../img/user.png"}/>
                 </div>
                 <div className="details-section">
                     <label>Username</label>

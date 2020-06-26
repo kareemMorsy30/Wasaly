@@ -8,6 +8,10 @@ import CreateProduct from './createProduct'
 import UpdateProduct from './updateProduct';
 import ListcatProducts from './ListcatProducts'
 import ShowProducts from '../showProducts'
+import { addToCart, auth } from '../../components/product owner/Cart/actions/user_actions';
+import { useDispatch } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+
 /**
  * 
  * @param {*} props
@@ -24,6 +28,9 @@ const ListCatProducts = (props) => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [hasMore, setHasMore] = useState(false)
+    const dispatch = useDispatch();
+    const [state, setstate] = useState({})
+
 
     const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
     useEffect(() => {
@@ -59,6 +66,31 @@ const ListCatProducts = (props) => {
     }, [page, id])
 
     const observer = useRef()
+    const addToCartHandler = (productId) => {
+       console.log('====================================');
+       console.log(productId);
+       console.log('====================================');      
+         axios.post(`${domain}/users/addToCart?productId=${productId}`
+        ,authHeader
+        ,
+
+    {   
+                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+}
+    
+    
+    ).then(response=>       response.data
+        
+       
+    ).catch((e)=>{e.message="please Signin"
+        toast(e.message);
+        
+    }
+    )
+
+
+
+    }
 
     const lastProductElementRef = useCallback(node => {
         if (loading) return
@@ -72,8 +104,9 @@ const ListCatProducts = (props) => {
     }, [loading, hasMore])
 
     return (
+        
         <>
-            <ShowProducts products={products} lastProductElementRef={lastProductElementRef} />
+            <ShowProducts products={products} addToCart={addToCartHandler}  lastProductElementRef={lastProductElementRef} />
             <div className="container" style={{ margin: 'auto', marginTop: '20vh', width: '20%' }}>
                 {
                     loading &&
@@ -84,10 +117,37 @@ const ListCatProducts = (props) => {
                     </div>
                 }
             </div>
-           
+            <ToastContainer/>
             {error}
         </>
     )
 
 }
 export default ListCatProducts
+
+
+
+/**
+ *   const addToCartHandler = (productId) => {
+        console.log('====================================');
+        console.log(productId);
+        console.log('====================================');
+        axios.post(`${domain}/users/addToCart?productId=${productId}`
+        ,authHeader,
+
+    {   
+                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+}
+    
+    
+    ).then(response=>       response.data
+        
+       
+    ).catch(e=>console.log(e)
+    )
+
+
+
+    }
+
+ */

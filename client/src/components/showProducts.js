@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { Card, Button } from 'react-bootstrap'
-import {Typography, Slider} from '@material-ui/core';
+import { Card, Button, Spinner } from 'react-bootstrap'
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
-const ShowProducts = ({ products, lastProductElementRef }) => {
+const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
   // const {state:{products}}= useLocation()
   const [filteredProducts, setFilteredProducts] = useState(products)
   const [productName, setProductName] = useState('')
@@ -36,6 +35,14 @@ const ShowProducts = ({ products, lastProductElementRef }) => {
     } else setFilteredProducts(products)
   }
 
+  const addToCarthandler = (id) => {
+    console.log('====================================');
+    console.log("id ", id);
+    console.log('====================================');
+    addToCart(id)
+    
+    
+}
   // const filterByPrice=(event,name)=>{    
   //   let value = event.target.value;
   //   if(name === "second"){        
@@ -57,10 +64,12 @@ const ShowProducts = ({ products, lastProductElementRef }) => {
   return (
     <>
       <div className="container" style={{ width: '60%', marginTop: "50px" }}>
-        <div className='row'>
-          <input className="form-control" style={{ width: '20%', margin: '5px' }} value={productName} onChange={filterByName} placeholder="Enter Product Name" />
-          <input className="form-control" style={{ width: '20%', margin: '5px' }} value={brandName} onChange={filterbyBrandName} placeholder="Enter Brand Name" />
-          {/* <section className="range-slider">
+           {products.length>0?
+        <div className='row'>    
+
+            <input className="form-control" style={{ width: '20%', margin: '5px' }} value={productName} onChange={filterByName} placeholder="Enter Product Name" />
+            <input className="form-control" style={{ width: '20%', margin: '5px' }} value={brandName} onChange={filterbyBrandName} placeholder="Enter Brand Name" />
+            {/* <section className="range-slider">
 
                 <input type="range" value={firstValue} min={minValue}  step={step}  onChange={(e)=>filterByPrice( e,"first")}/>
                 <input type="range" value={secondValue} max={maxValue} step={step} onChange={(e)=>filterByPrice(e,"second")}/>
@@ -68,49 +77,56 @@ const ShowProducts = ({ products, lastProductElementRef }) => {
                 <div className="minValue">{firstValue}</div>
                 <div className="maxValue">{secondValue}</div>
             </section> */}
-    
-        </div>
-        <div className="row">
-          {filteredProducts && filteredProducts.map((product, index) => {
-            if (products.length === index + 1) {
-              return (
-                <Card style={{ width: '20rem', marginTop: '10px' }} key={product._id} ref={lastProductElementRef}>
-                  <Card.Img variant="top" src={`${domain}/${product.images_path[0]}`} style={{ width: '90%', margin: 'auto', marginTop: '10px' }} />
-                  <Card.Body>
-                    <Card.Title>{product.name}</Card.Title>
-                    <Card.Text style={{ color: '#006fcc' }}>
-                      {console.log(product.price)}
-                      {product.price} <span style={{ fontSize: '10px' }}>EGP</span>
-                    </Card.Text>
-                    <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
-                      <Button variant="danger" className="btn-card" >View</Button>
-                      <Button variant="danger" className="btn-card">Add to Cart</Button>
-                    </div>
-                  </Card.Body>
-                </Card>
-              )
 
+            </div>
+            :<h4 style={{margin:'auto 0'}}>There are no Products</h4>
+            
             }
-            else {
-              return (
-                <Card style={{ width: '20rem', marginTop: '10px' }} key={product._id}>
-                  <Card.Img variant="top" src={`${domain}/${product.images_path[0]}`} style={{ width: '90%', margin: 'auto', marginTop: '10px' }} />
-                  <Card.Body>
-                    <Card.Title>{product.name}</Card.Title>
-                    <Card.Text style={{ color: '#006fcc' }}>
-                      {console.log(product.price)}
-                      {product.price} <span style={{ fontSize: '10px' }}>EGP</span>
+          <div className="row">
+            {filteredProducts && filteredProducts.map((product, index) => {
+              if (products.length === index + 1) {
+                return (
+                  <Card style={{ width: '20rem', marginTop: '10px' }} key={product._id} ref={lastProductElementRef}>
+                    <Card.Img variant="top" src={`${domain}/${product.images_path[0]}`} style={{ width: '90%', margin: 'auto', marginTop: '10px' }} />
+                    <Card.Body>
+                      <Card.Title>{product.name}</Card.Title>
+                      <Card.Text style={{ color: '#006fcc' }}>
+                        {product.price} <span style={{ fontSize: '10px' }}>EGP</span>
+                      </Card.Text>
+                      <Card.Text>
+                      {product.quantity}
                     </Card.Text>
-                    <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
-                      <Button variant="danger" className="btn-card" >View</Button>
-                      <Button variant="danger" className="btn-card">Add to Cart</Button>
-                    </div>
-                  </Card.Body>
-                </Card>
-              )
-            }
-          })}
-        </div>
+                    <Card.Text>
+                      {product._id}
+                    </Card.Text>
+                      <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
+                        <Button variant="danger" className="btn-card" >View</Button>
+                        <Button variant="danger" onClick={()=>addToCarthandler(product._id)} className="btn-card">Add to Cart</Button>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                )
+
+              }
+              else {
+                return (
+                  <Card style={{ width: '20rem', marginTop: '10px' }} key={product._id}>
+                    <Card.Img variant="top" src={`${domain}/${product.images_path[0]}`} style={{ width: '90%', margin: 'auto', marginTop: '10px' }} />
+                    <Card.Body>
+                      <Card.Title>{product.name}</Card.Title>
+                      <Card.Text style={{ color: '#006fcc' }}>
+                        {product.price} <span style={{ fontSize: '10px' }}>EGP</span>
+                      </Card.Text>
+                      <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
+                        <Button variant="danger" className="btn-card" >View</Button>
+                        <Button variant="danger" onClick={()=>addToCarthandler(product._id)}  className="btn-card">Add to Cart</Button>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                )
+              }
+            })}
+          </div>
       </div>
     </>
   )
@@ -118,3 +134,4 @@ const ShowProducts = ({ products, lastProductElementRef }) => {
 }
 
 export default ShowProducts
+

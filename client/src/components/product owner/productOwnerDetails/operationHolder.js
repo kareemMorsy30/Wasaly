@@ -24,7 +24,7 @@ const OperationHolder = ({ market, setStatus, status, setAlert, alert }) => {
     return (
         <div className="left-card">
             <div className="owner-img">
-                <img className="book-img" src={market.user.image_path ? market.user.image_path : "../../img/market.png"} alt="Market image"/>
+                <img className="book-img" src={market.user.avatar ? market.user.avatar : "../../img/market.png"} alt="Market image"/>
                 <p className="name-section">{market.marketName}</p>
                 {
                     status === 'Pending'

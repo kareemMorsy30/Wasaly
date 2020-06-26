@@ -30,10 +30,12 @@ const Login = (props) => {
         }).then((response) => {
             const { token, user } = response.data;         
             localStorage.setItem("token", token);
-
             console.log(user)
             localStorage.setItem("user", JSON.stringify(user));
-            window.location.href = "http://localhost:3000/";
+            if(user.role === 'customer') window.location.href = "http://localhost:3000/";
+            else if(user.role === 'admin') window.location.href = "http://localhost:3000/admin/landing";
+            else if(user.role === 'serviceowner') window.location.href = "http://localhost:3000/service-owner/landing";
+            else if(user.role === 'productowner') window.location.href = "http://localhost:3000/product-owner/landing";
         }, (error) => {
             console.log(error);
         });

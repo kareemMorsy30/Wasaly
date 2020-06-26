@@ -1,47 +1,27 @@
-import React ,{useState}from 'react';
+import React, { useEffect, useState } from 'react'
 import './Product.css';
 import {Link, Switch, Route, Redirect} from 'react-router-dom'
+import { Card, Button } from 'react-bootstrap'
+
 import ProductDetails from './ProductDetails'
-function Products({item,match,handleCart,handleClick,product,showAddToCartButton=true,  showRemoveProductButton = false,
-  setRender = f => f,
-  render = undefined
-}) {
-  const [redirect, setRedirect] = useState(false);
-  
- const  addItem = (item, next) => {
-    let cart = [];
-    if (typeof window !== 'undefined') {
-      if (localStorage.getItem('cart')) {
-        cart = JSON.parse(localStorage.getItem('cart'));
-      }
-      cart.push({
-        ...item,
-        count: 1
-      });
-      // remove duplicates
-      // build an Array from new Set and turn it back into array using Array.from
-      // so that later we can re-map it
-      // new set will only allow unique values in it
-      // so pass the ids of each object/product
-      // If the loop tries to add the same value again, it'll get ignored
-      // ...with the array of ids we got on when first map() was used
-      // run map() on it again and return the actual product from the cart
-  
-      cart = Array.from(new Set(cart.map(p => p._id))).map(id => {
-        return cart.find(p => p._id === id);
-      });
-  
-      localStorage.setItem('cart', JSON.stringify(cart));
-      next();
+function ProductInfo(props) {
+const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
+
+    const [Product, setProduct] = useState({})
+
+    useEffect(() => {
+        setProduct(props.detail)
+
+    }, [props.detail])
+
+    const addToCarthandler = () => {
+        props.addToCart(props.detail._id)
+        console.log("props",props);
+        console.log('====================================');
+        console.log(props.detail);
+        console.log('====================================');
+        
     }
-  };
-  
-// Add to cart functionality
-const addToCart = () => {
-  addItem(item, () => {
-    setRedirect(true);
-  });
-};
 const showStock = quantity => {
   return quantity > 0 ? (
     <span className="badge badge-primary badge-pill mb-2">In Stock</span>
@@ -50,51 +30,63 @@ const showStock = quantity => {
   );
 };
 
-const shouldRedirect = redirect => {
-  if (redirect) {
-    return <Redirect to="/cart" />;
-  }
-};
+// const shouldRedirect = redirect => {
+//   if (redirect) {
+//     return <Redirect to="/cart" />;
+//   }
+// };
 
-const showAddToCart = showAddToCartButton => {
-  return (
-    showAddToCartButton && (
-      <button
-        className="btn btn-outline-success mt-2 mb-2"
-        onClick={addToCart}
-      >
-        Add to cart
-      </button>
-    )
-  );
-};
-   console.log(match)
-  return (
-    
-    <div className="card h-100 text-center">
-    {
-    console.log(item)
-    }
-    <div className="column card-body">
+// const showAddToCart = showAddToCartButton => {
+//   return (
+//     showAddToCartButton && (
+//       <button
+//         className="btn btn-outline-success mt-2 mb-2"
+//         onClick={addToCart}
+//       >
+//         Add to cart
+//       </button>
+//     )
+//   );
+// };
 
-    <div className="card-header">{item.name}</div>
-    <div className="card-image">
-        {shouldRedirect(redirect)}
-        <img src={`http://localhost:5000/1592636194850-Screenshot%20from%202020-06-15%2016-32-07.png`} alt={`localhost:5000/${item.images_path}`}/>
-      </div>
-
-                    <p>{item.description } </p>
-                    <p>${item.price }</p>
-                    <div>{showStock(item.quantity)}</div>
-                   <li>
-                        <Link to={`/${item._id}/ownerinfo`}> View </Link>
-                        </li>
-                        {showAddToCart(showAddToCartButton)}
+    return (
+          <>
+                <div className="container" style={{ width: '60%', marginTop: "50px" }}>
+                  <div className="row">
+                          <Card style={{ width: '20rem', marginTop: '10px' }} key={Product._id} >
+                            <Card.Img variant="top" src={`${domain}/${Product.images_path}`} style={{ width: '90%', margin: 'auto', marginTop: '10px' }} />
+                            <Card.Body>
+                              <Card.Title>{Product.name}</Card.Title>
+                              <Card.Text>
+                                {Product.description}
+                              </Card.Text>
+                              <Card.Text>
+                                {Product.price}$
+                              </Card.Text>
+                              <Card.Text>
+                                <div>{showStock(Product.quantity)}</div>
+                              </Card.Text>
+                              <Card.Text>
+                                {/* {Product.owner.ownerName} */}
+                              </Card.Text>
+                              <Card.Text>
+                                {/* {Product.owner.marketName} */}
+                              </Card.Text>
+                              <Card.Text>
+                                {/* {Product.owner.marketPhone} */}
+                              </Card.Text>
+                           
+                              <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
+                                <Button variant="danger" className="btn-card" >View</Button>
+                                <Button variant="danger"  onClick={addToCarthandler}  className="btn-card">Add to Cart</Button>
+                              </div>
+                            </Card.Body>
+                          </Card>
+                     
+                  </div>
                 </div>
-                </div>
-
-        
-  );
+              </>
+            )
 }
 
-export default Products;
+export default ProductInfo

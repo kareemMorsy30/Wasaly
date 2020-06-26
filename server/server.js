@@ -28,6 +28,7 @@ const {
 const passport = require('passport');
 const morgan = require('morgan');
 
+
 app.use(cors({origin: true, credentials: true}));
 app.use(express.json())
 // app.use(express.static('public'));
@@ -69,8 +70,17 @@ app.use(bodyParser.json());
 app.use(express.static("./public")); 
 
 //___________________________Routes_____________________
+app.get('/google',
+  passport.authenticate('google', { scope: ['profile','email'] }));
 
+app.get('/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
 app.use('/users',userRoutes);
+
 /* --------------- Customer routes -------------------------*/
 app.use('/services', serviceRouter);
 // app.use('/users',userRouter);

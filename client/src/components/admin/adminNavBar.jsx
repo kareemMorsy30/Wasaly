@@ -38,7 +38,7 @@ const NavBar = (props) => {
 
     return (
         <>
-        <Navbar color="light" light expand="md">
+        {/* <Navbar color="light" light expand="md">
             <NavbarBrand >Wasaly Admin</NavbarBrand>
             <NavbarToggler onClick={toggle} />
             <Collapse isOpen={isOpen} navbar>
@@ -58,7 +58,7 @@ const NavBar = (props) => {
 
             </Collapse>
         </Navbar>
-        {props.children}
+        {props.children} */}
         </>
     );
 };

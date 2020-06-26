@@ -34,6 +34,13 @@ const userSchema = new mongoose.Schema({
     avatar: {
         type: String,
     },
+    cart: {
+        type: Array,
+        default: []
+    },
+    isVerified: { type: Boolean, default: false },
+    googleId:{type:String, unique:true}
+
 })
 userSchema.pre('save', async function (next) {
     console.log("this::", this);

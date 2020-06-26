@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import {Link, NavLink} from 'react-router-dom'
-import UserNavBar from "../user/userNavBar";
+import UserNavBar from "../../user/userNavBar";
 import axios from 'axios'
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
-import {isUser} from '../../services/authServices'
+import {isUser} from '../../../services/authServices'
+import Auth from '../../product owner/Cart/UserCart';
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 var styles={
@@ -17,7 +18,6 @@ const NavBar = () => {
     useEffect(() => {
         axios.get(`${domain}/customers/categories`).
             then((res) => {
-                console.log(res)
                 setCategories(res.data)
             }).catch(e => {
                 console.log(e)
@@ -26,7 +26,7 @@ const NavBar = () => {
 
     return (
         <>
-            <UserNavBar/>
+            <UserNavBar user={Auth} />
             <SideNav            
                 style={sideBarColor}
                 onToggle={(expanded)=>
@@ -53,11 +53,11 @@ const NavBar = () => {
                                 <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em' }} />
                             </NavIcon>
                             <NavText>
-                               <Link to='orders'> Track Orders</Link>
+                               <Link to='/orders'> Track Orders</Link>
                         </NavText>
                         </NavItem>
                     }
-                    <NavItem eventKey="categories">
+                    <NavItem eventKey="categories" >
                         <NavIcon>
                             <i className="fa fa-fw fa-line-chart" style={{ fontSize: '1.75em' }} />
                         </NavIcon>

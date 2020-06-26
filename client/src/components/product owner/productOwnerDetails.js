@@ -19,7 +19,7 @@ const ProductOwnerDetails = (props) => {
             }],
             _id: "",
             email: "",
-            image_path: "",
+            avatar: "",
             name: "",
             phones: [],
             role: "",

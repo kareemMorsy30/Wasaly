@@ -2,6 +2,8 @@ const jwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const User = require('../models/user');
 
+
+
 module.exports = (passport) => {
     //tokens from berrar auth
     let config = {};
@@ -25,3 +27,4 @@ module.exports = (passport) => {
         }
     }));
 }
+
