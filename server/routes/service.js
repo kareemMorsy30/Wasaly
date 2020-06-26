@@ -30,5 +30,7 @@ router.get('/:id/rate', serviceController.getUserRateForOrder);
 // Submit service owner report
 router.put('/service-owners/:id/report', userController.saveReport);
 
+// Submit product owner report
+router.put('/product-owners/:id/report', userController.saveProductOwnerReport);
 
 module.exports = router;

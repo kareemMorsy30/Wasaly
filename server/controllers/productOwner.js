@@ -31,6 +31,21 @@ const disconnect = (req, res) => {
     .catch(error => res.status(500).end());
 }
 
+const remove = (req, res) => {
+    const { id } = req.params;
+
+    productOwner.findOneAndDelete({user: id})
+    .then(owner => {
+        User.findByIdAndDelete(id)
+        .then(user => res.status(200).json(user))
+        .catch(error => {
+            console.log(error);
+            res.status(500).end()
+        });
+    })
+    .catch(error => res.status(500).end());
+}
+
 // Retrieve product owners request details
 const productOwnerDetails = (req, res) => {
     const { user } = req;
@@ -52,7 +67,7 @@ const productOwnerDetails = (req, res) => {
 
 const getAllproductsOwner = async(req,res)=>{
     try{
-        let productuser =await productOwner.find()
+        let productuser =await productOwner.find().populate('user').populate('reports.user')
         console.log(productuser);
         res.send(productuser)
     }catch(err){
@@ -97,6 +112,7 @@ module.exports = {
     connect,
     disconnect,
     productOwnerDetails,
+    remove,
     getAllproductsOwner,
     getProductOwner,
     changeStatus,

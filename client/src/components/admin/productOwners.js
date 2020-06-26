@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faFlag, faTrash } from '@fortawesome/free-solid-svg-icons';
-import {Link} from "react-router-dom";
 import Table from '../table';
 import Modal from '../product owner/modal';
 import Info from '../alerts/info';
 import Moment from 'react-moment';
-import { allServiceOwners, deleteServiceOwner } from '../../endpoints/admin';
+import { allProductOwners, deleteProductOwner } from '../../endpoints/admin';
 import { handleSuccess } from '../../errors/handleAlerts';
 import Alert from '../alerts/alert';
 
-const AdminServiceOwners = (props) => {
-    const cols = [["user", "name"], "rating", "transportation", "distance"];
-    const [serviceOwners, setServiceOwners] = useState([]);
+const AdminProductOwners = (props) => {
+    const cols = ["marketName", ["user", "name"], "marketPhone"];
+    const [productOwners, setProductOwners] = useState([]);
     const [ alert, setAlert ] = useState({
         errors: false,
         success: false,
@@ -20,7 +19,7 @@ const AdminServiceOwners = (props) => {
     });
 
     useEffect(() => {
-        allServiceOwners().then(owners => {setServiceOwners(owners);console.log(owners)});
+        allProductOwners().then(owners => setProductOwners(owners));
     } ,[]);
 
     function compare(a, b) {
@@ -38,9 +37,9 @@ const AdminServiceOwners = (props) => {
     }
 
     const deleteRecord = (record) => {
-        deleteServiceOwner(record.user._id)
+        deleteProductOwner(record.user._id)
         .then(deletedOwner => {
-            setServiceOwners(serviceOwners.filter(owner => owner.user._id !== deletedOwner._id));
+            setProductOwners(productOwners.filter(owner => owner.user._id !== deletedOwner._id));
             handleSuccess(setAlert, `User ${deletedOwner.name} deleted successfully`, 5000);
         })
     }
@@ -81,15 +80,15 @@ const AdminServiceOwners = (props) => {
                 <Alert alert={alert}/>
                 :
                 <>
-                    <h5>All service owners</h5>
+                    <h5>All product owners</h5>
                 </>
             }
         </div>
         <div className="card_two">
-            <Table del={deleteRecord} data={serviceOwners} cols={cols}><Modal Flag={flag} Description={description}/></Table>
+            <Table del={deleteRecord} data={productOwners} cols={cols}><Modal Flag={flag} Description={description}/></Table>
         </div>
         </>
     )
 }
 
-export default AdminServiceOwners;
+export default AdminProductOwners;
