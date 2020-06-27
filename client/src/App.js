@@ -41,6 +41,9 @@ import CartPage from "./components/product owner/Cart/CartPage";
 
 // import MainCart  from './components/product owner/Cart/AddCart';
 import LandingPage from "./pages/landingPage";
+
+// import user cart info(AUTH)
+import UserCart from './components/product owner/Cart/UserCart';
 import {
   isUser,
   isCustomer,
@@ -135,7 +138,7 @@ function App() {
         <Switch>
           <Route
             exact
-            path="/serviceownerprofile/:id"
+            path="/serviceownerprofile"
             component={ServiceOwnerProfile}
           />
           
@@ -175,7 +178,7 @@ function App() {
               <Route exact path="/register" component={Register} />
 
               <Route exact path="/" component={LandingPage} />
-              {/* <UserNavBar /> */}
+              {/* <UserNavBar  /> */}
               {/* <Route exact path="/" component={Delivery} /> */}
 
               <Route exact path="/search/:id" component={SearchResults} />
