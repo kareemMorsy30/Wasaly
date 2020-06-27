@@ -1,3 +1,5 @@
+import Push from 'push.js';
+import io from 'socket.io-client';
 
 const isAdmin=()=>{
     const user= JSON.parse(localStorage.getItem('user'));
@@ -25,5 +27,25 @@ const isLoggedIn=()=>{
 }
 
 const getEmail = () => isLoggedIn() && JSON.parse(localStorage.getItem("user")).email;
+
+export const subscribe = () => {
+    const socket = io(`${process.env.REACT_APP_BACKEND_DOMAIN}`);
+    socket.emit("subscribe", { room: getEmail() });
+
+    socket.on("pushNotification", function(data) {
+        console.log(data.body);
+        Push.create(data.title, {
+            body: data.message, //this should print Msg of owner
+            icon: 'icon.png',
+            timeout: 6000,
+            requireInteraction: true,
+            onClick: function () {
+                window.focus();
+                window.location.href = data.link;
+                this.close();
+            }
+        });
+    });
+}
 
 export {isAdmin, isProductOwner, isServiceOwner, isUser, isCustomer, isLoggedIn, getEmail}
