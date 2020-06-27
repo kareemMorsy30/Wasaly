@@ -28,6 +28,13 @@ const {
 const passport = require('passport');
 const morgan = require('morgan');
 
+io.sockets.on('connection', function (socket) {
+
+  socket.on('subscribe', function(data) { socket.join(data.room); })
+
+  socket.on('unsubscribe', function(data) { socket.leave(data.room); })
+
+});
 
 app.use(cors({origin: true, credentials: true}));
 app.use(express.json())
