@@ -53,9 +53,13 @@ const order = (req, res) => {
                     });
 
                     newOrder.save().then(order => {
-                        io.on('connection', (socket) => {
-                            socket.emit(`notify:${owner && owner.user.email}`, { success: true, msg: `A new request delivery from ${req.user ? req.user.username : 'Anonymous'}` });
-                        });
+                        const info = { 
+                            title: 'New order request',
+                            message: `Congratulations you have received a new order request`,
+                            link: 'http://localhost:3000/service-owner/orders',
+                            body: order
+                        }
+                        pushNotification(owner.user.email, info);
 
                         res.status(200).json(order);
                     }).catch(error => console.log(error));

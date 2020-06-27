@@ -1,7 +1,6 @@
+const { pushNotification } = require('./controller');
 const { Order, ServiceOwner, User } = require('./../models/allModels');
 const { getDistance, asyncFilter } = require('./controller');
-
-
 
 // Get all service owner orders
 const allIncomingOrders = (req, res) => {
@@ -173,7 +172,22 @@ const updateConnection = (req, res) => {
     ServiceOwner.findOneAndUpdate({user: user._id}, {
         'productOwner.status': status === 'accept' ? 'Connected' : 'Not connected'
     }, { new: true })
-    .then(owner => res.status(200).json({status: owner.productOwner.status}))
+    .populate('productOwner.user')
+    .then(owner => {
+        const info = { 
+            title: status === 'accept' ? 'Connection accepted' : 'Connection rejected' ,
+            message: status === 'accept' ? `User ${req.user.name} accepted your connection request` : `User ${req.user.name} canceled connection with you`,
+            link: req.user.role === 'serviceowner' ? 'http://localhost:3000/product-owner/connections' : 'http://localhost:3000/service-owner/connection',
+            body: owner
+        }
+
+        if(req.user.role === 'productowner'){
+            pushNotification(owner.user.email, info);
+        }else if(req.user.role === 'serviceowner'){
+            pushNotification(owner.productOwner.user.email, info);
+        }
+        res.status(200).json({status: owner.productOwner.status})
+    })
     .catch(error => res.status(500).end());
 }
 
