@@ -2,6 +2,7 @@ const User = require("../models/user");
 const allModels = require('../models/allModels');
 const userModel = require('../models/user');
 const { Product } = allModels;
+const Order = require('../models/order')
 const jwt = require("jsonwebtoken");
 let userController = {};
 const port = process.env.PORT
@@ -11,7 +12,6 @@ const Token = require('../models/tokenVerification')
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 var mongoose = require('mongoose');
-
 
 
 
@@ -204,8 +204,12 @@ userController.login = async (request, response, next) => {
                  * we will use this token with passport to make sure that the server can recognize the toke :)
                  */
                 // request.headers.authorization = token;
+                let userTemp = {}
+                userTemp.role = user.role
+                userTemp.email = user.email
+                userTemp.name = user.name
 
-                response.send({ token, user });
+                response.send({ token, user: userTemp });
             } else {
                 response.status(401).send({
                     error: "Invalid username or password",
@@ -274,12 +278,12 @@ userController.googleSignIn = async (req, res) => {
                     await user.save()
                 }
                 else {
-                    user = await new User({ name: Name, email, avatar: Image, googleId: userid, username: Name, role: 'customer', password, isVerified:true })
+                    user = await new User({ name: Name, email, avatar: Image, googleId: userid, username: Name, role: 'customer', password, isVerified: true })
                     await user.save()
                     try {
                         // Send the email
                         var transporter = nodemailer.createTransport({ service: 'Gmail', auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS } });
-                        var mailOptions = { from: process.env.GMAIL_USER, to: user.email, subject: 'Auto Generated Password', text: 'Hello,\n\n' + 'This is your Auto generated password:'  + " "+password +' .\n' };
+                        var mailOptions = { from: process.env.GMAIL_USER, to: user.email, subject: 'Auto Generated Password', text: 'Hello,\n\n' + 'This is your Auto generated password:' + " " + password + ' .\n' };
                         transporter.sendMail(mailOptions, function (err) {
                             if (err) console.log(err)
                         });
@@ -299,7 +303,11 @@ userController.googleSignIn = async (req, res) => {
             expiresIn: expire,
         });
 
-        res.send({ token, user });
+        let userTemp = {}
+        userTemp.role = user.role
+        userTemp.email = user.email
+        userTemp.name = user.name
+        res.send({ token, user: userTemp });
 
     } catch (e) {
         console.log(e)
@@ -412,16 +420,16 @@ userController.saveReport = (req, res, next) => {
     }
 }
 
-userController.saveProductOwnerReport= (req, res, next ) => {
+userController.saveProductOwnerReport = (req, res, next) => {
     try {
-        const {report} = req.body
-        const {id}= req.params
+        const { report } = req.body
+        const { id } = req.params
         const customer = req.user._id;
-        allModels.productOwner.findOneAndUpdate({ 
+        allModels.productOwner.findOneAndUpdate({
             user: id
         }, {
             $push: {
-                reports: {'message': report, user: customer}
+                reports: { 'message': report, user: customer }
             }
         }).catch(err => console.log(err));
         res.json("Reported Successfully");
@@ -479,8 +487,50 @@ userController.userCartInfo = (req, res) => {
     )
 }
 
-
-
+// ,{
+//     product: "5ee39afd07d185258b6b4697",
+//     amount: 3
+// }
+userController.test = async (req, res) => {
+    await new Order(
+        {
+            products: [{
+                product: "5ee39ad707d185258b6b4696",
+                amount: 3
+            },{
+                product: "5ee39afd07d185258b6b4697",
+                amount: 3
+            }],
+            status: "Canceled",
+            customer: "5eecaf2197167b16ae927edd",
+            service: "5ee810c50365db49dececf99",
+            to: {
+                street: "qaraqoul",
+                city: "cairo",
+                area: "abbasia",
+                longitude: 1.25,
+                latitude: 1.25
+            },
+            from: {
+                street: "qaraqoul",
+                city: "cairo",
+                area: "abbasia",
+                longitude: 1.25,
+                latitude: 1.25
+            },
+            item: "adidas shoessssss",
+            amount: 5,
+            rate: {
+                rating: 1,
+                reviews: []
+            },
+            cost: 1000,
+            description: "adidas shoes red colorrrrrrr",
+            targetedServiceOwners: []
+        }).save()
+    console.log('oj')
+    res.send('done')
+}
 module.exports = userController;
 /**
  *
