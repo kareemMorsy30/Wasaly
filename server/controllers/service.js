@@ -1,11 +1,8 @@
 const { getDistance, asyncFilter, changeOrderStatus, pushNotification } = require('./controller');
 const { Order, ServiceOwner, User } = require('./../models/allModels');
 const serviceOwner = require('../config/serviceOwner');
-<<<<<<< HEAD
 const { io } = require("../server");
-=======
 const serviceOwners = require('./serviceOwners');
->>>>>>> 96ee4956b9f9f190184a550e0c266018808a8c07
 
 const availableServiceOwners = async ({ body }) => {
     const transportation = body.transportation;
