@@ -23,4 +23,7 @@ const isLoggedIn=()=>{
     const user= JSON.parse(localStorage.getItem('user'));
     return user ? true:false;
 }
-export {isAdmin, isProductOwner, isServiceOwner, isUser, isCustomer, isLoggedIn}
+
+const getEmail = () => isLoggedIn() && JSON.parse(localStorage.getItem("user")).email;
+
+export {isAdmin, isProductOwner, isServiceOwner, isUser, isCustomer, isLoggedIn, getEmail}

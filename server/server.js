@@ -27,10 +27,16 @@ const {
 } = require('./routes/allRoutes');
 const passport = require('passport');
 const morgan = require('morgan');
-
 // const stripeSecretKey = process.env.STRIPE_SECRET_KEY
 const stripe = require("stripe")("sk_test_51GyFlZASd8wCD66zQnZ6lVzneK62YhprG2iBtZdVmN4lknDDp5idlD5BA0vW0SCHtULgyabjPghW4lLlLpyFhQGp00yQmrYy3G");
 
+io.sockets.on('connection', function (socket) {
+
+  socket.on('subscribe', function(data) { socket.join(data.room); })
+
+  socket.on('unsubscribe', function(data) { socket.leave(data.room); })
+
+});
 app.use(cors({origin: true, credentials: true}));
 app.use(express.json())
 // app.use(express.static('public'));

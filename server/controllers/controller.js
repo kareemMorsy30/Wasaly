@@ -1,7 +1,7 @@
 const axios = require('axios');
 const userModel = require('../models/user');
-const { Order, ServiceOwner } = require('./../models/allModels');
-
+const { Order, ServiceOwner, User } = require('./../models/allModels');
+const { io } = require("../server");
 
 const getDistance = async (source, destination, location = null) => {
     const key = process.env.BING_KEY;
@@ -28,10 +28,16 @@ const changeOrderStatus = async (orderId, status) => {
     }).populate('customer');
 }
 
-
+const pushNotification = (room, info) => {
+    User.findOneAndUpdate({email: room}, {$push: {notifications: info}})
+        .then(user => {
+            io.sockets.in(`${room}`).emit('pushNotification', info);
+        })
+}
 
 module.exports = {
     getDistance,
     asyncFilter,
-    changeOrderStatus
+    changeOrderStatus,
+    pushNotification
 }
