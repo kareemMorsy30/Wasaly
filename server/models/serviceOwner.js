@@ -8,8 +8,8 @@ const rate = new mongoose.Schema({
         default: 1
     },
     reviews: [{
-        type: String,
-        default: null
+        review: {type: String,default: null},
+        createdAt: { type: Date, default: new Date() }
     }],
     user: {
         type: mongoose.Schema.Types.ObjectId,

@@ -27,6 +27,8 @@ const {
 } = require('./routes/allRoutes');
 const passport = require('passport');
 const morgan = require('morgan');
+// const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+const stripe = require("stripe")("sk_test_51GyFlZASd8wCD66zQnZ6lVzneK62YhprG2iBtZdVmN4lknDDp5idlD5BA0vW0SCHtULgyabjPghW4lLlLpyFhQGp00yQmrYy3G");
 
 io.sockets.on('connection', function (socket) {
 
@@ -35,7 +37,6 @@ io.sockets.on('connection', function (socket) {
   socket.on('unsubscribe', function(data) { socket.leave(data.room); })
 
 });
-
 app.use(cors({origin: true, credentials: true}));
 app.use(express.json())
 // app.use(express.static('public'));
@@ -49,7 +50,8 @@ app.get('/', (req, res) =>{
 
 mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useFindAndModify: false 
 }, async (err) => {
   if (!err) {
     console.log(`Started connection to mongo ::  ${DB_DATABASE}`);
@@ -102,6 +104,22 @@ app.use('/orders', OrderRouter)
 app.use('/category', CategoryRouter)
 app.use('/customers', CustomerRouter)
 
+
+/*-------------payment---------------------------*/
+const SERVER_CONFIGS = require('./constants/backend');
+
+const configureServer = require('./index');
+const configureRoutes = require('./routes/paymentIndex');
+
+// const app = express();
+
+configureServer(app);
+configureRoutes(app);
+
+// app.listen(SERVER_CONFIGS.PORT, error => {
+//   if (error) throw error;
+//   console.log('Server running on port: ' + SERVER_CONFIGS.PORT);
+// });
 
 /* --------------- Product owner routes -------------------------*/
 app.use('/product-owners', productOwnerRouter);

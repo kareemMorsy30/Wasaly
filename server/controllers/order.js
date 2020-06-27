@@ -31,6 +31,25 @@ exports.changeOrderStatus = async (req, res, next) => {
 
 }
 
+exports.cancelOrder= async (req,res,next)=>{
+    try {
+        const {orderId} = req.params
+        const userID = req.user._id
+        console.log(userID)
+        console.log(orderId)
+
+        let order = await Order.findOne({ _id: orderId, customer: userID, status:'Pending' }).exec()
+
+        order.status = "Canceled"
+
+        await Order.findByIdAndUpdate(orderId, { $set: order }, { new: true })
+        res.send("Status Updated Successfully")
+
+    } catch (err) {
+        next(err)
+    }
+}
+
 exports.listCustomerOrders= async (req, res, next) => {
     try {
         const id = req.user._id

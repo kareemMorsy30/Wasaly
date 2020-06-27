@@ -6,6 +6,7 @@ import RateService from '../rateService'
 import '../../styles/order.scss'
 const Order=()=>{
     const[orders,setOrders]= useState([])
+    const[cancelled, setCancelled]= useState(false)
     const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
     
     useEffect(()=>{
@@ -16,8 +17,18 @@ const Order=()=>{
         }).catch(e=>{
             console.log(e)
         })
-    },[])
+    },[cancelled])
 
+    const cancelOrder=(orderId)=>{
+        axios.post(`${domain}/orders/${orderId}/cancel/`, {},authHeader)
+        .then(response => {
+            console.log(response); 
+            setCancelled(prevState=> !prevState)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
     return(
         <>
 
@@ -28,10 +39,13 @@ const Order=()=>{
                     <div className="col-3">
                        { order._id}
                     </div>
-                    <div className="col-3">
-                       { order.status}
+                    <div className="col-2">
+                       { order.status} 
                     </div>
-                    <div className="col-3">
+                    <div className="col-2">
+                       {order.status==='Pending'&& <a onClick={()=>cancelOrder(order._id)}>Cancel order</a>}
+                    </div>
+                    <div className="col-2">
                        <Link to={`orders/${order._id}`}>View Order Details</Link>
                     </div>
                     <div className="col-3">
