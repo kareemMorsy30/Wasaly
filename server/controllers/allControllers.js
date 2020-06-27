@@ -3,11 +3,13 @@ const serviceOwnerController = require('./serviceOwners');
 const productOwnerController = require('./productOwner');
 const categoryController = require('./category');
 const userController = require('./user.controller');
+const controller = require('./controller')
 
 module.exports = {
     serviceController,
     serviceOwnerController,
     productOwnerController,
     categoryController,
-    userController
+    userController,
+    controller
 }
