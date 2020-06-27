@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Push from 'push.js';
+import io from 'socket.io-client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
-import io from 'socket.io-client';
 import '../../styles/form.scss';
 import { getAvailableTransportations, getAvailableServiceOwners } from '../../endpoints/order';
 import { getGeoLocation } from '../../endpoints/geocoding';
@@ -39,26 +39,6 @@ const ServiceOrderForm = ({ setServiceOwners, setWaiting, setOrder }) => {
     useEffect(() => {
         getAvailableTransportations().then(transportations => {
             setTransportations(transportations);
-        });
-        const socket = io('http://localhost:5000/');
-        socket.on('connect', () => {
-            console.log("Client connected successfully to the server");
-            socket.on('disconnect', function(){
-                console.log('user disconnected');
-            });
-        });
-
-        socket.on('pushNotification', function (data) {
-            console.log(data);
-            Push.create("Hello world!", {
-                body: data.msg, //this should print "hello"
-                icon: '/icon.png',
-                timeout: 4000,
-                onClick: function () {
-                    window.focus();
-                    this.close();
-                }
-            });
         });
     }, []);
 
@@ -140,6 +120,22 @@ const ServiceOrderForm = ({ setServiceOwners, setWaiting, setOrder }) => {
             setWaiting(false);
         })
         .catch(err => console.error(err));
+
+        const socket = io(`${process.env.REACT_APP_BACKEND_DOMAIN}`);
+
+        socket.on('pushNotification', function (data) {
+            console.log(data);
+            Push.create("Order status has been updated", {
+                body: data.msg, //this should print Msg of owner
+                icon: '/icon.png',
+                timeout: 4000,
+                onClick: function () {
+                    window.focus();
+                    this.close();
+                }
+            });
+            Push.clear();
+        });
     }
 
     return (

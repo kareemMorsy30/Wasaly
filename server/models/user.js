@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema({
         type: Array,
         default: []
     },
+    notifications: [{
+        message: String,
+        link: String,
+        read: { type: Boolean, default: false },
+        createdAt: { type: Date, default: new Date() }
+    }],
     isVerified: { type: Boolean, default: false },
     googleId:{type:String, unique:true}
 
