@@ -26,9 +26,9 @@ const Connections = (props) => {
             if(type === 'disconnect') handleSuccess(setAlert, `You have removed ${owner.user.name} from your connections`, 5000);
             setConnections(connections.map(connection => {
                 if(connection._id.toString() === owner._id.toString()){
-                    owner.productOwner.status = owner.productOwner.status;
+                    connection.productOwner.status = owner.productOwner.status;
                 }
-                return owner;
+                return connection;
             }));
         });
     }

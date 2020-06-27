@@ -12,7 +12,7 @@ const Token = require('../models/tokenVerification')
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 var mongoose = require('mongoose');
-
+const { pushNotification } = require('./controller');
 
 
 
@@ -412,7 +412,16 @@ userController.saveReport = (req, res, next) => {
             $push: {
                 reports: { 'message': report, user: customer }
             }
-        }).catch(err => console.log(err));
+        }).populate('user')
+        .then(owner => {
+            const info = { 
+                title: 'Service owner reported',
+                message: `Customer ${req.user.name} has reported service owner ${owner.user.name}`,
+                link: 'http://localhost:3000/admin/service-owners'
+            }
+            User.findOne({role: 'admin'}).then(admin => pushNotification(admin.email, info));
+        })
+        .catch(err => console.log(err));
         res.json("Reported Successfully");
     }
     catch (err) {
@@ -495,10 +504,10 @@ userController.test = async (req, res) => {
     await new Order(
         {
             products: [{
-                product: "5ee39ad707d185258b6b4696",
+                product: "5ef4bd41f7f36c192851980c",
                 amount: 3
             },{
-                product: "5ee39afd07d185258b6b4697",
+                product: "5ef4bd41f7f36c192851980c",
                 amount: 3
             }],
             status: "Canceled",
