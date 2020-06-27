@@ -60,7 +60,7 @@ const AdminProductOwners = (props) => {
                 record.reports.sort(compare).map(report => {
                     return (
                     <>
-                    <label className="modal-title">{report.user.name && report.user.name}:</label>
+                    <label className="modal-title">{report.user ? report.user.name : 'Anonymous'}:</label>
                     <Moment style={{color: 'black', fontSize: 'small'}} format="D MMM YYYY" withTitle>{report.createdAt}</Moment>
                     <textarea placeholder="More info" value={report.message} readOnly/>
                     </>

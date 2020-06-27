@@ -25,13 +25,13 @@ const AdminServiceOwners = (props) => {
 
     function compare(a, b) {
         // Use toUpperCase() to ignore character casing
-        const createdAtA = a.createdAt;
-        const createdAtB = b.createdAt;
+        const createdAtA = parseInt((new Date(a.createdAt).getTime() / 1000).toFixed(0));
+        const createdAtB = parseInt((new Date(b.createdAt).getTime() / 1000).toFixed(0));
       
         let comparison = 0;
-        if (createdAtA > createdAtB) {
+        if (createdAtA < createdAtB) {
           comparison = 1;
-        } else if (createdAtA < createdAtB) {
+        } else if (createdAtA > createdAtB) {
           comparison = -1;
         }
         return comparison;
@@ -61,7 +61,7 @@ const AdminServiceOwners = (props) => {
                 record.reports.sort(compare).map(report => {
                     return (
                     <>
-                    <label className="modal-title">{report.user.name && report.user.name}:</label>
+                    <label className="modal-title">{report.user ? report.user.name : 'Anonymous'}:</label>
                     <Moment style={{color: 'black', fontSize: 'small'}} format="D MMM YYYY" withTitle>{report.createdAt}</Moment>
                     <textarea placeholder="More info" value={report.message} readOnly/>
                     </>
