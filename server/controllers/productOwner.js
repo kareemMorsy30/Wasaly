@@ -1,3 +1,4 @@
+const { pushNotification } = require('./controller');
 const { ServiceOwner, productOwner, User } = require('../models/allModels');
 const { populate } = require('../models/user');
 
@@ -12,7 +13,16 @@ const connect = (req, res) => {
     }, {
         new: true
     }).populate('user')
-    .then(owner => res.status(200).json(owner))
+    .then(owner => {
+        const info = { 
+            title: 'New connection request',
+            message: `Product owner ${req.user.name} sent a connection request to you`,
+            link: 'http://localhost:3000/service-owner/connection',
+            body: owner
+        }
+        pushNotification(owner.user.email, info);
+        res.status(200).json(owner);
+    })
     .catch(error => res.status(500).end());
 }
 
@@ -24,10 +34,24 @@ const disconnect = (req, res) => {
             user: req.user._id,
             status: 'Not connected'
         }
-    }, {
-        new: true
     }).populate('user')
-    .then(owner => res.status(200).json(owner))
+    .populate('productOwner.user')
+    .then(owner => {
+        const info = { 
+            title: 'User disconnected',
+            message: `User ${req.user.name} has disconnected with you`,
+            link: req.user.role === 'serviceowner' ? 'http://localhost:3000/product-owner/connections' : 'http://localhost:3000/service-owner/connection',
+            body: owner
+        }
+
+        if(req.user._id.toString() !== owner.user._id.toString()){
+            pushNotification(owner.user.email, info);
+        }else{
+            pushNotification(owner.productOwner.user.email, info);
+        }
+
+        res.status(200).json(owner);
+    })
     .catch(error => res.status(500).end());
 }
 

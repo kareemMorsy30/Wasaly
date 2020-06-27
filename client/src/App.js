@@ -58,6 +58,7 @@ import Auth from "./components/product owner/Cart/UserCart";
 import table from "./components/table";
 import Layout from "./components/layouts/dashboard/layout";
 import SiteLayout from "./components/layouts/site/layout";
+import {Welcome} from "./components/user/welcome"
 
 function App() {
   return (
@@ -103,6 +104,7 @@ function App() {
           />
           <Route exact path="/service-owner/reviews" component={Reviews} />
           {/* Product owner routes */}
+          <Route exact path="/welcome" component={Welcome} />
           <Route
             exact
             path="/product-owner/connections"

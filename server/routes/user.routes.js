@@ -25,7 +25,7 @@ const upload = imageUploader('public/uploads/users/images');
 // Customize auth message Protect the  routes
 // and prevent copy paste {passport.authenticate('jwt', { session: false }),}
 router.post('/register', userController.regesiter);
-
+router.get('/test', userController.test)
 router.get('/confirmation/:token', userController.confirmationPost);
 router.post('/resend', userController.resendTokenPost);
 router.post('/googlesigin',userController.googleSignIn)

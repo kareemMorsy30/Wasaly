@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react'
+import { subscribe } from '../../../services/authServices';
 import {Link, NavLink} from 'react-router-dom'
 import UserNavBar from "../../user/userNavBar";
 import axios from 'axios'
+import Push from 'push.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';
+import io from 'socket.io-client';
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
-import {isUser} from '../../../services/authServices'
+import {isUser, getEmail} from '../../../services/authServices'
 import Auth from '../../product owner/Cart/UserCart';
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
@@ -22,6 +27,9 @@ const NavBar = () => {
             }).catch(e => {
                 console.log(e)
             })
+
+        subscribe();
+
     }, [])
 
     return (

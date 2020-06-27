@@ -27,19 +27,6 @@ const Reviews = (props) => {
         });
     }, []);
 
-    // const changeOption = (event, orderId) => {
-    //     console.log(orders);
-    //     const status = event.target.value;
-    //     setOrders(orders.map(order => {
-    //         if(order._id.toString() === orderId.toString()){
-    //             order.status = status;
-    //         }
-    //         return order;
-    //     }));
-        
-    //     updateOrderStatus(orderId, status).then(order => handleSuccess(setAlert, `Order is ${status} successfully!`, 5000)).catch(err => console.log(err));
-    // }
-
     const toggle = (record) => {
         console.log(record)
         setModal(!modal)

@@ -1,7 +1,7 @@
-const { getDistance, asyncFilter, changeOrderStatus } = require('./controller');
-const { Order, ServiceOwner } = require('./../models/allModels');
-const { io } = require('../server');
+const { getDistance, asyncFilter, changeOrderStatus, pushNotification } = require('./controller');
+const { Order, ServiceOwner, User } = require('./../models/allModels');
 const serviceOwner = require('../config/serviceOwner');
+const { io } = require("../server");
 const serviceOwners = require('./serviceOwners');
 
 const availableServiceOwners = async ({ body }) => {
@@ -53,9 +53,13 @@ const order = (req, res) => {
                     });
 
                     newOrder.save().then(order => {
-                        io.on('connection', (socket) => {
-                            socket.emit(`notify:${owner && owner.user.email}`, { success: true, msg: `A new request delivery from ${req.user ? req.user.username : 'Anonymous'}` });
-                        });
+                        const info = { 
+                            title: 'New order request',
+                            message: `Congratulations you have received a new order request`,
+                            link: 'http://localhost:3000/service-owner/orders',
+                            body: order
+                        }
+                        pushNotification(owner.user.email, info);
 
                         res.status(200).json(order);
                     }).catch(error => console.log(error));
@@ -65,19 +69,23 @@ const order = (req, res) => {
 
 const cancel = (req, res) => {
     changeOrderStatus(req.params.id, 'Canceled')
-        .then(order => res.status(200).json({ status: order.status }))
-        .catch(err => res.status(500).end());
+    .then(order => res.status(200).json({ status: order.status }))
+    .catch(err => res.status(500).end());
 }
 
 const updateOrderStatus = (req, res) => {
     changeOrderStatus(req.params.id, req.params.status)
-        .then(order => {
-            io.on('connection', (socket) => {
-                socket.emit(`notify:${order.customer.email && order.customer.email}`, { success: true, msg: `Congratulations! Your order is accepted` });
-            });
-            res.status(200).json(order);
-        })
-        .catch(err => res.status(500).end());
+    .then(order => {
+        const info = { 
+            title: 'Order status has been updated',
+            message: `Your order has been ${order.status}`,
+            link: 'http://localhost:3000/orders',
+            body: order
+        }
+        pushNotification(order.customer.email, info);
+        res.status(200).json(order);
+    })
+    .catch(err => res.status(500).end());
 }
 
 // save customer review to service owner
@@ -100,6 +108,7 @@ const saveReview = async (req, res, next) => {
         serviceOwner.save()
         //save review to order
         await Order.updateOne({ _id: order }, { $push: { 'rate.reviews': review } })
+
         return res.json("Review added successfully")
     } catch (err) {
         next(err)
@@ -113,7 +122,7 @@ const saveRate = async (req, res, next) => {
     const { rating, order } = req.body
 
     try {
-        const serviceOwner = await ServiceOwner.findOne({ user: serviceOwnerID })
+        const serviceOwner = await ServiceOwner.findOne({ user: serviceOwnerID }).populate('user')
         let averageRating = 0;
 
 
@@ -123,6 +132,13 @@ const saveRate = async (req, res, next) => {
                 serviceOwner.rates[i].rating = rating
                 //save rate to order
                 await Order.updateOne({ _id: order }, { "rate.rating": rating })
+
+                const info = { 
+                    title: 'New customer rating',
+                    message: `A new user rated you ${rating} stars`,
+                    link: 'http://localhost:3000/service-owner/reviews'
+                }
+                pushNotification(serviceOwner.user.email, info);
                 return res.json("Rate added successfully")
             }
         }
@@ -142,6 +158,13 @@ const saveRate = async (req, res, next) => {
             serviceOwner.rating = averageRating
         }
         serviceOwner.save()
+
+        const info = { 
+            title: 'New customer rating',
+            message: `A new user rated you ${rating} stars`,
+            link: 'http://localhost:3000/service-owner/reviews'
+        }
+        pushNotification(serviceOwner.user.email, info);
         return res.json("Rate added successfully")
     } catch (err) {
         next(err)
