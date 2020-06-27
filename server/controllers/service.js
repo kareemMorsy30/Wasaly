@@ -108,6 +108,7 @@ const saveReview = async (req, res, next) => {
         serviceOwner.save()
         //save review to order
         await Order.updateOne({ _id: order }, { $push: { 'rate.reviews': review } })
+
         return res.json("Review added successfully")
     } catch (err) {
         next(err)
@@ -121,7 +122,7 @@ const saveRate = async (req, res, next) => {
     const { rating, order } = req.body
 
     try {
-        const serviceOwner = await ServiceOwner.findOne({ user: serviceOwnerID })
+        const serviceOwner = await ServiceOwner.findOne({ user: serviceOwnerID }).populate('user')
         let averageRating = 0;
 
 
@@ -131,6 +132,13 @@ const saveRate = async (req, res, next) => {
                 serviceOwner.rates[i].rating = rating
                 //save rate to order
                 await Order.updateOne({ _id: order }, { "rate.rating": rating })
+
+                const info = { 
+                    title: 'New customer rating',
+                    message: `A new user rated you ${rating} stars`,
+                    link: 'http://localhost:3000/service-owner/reviews'
+                }
+                pushNotification(serviceOwner.user.email, info);
                 return res.json("Rate added successfully")
             }
         }
@@ -150,6 +158,13 @@ const saveRate = async (req, res, next) => {
             serviceOwner.rating = averageRating
         }
         serviceOwner.save()
+
+        const info = { 
+            title: 'New customer rating',
+            message: `A new user rated you ${rating} stars`,
+            link: 'http://localhost:3000/service-owner/reviews'
+        }
+        pushNotification(serviceOwner.user.email, info);
         return res.json("Rate added successfully")
     } catch (err) {
         next(err)

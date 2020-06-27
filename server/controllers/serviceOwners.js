@@ -261,10 +261,7 @@ const deliverNewProduct = (req, res) => {
         });
 
         newOrder.save().then(order => {
-            io.on('connection', (socket) => {
-                socket.emit(`notify:${owner && owner.user.email}`, { success: true, msg: `A new request delivery from ${req.user ? req.user.username : 'Anonymous'}` });
-            });
-
+            
             res.status(200).json(order);
         }).catch(error => console.log(error));
     })
@@ -284,5 +281,4 @@ module.exports = {
     getProductOwnerDetails,
     filteredServiceOwners,
     deliverNewProduct
-    
 }
