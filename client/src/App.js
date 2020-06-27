@@ -15,6 +15,8 @@ import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import AdminLogin from "./components/admin/adminLogin";
 import ServiceOwnerProfile from "./components/service owner/serviceOwnerProfile";
+import Checkout from "./components/checkout";
+import Payment from "./components/payment";
 import UserNavBar from "./components/user/userNavBar";
 import UserAndCustomerNavBar from "./components/layouts/site/navbar";
 /*** Service owners */
@@ -135,6 +137,12 @@ function App() {
             exact
             path="/serviceownerprofile/:id"
             component={ServiceOwnerProfile}
+          />
+          
+          <Route
+            exact
+            path="/payment"
+            component={Payment}
           />
 
           <Route exact path="/admin">
