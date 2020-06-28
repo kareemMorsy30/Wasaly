@@ -44,10 +44,13 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
     
     
 }
-const showStock = quantity => {
+const showStock = (quantity,product) => {
   return quantity > 0 ? (
-    
+    <>
     <span className="badge badge-primary badge-pill mb-2">In Stock</span>
+    <Button variant="danger" onClick={()=>addToCarthandler(product._id)} className="btn-card">Add to Cart</Button>
+
+</>
   ) : (
       <span className="badge badge-primary badge-pill mb-2">Out of Stock</span>
     );
@@ -62,7 +65,7 @@ const showStock = quantity => {
   //   }
   //   else{
   //   		if(parseInt(value) < parseInt(secondValue)){      
-  //         setFirstValue(value)
+  //         setFirstValue(value) 
   //       }
   //   }  
   //   if (products.length > 0 && event.target.value != "") {
@@ -105,7 +108,7 @@ const showStock = quantity => {
                       </Card.Text>
                       <Card.Text style={{ color: '#006fcc' }}>
                         {
-                      showStock(product.quantity)
+                      showStock(product.quantity,product)
                     
 
                         } <span style={{ fontSize: '10px' }}></span>
@@ -113,7 +116,6 @@ const showStock = quantity => {
             
                       <div style={{ display: 'flex', 'justifyContent': 'space-around', flexShrink: 0 }}>
                         <Button variant="danger" className="btn-card" >View</Button>
-                        <Button variant="danger" onClick={()=>addToCarthandler(product._id)} className="btn-card">Add to Cart</Button>
                       </div>
                     </Card.Body>
                   </Card>
@@ -131,13 +133,12 @@ const showStock = quantity => {
                       </Card.Text>
                       <Card.Text style={{ color: '#006fcc' }}>
                         {
-                      showStock(product.quantity)
+                      showStock(product.quantity,product)
 
                         } <span style={{ fontSize: '10px' }}></span>
                       </Card.Text>
                       <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
                         <Button variant="danger" className="btn-card" >View</Button>
-                        <Button variant="danger" onClick={()=>addToCarthandler(product._id)}  className="btn-card">Add to Cart</Button>
                       </div>
                     </Card.Body>
                   </Card>

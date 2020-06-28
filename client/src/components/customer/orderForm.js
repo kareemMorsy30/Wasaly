@@ -300,8 +300,11 @@ console.log('====================props.user.userData.address[0].areap===========
 
 
 
-        console.log(typeof (to))
 
+        console.log(typeof (to))
+console.log('====================================');
+console.log(props.user.userData.address[0] && props.user.userData.address[0].area && !props.user.userData.address[0].location && !show &&"dddddddd");
+console.log('====================================');
         // getAvailableServiceOwners(order)
         // .then(owners => {
         //     setServiceOwners(owners);
@@ -312,13 +315,13 @@ console.log('====================props.user.userData.address[0].areap===========
 
     return (
         <div className="delivery-form">
-            {props.user.userData.address[0].area && props.user.userData.address[0].location && !show &&
+            {/* {props.user.userData.address[0]&&props.user.userData.address[0].area && props.user.userData.address[0].location && !show && */}
                 <>
                     <div className="order" >
                         <h4>Your Address</h4>
-                        <p>{props.user.userData.address[0].street}</p>
-                        <p>{props.user.userData.address[0].area}</p>
-                        <p>{props.user.userData.address[0].city}</p>
+                        {/* <p>{props.user.userData.address[0].street}</p>
+                        <p>{props.user.userData.address[0]&&props.user.userData.address[0].area}</p>
+                        <p>{props.user.userData.address[0].city}</p> */}
 
 
                     </div>
@@ -334,17 +337,16 @@ console.log('====================props.user.userData.address[0].areap===========
                 </>
 
 
-            }
-            {props.user.userData.address[0].area&&props.user.userData.address[0].location&&
+            {/* } */}
+            {/* {props.user.userData.address[0].area&&props.user.userData.address[0].location&& */}
             
             
              <Button variant="contained"  color="primary"className={classes.button}    endIcon={<Icon></Icon>}  onClick={() =>{ setShow((prevstate) => !prevstate)}}>{show ? "Choose my address" : "Choose Another Address"}</Button>
-             }
+             {/* } */}
 
 
             
-               { (props.user.userData.address[0].area && !props.user.userData.address[0].location)||(props.user.userData.address[0].area && props.user.userData.address[0].location) && show &&
-
+             {/* { (props.user.userData.address[0].area && !props.user.userData.address[0].location)||(props.user.userData.address[0].area && props.user.userData.address[0].location) && show && */}
 
 <>
                 <form onSubmit={handleSubmit}>
@@ -362,7 +364,7 @@ console.log('====================props.user.userData.address[0].areap===========
                 </form>
         </>
 
-            }
+            {/* } */}
         </div>
         
     )

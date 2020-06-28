@@ -647,7 +647,10 @@ validate={{
                     {phones.map((phone, index) => {
                         return (<div key={index}>
                         <AvField className="form-input" placeholder="Phone" value={phone}
-                        
+                     validate={{
+                        pattern:{value:'^(012|011|010|015)[0-9]{8}$'}
+
+                       }}
                             onChange={handleChangePhone(index)} />
                             
                             {

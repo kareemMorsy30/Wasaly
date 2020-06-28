@@ -28,10 +28,16 @@ function ProductInfo(props) {
   }
   const showStock = quantity => {
     return quantity > 0 ? (
-      <span className="badge badge-primary badge-pill mb-2">In Stock</span>
-    ) : (
+     <>
+     <span className="badge badge-primary badge-pill mb-2">In Stock</span>
+        <Button variant="danger"  onClick={addToCarthandler}   className="btn-card">Add to Cart</Button>
+</>
+      )
+     : (
         <span className="badge badge-primary badge-pill mb-2">Out of Stock</span>
-      );
+
+
+);
   };
 
   const shouldRedirect = redirect => {
@@ -40,14 +46,14 @@ function ProductInfo(props) {
     }
   };
 
-  const showAddToCart = showAddToCartButton => {
-    return (
-      showAddToCartButton &&  (
-        <Button variant="danger"  onClick={addToCarthandler}   className="btn-card">Add to Cart</Button>
+  // const showAddToCart = showAddToCartButton => {
+  //   return (
+  //     // showAddToCartButton &&  (
+  //     //   <Button variant="danger"  onClick={addToCarthandler}   className="btn-card">Add to Cart</Button>
 
-      )
-    );
-  };
+  //     // )
+  //   );
+  // };
   // console.log(Product)
 
 
@@ -70,7 +76,8 @@ function ProductInfo(props) {
               <h4 style={{color:"blue"}}>{Product.price}<span style={{fontSize:"10px", color:"blue"}}>EGP</span></h4>
               <h4>Description: </h4>
              <p>{Product.description}</p>
-             {showAddToCart(showAddToCartButton)}
+             
+             {/* {showAddToCart(showAddToCartButton)} */}
 
              {/* <Button variant="danger"  onClick={addToCarthandler}   className="btn-card">Add to Cart</Button> */}
              <p style={{marginTop:'10px'}}>Sold by:    <span style={{fontSize:'13px', fontWeight:400}}>{Product.owner&&Product.owner.ownerName}</span></p>

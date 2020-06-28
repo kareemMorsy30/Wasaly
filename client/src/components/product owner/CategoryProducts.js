@@ -82,8 +82,10 @@ const ListCatProducts = (props) => {
     ).then(response=>       response.data
         
        
-    ).catch((e)=>{e.message="please Signin"
-        toast(e.message);
+    )
+    .catch(
+        (e)=>{console.log(e);
+        
         
     }
     )
