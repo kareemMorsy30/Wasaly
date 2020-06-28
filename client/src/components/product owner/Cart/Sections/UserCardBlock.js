@@ -1,10 +1,18 @@
 import React,{useState} from 'react'
 import Table from 'react-bootstrap/Table'
-import { Button } from 'antd';
 import { Link } from 'react-router-dom';
-
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import DeleteIcon from '@material-ui/icons/Delete';
+const useStyles = makeStyles((theme) => ({
+    button: {
+      margin: theme.spacing(1),
+    },
+  }));
+  
 function UserCardBlock(props) {
     const domain = process.env.REACT_APP_BACKEND_DOMAIN
+    const classes = useStyles();
 
     console.log('====================================');
     console.log(props);
@@ -27,7 +35,21 @@ const [owner, setowner] = useState()
     const renderItems = () => (
         props.products && props.products.map(product => (
             <tr key={product._id}>
+<td style={{
+                    backgroundColor: "initial"
+                }}>
+                    <img style={{ width: '70px' }} alt="product"
+                        src={renderCartImage(product.images_path)} />
+                </td>
+                <td style={{
+                    backgroundColor: "initial"
+                }}>{product.amount} EA</td>
 
+<td style={{
+                    backgroundColor: "initial"
+                }}>$ {product.price} </td>
+
+              
                 <td style={{
                     backgroundColor: "initial"
                 }}>$ {product.name} </td>
@@ -38,37 +60,28 @@ const [owner, setowner] = useState()
                 }}>$ {!props.owner[0].owner.ownerName:} </td> */}
 
 
+                
+
+               
                 <td style={{
                     backgroundColor: "initial"
                 }}>
-                    <img style={{ width: '70px' }} alt="product"
-                        src={renderCartImage(product.images_path)} />
-                </td>
-
-                <td style={{
-                    backgroundColor: "initial"
-                }}>{product.quantity} EA</td>
-
-              
-                <td style={{
-                    backgroundColor: "initial"
-                }}>$ {product.price} </td>
-
-                <td style={{
-                    backgroundColor: "initial"
-                }}>
-                    <Button className="btn btn-primary" onClick={() => props.removeItem(product._id)}
+                    <Button  onClick={() => props.removeItem(product._id)}
+                      variant="contained"
+        color="secondary"
+        className={classes.button}
+        startIcon={<DeleteIcon />}
                     >Remove</Button>
                 </td>
                
                
                
-                <td style={{
+                {/* <td style={{
                     backgroundColor: "initial"
                 }}>
                     <Link to="/addOrder" className="btn btn-primary">Make Order</Link>
 
-                </td>
+                </td> */}
             </tr>
         ))
     )
@@ -92,7 +105,6 @@ const [owner, setowner] = useState()
                     <th>Product Price</th>
                     <th>Brand Name</th>
                     <th>Remove from Cart</th>
-                    <th>Make Order</th>
                 </tr>
             </thead>
             <tbody>

@@ -42,8 +42,18 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
     addToCart(id)
     
     
+    
 }
-  // const filterByPrice=(event,name)=>{    
+const showStock = quantity => {
+  return quantity > 0 ? (
+    
+    <span className="badge badge-primary badge-pill mb-2">In Stock</span>
+  ) : (
+      <span className="badge badge-primary badge-pill mb-2">Out of Stock</span>
+    );
+};
+
+// const filterByPrice=(event,name)=>{    
   //   let value = event.target.value;
   //   if(name === "second"){        
   //   		if(parseInt(firstValue) < parseInt(value)){
@@ -93,7 +103,13 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
                       <Card.Text style={{ color: '#006fcc' }}>
                         {product.price} <span style={{ fontSize: '10px' }}>EGP</span>
                       </Card.Text>
+                      <Card.Text style={{ color: '#006fcc' }}>
+                        {
+                      showStock(product.quantity)
                     
+
+                        } <span style={{ fontSize: '10px' }}></span>
+                      </Card.Text>
             
                       <div style={{ display: 'flex', 'justifyContent': 'space-around', flexShrink: 0 }}>
                         <Button variant="danger" className="btn-card" >View</Button>
@@ -112,6 +128,12 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
                       <Card.Title>{product.name}</Card.Title>
                       <Card.Text style={{ color: '#006fcc' }}>
                         {product.price} <span style={{ fontSize: '10px' }}>EGP</span>
+                      </Card.Text>
+                      <Card.Text style={{ color: '#006fcc' }}>
+                        {
+                      showStock(product.quantity)
+
+                        } <span style={{ fontSize: '10px' }}></span>
                       </Card.Text>
                       <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
                         <Button variant="danger" className="btn-card" >View</Button>

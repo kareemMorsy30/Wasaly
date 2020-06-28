@@ -9,7 +9,6 @@ import UpdateProduct from "./components/product owner/updateProduct";
 import ListProducts from "./components/product owner/listProducts";
 import Connections from "./components/product owner/connection";
 import ProductOwnerDetails from "./components/product owner/productOwnerDetails";
-import AdminProductOwners from "./components/admin/productOwners";
 import ListCatProducts from "./components/product owner/CategoryProducts";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
@@ -21,7 +20,6 @@ import UserNavBar from "./components/user/userNavBar";
 import UserAndCustomerNavBar from "./components/layouts/site/navbar";
 /*** Service owners */
 import ServiceOwnerOrders from "./components/service owner/orders";
-import Reviews from "./components/service owner/reviews/reviews";
 /**** Admin ****/
 import AdminServiceOwners from "./components/admin/serviceOwners";
 import All from "./components/admin/categories/all";
@@ -30,12 +28,7 @@ import Landing from "./components/layouts/dashboard/landing";
  * Admin NavBar Ya adham :)
  */
 import NavBar from "./components/admin/adminNavBar";
-<<<<<<< HEAD
-import ServiceOrderForm from './components/customer/serviceForm';
-import orderForm from './components/customer/orderForm';
-=======
 import ServiceOrderForm from "./components/customer/serviceForm";
->>>>>>> 96ee4956b9f9f190184a550e0c266018808a8c07
 // import Delivery from './components/customer/delivery';
 import Delivery from "./components/customer/delivery";
 import Order from "./components/user/orders";
@@ -103,7 +96,6 @@ function App() {
             path="/service-owner/connection"
             component={ProductOwnerDetails}
           />
-          <Route exact path="/service-owner/reviews" component={Reviews} />
           {/* Product owner routes */}
           <Route
             exact
@@ -130,10 +122,6 @@ function App() {
           <ProductOwnerRoute exact path="/product-owner/products">
             <ListProducts />
           </ProductOwnerRoute>
-
-          <Route exact path="/admin/product-owners/">
-            <AdminProductOwners />
-          </Route>
         </Layout>
       </Route>
 
@@ -194,23 +182,6 @@ function App() {
                 {/* <Route exact path="/test" >
               < Category />
             </Route> */}
-<<<<<<< HEAD
-         
-            <Route exact path="/sO" component={ServiceOrderForm} />
-            <UserRoute>
-            <Route exact path="/addOrder" component={Auth(orderForm, true)} />
-            {/* <Route exact path="/" component={Delivery} /> */}
-</UserRoute>
-            <Route exact path="/orders" component={Order} />
-            <Route exact path="/orders/:id" component={OrderDetails} />
-            {/* http://localhost:3000/5ef231d4a5a9572baa78364f/ownerinfo */}
-            <Route exact path="/:id/ownerinfo" component={ProductDetails} />
-            <Route exact path="/cart" component={Auth(CartPage, true)} />
-
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/table" component={table} />
-
-=======
                 <Route exact path="/sO" component={ServiceOrderForm} />
                 {/* <Route exact path="/" component={Delivery} /> */}
 
@@ -226,7 +197,6 @@ function App() {
                 </div>
               </SiteLayout>
             </Route>
->>>>>>> 96ee4956b9f9f190184a550e0c266018808a8c07
 
             {/* <div className="menu-items">
                 

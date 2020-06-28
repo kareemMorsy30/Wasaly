@@ -9,7 +9,8 @@ import ProductDetails from './ProductDetails'
 // import productOwner from '../../../../../server/config/productOwner';
 function ProductInfo(props) {
   const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
-
+  let showAddToCartButton= props.showAddToCartButton;
+  showAddToCartButton=true;
   const [Product, setProduct] = useState({})
 
   useEffect(() => {
@@ -39,18 +40,14 @@ function ProductInfo(props) {
     }
   };
 
-  // const showAddToCart = showAddToCartButton => {
-  //   return (
-  //     showAddToCartButton && (
-  //       <button
-  //         className="btn btn-outline-success mt-2 mb-2"
-  //         onClick={addToCart}
-  //       >
-  //         Add to cart
-  //       </button>
-  //     )
-  //   );
-  // };
+  const showAddToCart = showAddToCartButton => {
+    return (
+      showAddToCartButton &&  (
+        <Button variant="danger"  onClick={addToCarthandler}   className="btn-card">Add to Cart</Button>
+
+      )
+    );
+  };
   // console.log(Product)
 
 
@@ -69,10 +66,13 @@ function ProductInfo(props) {
           </div>
           <div className="col-3">
               <h4>{Product.name}</h4>
+              <h4>{showStock(Product.quantity)}</h4>
               <h4 style={{color:"blue"}}>{Product.price}<span style={{fontSize:"10px", color:"blue"}}>EGP</span></h4>
               <h4>Description: </h4>
              <p>{Product.description}</p>
-             <Button variant="danger"  onClick={addToCarthandler}  className="btn-card">Add to Cart</Button>
+             {showAddToCart(showAddToCartButton)}
+
+             {/* <Button variant="danger"  onClick={addToCarthandler}   className="btn-card">Add to Cart</Button> */}
              <p style={{marginTop:'10px'}}>Sold by:    <span style={{fontSize:'13px', fontWeight:400}}>{Product.owner&&Product.owner.ownerName}</span></p>
 
           </div>
@@ -86,6 +86,8 @@ function ProductInfo(props) {
         <p>Description:    <span style={{fontSize:'13px'}}>{Product.Description&&Product.Description}</span></p>
 
       </div>
+
+      
       </>
   )
 

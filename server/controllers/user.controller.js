@@ -34,6 +34,7 @@ userController.regesiter = async (req, res, next) => {
 
     if (newUser._id != undefined && newUser.role === "customer") {
         try {
+         
             const user = await newUser.save()
 
             sendEmail(req, res, user)
@@ -67,6 +68,9 @@ userController.regesiter = async (req, res, next) => {
             sendEmail(newUser)
         }
         catch (e) {
+            console.log('====================================');
+            console.log(e);
+            console.log('====================================');
             if (e.name === "MongoError" && e.code === 11000) {
                 const error = new Error(`Email address ${newUser.email} is already taken`);
                 error.status = 400
@@ -208,7 +212,7 @@ userController.login = async (request, response, next) => {
                 response.send({ token, user });
             } else {
                 response.status(401).send({
-                    error: "Invalid username or password",
+                    error: "Invalid email or password",
                 });
             }
         });
@@ -335,7 +339,7 @@ userController.addToCart = (req, res) => {
         if (duplicate) {
             User.findOneAndUpdate(
                 { _id: userID, "cart.id": req.query.productId },
-                { $inc: { "cart.$.quantity": 1 } },
+                { $inc: { "cart.$.amount": 1 } },
                 { new: true },
                 (err, userInfo) => {
                     if (err) return res.json({ success: false, err });
@@ -343,24 +347,34 @@ userController.addToCart = (req, res) => {
                 }
             )
         } else {
-            User.findOneAndUpdate(
-                { _id: req.user._id },
-                {
-                    $push: {
-                        cart: {
-                            id: req.query.productId,
-                            quantity: 1,
-                            date: Date.now()
+
+            Product.findOne({_id:req.query.productId},(err,productCart)=>{
+                console.log('=================Product Cart===================');
+                console.log(productCart);
+                console.log('====================================');
+                User.findOneAndUpdate(
+                    { _id: req.user._id },
+                    {
+                        $push: {
+                            cart: {
+                                id: req.query.productId,
+                                amount: 1,
+                                price:productCart.price,
+                                date: Date.now()
+                            }
                         }
+                    },
+                    { new: true },
+                    (err, userInfo) => {
+                        if (err) return res.json({ success: false, err });
+                        res.status(200).json(userInfo.cart)
                     }
-                },
-                { new: true },
-                (err, userInfo) => {
-                    if (err) return res.json({ success: false, err });
-                    res.status(200).json(userInfo.cart)
-                }
+                )
+
+            }
             )
-        }ي
+        
+        }
     })
 };
 
@@ -458,14 +472,39 @@ userController.removeFromCart = (req, res) => {
     )
 }
 
+userController.removeCart = (req, res) => {
+
+    User.findOneAndUpdate(
+        { _id: req.user._id },
+        {
+            "$pull":
+                { "cart": {  } }
+        },
+        { new: true },
+        (err, userInfo) => {
+            let cart = userInfo.cart;
+            let array = cart.map(item => {
+                return item.id
+            })
+
+            Product.find({ '_id': { $in: array } })
+                .populate('user')
+                .exec((err, cartDetail) => {
+                    return res.status(200).json({
+                        cartDetail,
+                        cart
+                    })
+                })
+        }
+    )
+}
+
 userController.userCartInfo= async (req, res) => {
     console.log('====================================');
     console.log("5555555555555555555555555");
     console.log('====================================');
 
     await    User.findOne(
-userController.userCartInfo = (req, res) => {
-    User.findOne(
         { _id: req.user._id },
         (err, userInfo) => {
             let cart = userInfo.cart;

@@ -86,7 +86,7 @@ console.log('====================================');
             userCart.forEach(cartItem => {
                 response.data.forEach((productDetail, i) => {
                     if (cartItem.id === productDetail._id) {
-                        response.data[i].quantity = cartItem.quantity;
+                        response.data[i].amount = cartItem.amount;
                     }
                 })
             })
@@ -106,13 +106,13 @@ console.log('====================================');
 export function removeCartItem(id) {
     // `${process.env.REACT_APP_BACKEND_DOMAIN}/product/products_by_id?id=${cartItems}&type=array`
     // 
-    const request = axios.post(`${process.env.REACT_APP_BACKEND_DOMAIN}/orders/?_id=${id}`,authHeader)
+    const request = axios.delete(`${process.env.REACT_APP_BACKEND_DOMAIN}/users/removeFromCart?_id=${id}`,authHeader)
         .then(response => {
 
             response.data.cart.forEach(item => {
                 response.data.cartDetail.forEach((k, i) => {
                     if (item.id === k._id) {
-                        response.data.cartDetail[i].quantity = item.quantity
+                        response.data.cartDetail[i].amount = item.amount
                     }
                 })
             })

@@ -113,5 +113,7 @@ router.post('/admin', adminAuth,
     router.get('/:id/',userController.getUser);
     router.post('/addToCart',userController.addToCart);
 router.delete('/removeFromCart',userController.removeFromCart);
+router.delete('/removeCart',userController.removeCart);
+
 
 module.exports = router;

@@ -8,6 +8,8 @@ import UserCardBlock from './Sections/UserCardBlock';
 import { Result, Empty } from 'antd';
 import Axios from 'axios';
 import OrderForm from '../../customer/orderForm';
+import ReactLoading from 'react-loading';
+
 
 function CartPage(props) {
     const dispatch = useDispatch();
@@ -15,6 +17,8 @@ function CartPage(props) {
     const [ShowTotal, setShowTotal] = useState(false)
     const [ShowSuccess, setShowSuccess] = useState(false)
     const [owner, setowner] = useState([])
+    const [ waiting, setWaiting ] = useState(false);
+
     console.log('================Cart Page====================');
     console.log(props);
     console.log('====================================');
@@ -52,7 +56,7 @@ function CartPage(props) {
         let total = 0;
 
         cartDetail.map(item => {
-            total += parseInt(item.price, 10) * item.quantity
+            total += parseInt(item.price, 10) * item.amount
         });
 
         setTotal(total)
@@ -90,6 +94,9 @@ console.log('====================================');
         <div style={{ width: '85%', margin: '3rem auto' }}>
             <h1>My Cart</h1>
             <div>
+                             
+   {ShowTotal ?
+    <>
 
                 <UserCardBlock
                     products={props.user.cartDetail}
@@ -97,16 +104,23 @@ console.log('====================================');
                     removeItem={removeFromCart}
                     addOrder={addOrder}
                 />
-   {ShowTotal ?
+  
                     <div style={{ marginTop: '3rem' }}>
                         <h2>Total amount: ${Total} </h2>
                     </div>
+<OrderForm    props={props} ShowTotals={setShowTotal}  setShowSuccess={setShowSuccess} />
+</>
+
                     :
+
                     ShowSuccess ?
+
                         <Result
                             status="success"
                             title="Successfully Purchased Items"
-                        /> :
+                        /> 
+                        
+                        :
                         <div style={{
                             width: '100%', display: 'flex', flexDirection: 'column',
                             justifyContent: 'center'
@@ -116,9 +130,16 @@ console.log('====================================');
                             <p>No Items In the Cart</p>
 
                         </div>
+
                 }
-<OrderForm    props={props}/>
-             
+              {/* {  waiting 
+                    ?
+                    <ReactLoading type="cylon" color="rgb(196, 0, 42)" height={'40%'} width={'40%'} />
+                    : 
+                    !props.user.cartDetail 
+                    ? */}
+{/* :null */}
+              {/* } */}
             </div>
 
 

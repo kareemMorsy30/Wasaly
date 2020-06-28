@@ -15,7 +15,7 @@ import {
 import Axios from 'axios';
 import { authHeader } from '../config/config';
 
-const OrderForm = ({props}) => {
+const OrderForm = ({ props, setShowSuccess, ShowTotals }) => {
     const [Total, setTotal] = useState(0)
     const [ShowTotal, setShowTotal] = useState(false)
     const [item, setItem] = useState('')
@@ -23,13 +23,16 @@ const OrderForm = ({props}) => {
     const [amount, setAmount] = useState(1)
     const [description, setDescription] = useState('')
     const [transportation, setTransportation] = useState('');
-    const [from, setFrom] = useState({
-        area: '',
-        street: '',
-        city: '',
-        longitude: 0,
-        latitude: 0,
-    });
+    // const [from, setFrom] = useState({
+    //     area: '',
+    //     street: '',
+    //     city: '',
+    //     longitude: 0,
+    //     latitude: 0,
+    // });
+    console.log('====================================');
+    // console.log(from);
+    console.log('====================================');
     const [to, setTo] = useState({
         area: '',
         street: '',
@@ -38,15 +41,16 @@ const OrderForm = ({props}) => {
         latitude: 0,
     })
     const dispatch = useDispatch();
+    console.log(props);
 
     const [transportations, setTransportations] = useState([]);
     const [fromValue, setFromValue] = useState('');
-    const [toValue, setToValue] = useState(props.user.userData&&props.user.userData.address?props.user.userData.address[0].area:'' ) ;
+    const [toValue, setToValue] = useState('');
     const [suggested, setSuggested] = useState([]);
     const [latitude, setlatitude] = useState(0);
     const [longitude, setlongitude] = useState(0);
     const [useraddress, setuseraddress] = useState('')
-
+    const [show, setShow] = useState(false)
     // setuseraddress(props.user.userData&&props.user.userData.address?props.user.userData.address[0].area:'')
     // const { loading, breweries, error } = usestate;
     // const [addresss, setaddresss] = useState({error,loading,address})
@@ -59,105 +63,118 @@ const OrderForm = ({props}) => {
         let total = 0;
 
         cartDetail.map(item => {
-            total += parseInt(item.price, 10) * item.quantity
+            total += parseInt(item.price, 10) * item.amount
         });
 
         setTotal(total)
         setShowTotal(true)
     }
 
-    const haandleuserAddress=(event)=>
-    {
+    const haandleuserAddress = (event) => {
         const input = event.target.value;
 
 
     }
-   
-try {
-    // console.log('===================props of order=================');
-    // console.log(props.user.userData['address'] === undefined  &&props.user.userData);
-    // console.log('====================================');
 
-    console.log('====================================');
-    console.log(props);
-    console.log('====================================');
-    
-} catch (error) {
-    // setaddresss({error:error,loading:false})
-    console.log(error);
-    
-}
-  
-useEffect(()=>{
-    props.user.userData&&  setToValue(props.user.userData.address[0].area)
-},[ props.user.userData&&props.user.userData.address.length])
+    try {
+        // console.log('===================props of order=================');
+        // console.log(props.user.userData['address'] === undefined  &&props.user.userData);
+        // console.log('====================================');
 
-// ,data.longitude,data.latitude
+        console.log('====================================');
+        console.log(props);
+        console.log('====================================');
 
-    const insertFrom = event => {
-        const input = event.target.value;
+    } catch (error) {
+        // setaddresss({error:error,loading:false})
+        console.log(error);
 
-        setFromValue(event.target.value);
-
-
-        if(input.length >= 3 && input[input.length-1] !== ' '){
-            getGeoLocation(input).then(data => {
-                console.log("data",data);
-                console.log(data.latitude);
-                
-
-                if(data.area) setFrom({
-                    
-                    ...from,
-                    area: data.fullArea,
-                    city: data.city,
-                    longitude:data.longitude,
-                    latitude:data.latitude,
-                });
-                setlatitude(data.latitude);
-
-                console.log(data.area);
-                console.log('====================================');
-                console.log(latitude);
-
-                if(input > toValue && data.area && !suggested.includes(data.area) && data.area.toLowerCase().includes(input)){
-                    console.log('====================================');
-                    console.log(data.area);
-                    console.log('====================================');
-                    // { latitude: data.latitude, longitude: data.longitude } }
-                    setSuggested([...suggested, data.area]);
-                    setFromValue(data.area);
-                    console.log('====================================');
-                    console.log(latitude);
-                    console.log('====================================');
-                setlatitude(data.latitude);
-
-                }
-            })
-        }
     }
 
+    /**
+     * FROM VALUE 
+     */
+    // const insertFrom = event => {
+    //     const input = event.target.value;
+
+    //     setFromValue(event.target.value);
+
+
+    //     if(input.length >= 3 && input[input.length-1] !== ' '){
+    //         getGeoLocation(input).then(data => {
+    //             console.log("data",data);
+    //             console.log(data.latitude);
+
+
+    //             if(data.area) setFrom({
+
+    //                 ...from,
+    //                 area: data.fullArea,
+    //                 city: data.city,
+    //                 longitude:data.longitude,
+    //                 latitude:data.latitude,
+    //             });
+    //             setlatitude(data.latitude);
+
+    //             console.log(data.area);
+    //             console.log('====================================');
+    //             console.log(latitude);
+
+    //             if(input > toValue && data.area && !suggested.includes(data.area) && data.area.toLowerCase().includes(input)){
+    //                 console.log('====================================');
+    //                 console.log(data.area);
+    //                 console.log('====================================');
+    //                 // { latitude: data.latitude, longitude: data.longitude } }
+    //                 setSuggested([...suggested, data.area]);
+    //                 setFromValue(data.area);
+    //                 console.log('====================================');
+    //                 console.log(latitude);
+    //                 console.log('====================================');
+    //             setlatitude(data.latitude);
+
+    //             }
+    //         })
+    //     }
+    // }
+
+    const from = {
+        // from: {
+        area: '',
+        city: '',
+        longitude: 0,
+        latitude: 0,
+
+    }
+    // }
     const insertTo = event => {
         const input = event.target.value;
 
         setToValue(event.target.value);
 
-        if(input.length >= 3 && input[input.length-1] !== ' '){
+        if (input.length >= 3 && input[input.length - 1] !== ' ') {
             getGeoLocation(input).then(data => {
                 setlongitude(data.longitude);
 
-                if(data.area) setTo({
-                    ...to,
-                    area: data.fullArea,
-                    city: data.city,
-                    longitude:data.longitude,
-                    latitude:data.latitude,
-                });
+                if (data.area) {
+                    setTo({
+                        ...to,
+                        area: data.fullArea,
+                        city: data.city,
+                        longitude: data.longitude,
+                        latitude: data.latitude,
+                    });
+                    console.log("to inside insert to first IF ", to);
+                    console.log("to inside insert toValue first IF ", toValue);
 
-                if(input > toValue && data.area && !suggested.includes(data.area) && data.area.toLowerCase().includes(input)){
+                }
+
+                if (input > toValue && data.area && !suggested.includes(data.area) && data.area.toLowerCase().includes(input)) {
                     setSuggested([...suggested, data.area]);
                     setToValue(data.area);
-                setlongitude(data.longitude);
+                    console.log("to inside insert to second IF ", to);
+                    console.log("to inside insert toValue second IF ", toValue);
+
+                    setlongitude(data.longitude);
 
                 }
             })
@@ -167,29 +184,93 @@ useEffect(()=>{
     const handleSubmit = event => {
         // setWaiting(true);
         event.preventDefault();
-
-        if( !phone|| !amount || !description || !transportation || !from || !to)
-            setAlert({
-                message: 'Check required inputs',
-                type: 'error'
-            })
-
-        const order = {
-            amount,
-            description,
-            transportation,
-            from,
-            to,transportation,phone,description
-        };
-
-        // setOrder(order);
-MakeOrder(order).then(data=> {console.log("data",data)
-
-            // setWaiting(false);
+        // setTo(toValue);
+        if (to.area == "") {
+            console.log('====================================');
+            console.log('====================================');
+            console.log(to.area);
+            console.log(props.user.userData.address[0])
+            setTo(props.user.userData.address[0] && props.user.userData.address[0])
         }
 
-).catch(err=>console.log(err)
-)
+        if (show) {
+            if (!phone || !description || !to) {
+                setAlert({
+                    message: 'Check required inputs',
+                    type: 'error'
+                })
+            }
+            else {
+                const order = {
+
+                    to, phone, description
+                };
+                console.log("TO ", to);
+
+                // setOrder(order);
+                MakeOrder(order).then(data => {
+                    console.log("data", data)
+
+
+                    Axios.delete(`${domain}/users/removeCart`, authHeader)
+                    setShowSuccess(true);
+                    ShowTotals(false);
+                    console.log("reached");
+
+
+
+
+                }
+
+                ).catch(err => console.log(err)
+                )
+            }
+
+        } else {
+            if (props.user.userData.address[0].area && props.user.userData.address[0].location && props.user.userData.address[0].location) {
+                const order = {
+                    to:
+                    {
+                        area: props.user.userData.address[0].area,
+                        street: props.user.userData.address[0].street || "",
+                        city: props.user.userData.address[0].city,
+                        longitude: props.user.userData.address[0].location.longitude || 0,
+                        latitude: props.user.userData.address[0].location.latitude || 0
+
+                    }, phone, description
+                };
+                console.log("TO ", to);
+
+                // setOrder(order);
+                MakeOrder(order).then(data => {
+                    console.log("data", data)
+
+
+                    Axios.delete(`${domain}/users/removeCart`, authHeader)
+                    setShowSuccess(true);
+                    ShowTotals(false);
+                    console.log("reached");
+
+
+
+
+                }
+
+                ).catch(err => console.log(err)
+                )
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+        console.log(typeof (to))
 
         // getAvailableServiceOwners(order)
         // .then(owners => {
@@ -201,33 +282,56 @@ MakeOrder(order).then(data=> {console.log("data",data)
 
     return (
         <div className="delivery-form">
-            <form onSubmit={handleSubmit}>
-                <div className="form_container">
-                    <input type="text" placeholder="From" value={fromValue} onChange={insertFrom} list="from" style={{border: alert.type === 'error' && !from.area && '1px red solid'}}/>
-                    <datalist id="from">
-                        <option key="source" value={from.area}/>
-                    </datalist>
-                    
-                    <input type="text" placeholder="To" value={toValue} onChange={insertTo} list="to-list" style={{border: alert.type === 'error' && !to.area && '1px red solid'}}/>
-                    <datalist id="to-list">
-                        <option key="destination" value={to.area}/>
-                    </datalist>
-                    {/* <input type="number" placeholder="Amount" value={amount} onChange={event => setAmount(event.target.value)} style={{border: alert.type === 'error' && !amount && '1px red solid'}}/> */}
-                    {/* <select name="author" id="author" value={transportation} onChange={event => setTransportation(event.target.value)} style={{border: alert.type === 'error' && !transportation && '1px red solid'}}>
-                        <option disabled selected value="">Transportation way</option>
-                        {
-                            transportations.length > 0 && transportations.map(transportation => {
-                                return <option value={transportation}>{transportation}</option>;
-                            })
-                        }
-                    </select> */}
-                    {/* <input type="text" placeholder="Item to deliver" value={item} onChange={event => setItem(event.target.value)} style={{border: alert.type === 'error' && !item && '1px red solid'}}/> */}
-                    <input type="text" placeholder="phone" value={phone} onChange={event => setPhone(event.target.value)} style={{border: alert.type === 'error' && !item && '1px red solid'}}/>
-                    <textarea placeholder="More info" value={description} onChange={event => setDescription(event.target.value)} style={{border: alert.type === 'error' && !description && '1px red solid'}}/>
-                    <button type="submit" onSubmit={handleSubmit} className="submit-btn">Submit</button>
-                </div>
-            </form>
+            {props.user.userData.address[0].area && props.user.userData.address[0].location && !show &&
+                <>
+                    <div className="order" >
+                        <h4>Your Address</h4>
+                        <p>{props.user.userData.address[0].street}</p>
+                        <p>{props.user.userData.address[0].area}</p>
+                        <p>{props.user.userData.address[0].city}</p>
+
+
+                    </div>
+
+                    <form onSubmit={handleSubmit}>
+                        <div className="form_container">
+
+                            <input type="text" placeholder="phone" value={phone} onChange={event => setPhone(event.target.value)} style={{ border: alert.type === 'error' && !phone && '1px red solid' }} />
+                            <textarea placeholder="More info" value={description} onChange={event => setDescription(event.target.value)} style={{ border: alert.type === 'error' && !description && '1px red solid' }} />
+                            <button type="submit" onSubmit={handleSubmit} className="submit-btn">Submit</button>
+                        </div>
+                    </form>
+                </>
+
+
+            }
+            {props.user.userData.address[0].area&&  props.user.userData.address[0].location && <button  onClick={() =>{ setShow((prevstate) => !prevstate)}}>{show ? "Choose my address" : "Choose Another Address"}</button>}
+
+
+            
+               { props.user.userData.address[0].area && props.user.userData.address[0].location && show &&
+
+
+<>
+                <form onSubmit={handleSubmit}>
+                    <div className="form_container">
+
+                    <input type="text" placeholder="To" value={toValue} onChange={insertTo} list="to-list" style={{ border: alert.type === 'error' && !to.area && '1px red solid' }} />
+                        <datalist id="to-list">
+                            <option key="destination" value={to.area} />
+                        </datalist>
+
+                        <input type="text" placeholder="phone" value={phone} onChange={event => setPhone(event.target.value)} style={{ border: alert.type === 'error' && !phone && '1px red solid' }} />
+                        <textarea placeholder="More info" value={description} onChange={event => setDescription(event.target.value)} style={{ border: alert.type === 'error' && !description && '1px red solid' }} />
+                        <button type="submit" onSubmit={handleSubmit} className="submit-btn">SubmitChooseAnotherAddrress</button>
+                    </div>
+                </form>
+        </>
+
+            }
+
         </div>
+        
     )
 
 
