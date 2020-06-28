@@ -31,7 +31,7 @@ const changeStatus = async(req,res)=>{
 
 const getServiceOwner = async(req,res)=>{
     try{
-        let user =await ServiceOwner.findById({_id: req.params.id})
+        let user =await ServiceOwner.findOne({user: req.user._id})
         .populate('user');
         res.send(user)
         }

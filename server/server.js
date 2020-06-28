@@ -108,13 +108,13 @@ app.use('/customers', CustomerRouter)
 /*-------------payment---------------------------*/
 const SERVER_CONFIGS = require('./constants/backend');
 
-// const configureServer = require('./index');
+const configureServer = require('./index');
 const configureRoutes = require('./routes/paymentIndex');
 
 // const app = express();
 
-// configureServer(app);
-// configureRoutes(app);
+configureServer(app);
+configureRoutes(app);
 
 // app.listen(SERVER_CONFIGS.PORT, error => {
 //   if (error) throw error;

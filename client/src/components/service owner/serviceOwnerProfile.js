@@ -5,10 +5,10 @@ import { authHeader } from '../config/config';
 import { objectToFormData } from 'object-to-formdata';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-const ServiceOwnerProfile = ({ match: { params: { id: serviceOwnerId } } }) => {
+const ServiceOwnerProfile = (props) => {
     // const serviceOwnerId = props.match.params.id
     const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
-    const API_SERVICEOWNER_URL = `${domain}/service-owners/${serviceOwnerId}`;
+    const API_SERVICEOWNER_URL = `${domain}/service-owners`;
     const [serviceOwner, setServiceOwner] = useState([]);
     const [user, setUser] = useState([]);
     const [productOwner, setProductOwner] = useState([]);
@@ -18,7 +18,7 @@ const ServiceOwnerProfile = ({ match: { params: { id: serviceOwnerId } } }) => {
         distance: 0, region: 0, transportation: "", rating: 0, avatar: null
     })
     const toggle = () => setModal(!modal);
-    console.log(serviceOwnerId);
+    // console.log(serviceOwnerId);
     useEffect(() => {
         axios.get(API_SERVICEOWNER_URL, authHeader)
             .then(response => {

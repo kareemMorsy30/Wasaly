@@ -5,6 +5,7 @@ const User = require('./user')
 const { controller } = require('../controllers/allControllers')
 const { io } = require("../server");
 const service = require('../controllers/service');
+const serviceOwner = require('../config/serviceOwner');
 
 const orderSchema = new mongoose.Schema({
     products: [{
@@ -53,37 +54,32 @@ const orderSchema = new mongoose.Schema({
 })
 
 orderSchema.post('save', function (doc, next) {
-    console.log('jooooooooooooooooooooo')
     let productInf
     let serviceOwners
+    let services=[]
 
     this.products.forEach(async product => {
-
-
         productInf = await Product.findById(product.product).populate({ path: 'owner', populate: { path: 'user' } }).select('owner.user')
-        serviceOwners = await ServiceOwner.find({ 'productOwner.user': productInf.owner.user }).populate('user')
-
+        serviceOwners = await ServiceOwner.find({ 'productOwner.user': productInf.owner.user, 'productOwner.status':'Connected'}).populate('user')
 
         let info = {
             title: 'new order',
             message: `New order from ${productInf.owner.user.name}`,
-            link: 'http://localhost:3000/orders',
+            link: 'http://localhost:3000/service-owner/product-orders',
             body: this
         }
-        let services=[]
-        serviceOwners.forEach((serviceOwner) => {            
+      
+        serviceOwners.forEach((serviceOwner) => {                        
             if (serviceOwner.user.status === "online" && !services.includes(serviceOwner.user.name) ){
                 services.push(serviceOwner.user.name)
-                console.log("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii jhoppppppppp")
-
                 User.findOneAndUpdate({ email: serviceOwner.user.email }, { $push: { notifications: info } })
                     .then(user => {
                         io.sockets.in(`${serviceOwner.user.email}`).emit('pushNotification', info);
                     })
             }
         })
-        services=[]
     })
+    services=[]
     next()
 });
 

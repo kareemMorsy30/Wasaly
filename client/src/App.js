@@ -41,6 +41,9 @@ import CartPage from "./components/product owner/Cart/CartPage";
 
 // import MainCart  from './components/product owner/Cart/AddCart';
 import LandingPage from "./pages/landingPage";
+
+// import user cart info(AUTH)
+import UserCart from './components/product owner/Cart/UserCart';
 import {
   isUser,
   isCustomer,
@@ -56,6 +59,7 @@ import table from "./components/table";
 import Layout from "./components/layouts/dashboard/layout";
 import SiteLayout from "./components/layouts/site/layout";
 import Notifications from "./components/layouts/notifications";
+import {Welcome} from "./components/user/welcome"
 
 function App() {
   return (
@@ -104,6 +108,7 @@ function App() {
           />
           <Route exact path="/service-owner/reviews" component={Reviews} />
           {/* Product owner routes */}
+          <Route exact path="/welcome" component={Welcome} />
           <Route
             exact
             path="/product-owner/connections"
@@ -147,7 +152,7 @@ function App() {
         <Switch>
           <Route
             exact
-            path="/serviceownerprofile/:id"
+            path="/serviceownerprofile"
             component={ServiceOwnerProfile}
           />
           
@@ -193,7 +198,7 @@ function App() {
               <Route exact path="/register" component={Register} />
 
               <Route exact path="/" component={LandingPage} />
-              {/* <UserNavBar /> */}
+              {/* <UserNavBar  /> */}
               {/* <Route exact path="/" component={Delivery} /> */}
 
               <Route exact path="/search/:id" component={SearchResults} />
