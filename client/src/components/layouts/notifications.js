@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from 'react';
-import {Link} from 'react-router-dom';
 import Moment from 'react-moment';
 import Info from "../alerts/info";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -25,7 +24,11 @@ const Notifications = () => {
                     { notification.message }
                 </div>
                 <div className="col-2">
-                    <Moment style={{color: 'black', fontSize: 'small'}} format="D MMM YYYY" withTitle>
+                    <Moment style={{color: 'black', fontSize: 'small'}} format="HH:mm" withTitle>
+                        {notification.createdAt}
+                    </Moment>
+                    {' '}
+                    <Moment style={{color: 'black', fontSize: 'small'}} toNow withTitle>
                         {notification.createdAt}
                     </Moment>
                 </div>
