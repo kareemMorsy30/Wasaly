@@ -33,7 +33,7 @@ const NavBar = () => {
         getNotifications().then(notifications => {
             setNotifications(notifications);
             const data = notifications;
-            data && data.map(item => {
+            data && data.length > 0 && data.map(item => {
                 if(!item.read) {
                     counter++;
                 }

@@ -27,6 +27,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Card from '../../layouts/dashboard/card';
 import { notification } from 'antd';
 
@@ -217,6 +218,9 @@ function Dashboard({children}) {
             <Badge badgeContent={notificationsNo} color="primary">
               <NotificationsIcon/>
             </Badge>
+          </IconButton>
+          <IconButton color="inherit">
+              <AccountCircleIcon />
           </IconButton>
           <IconButton color="inherit" onClick={handleLogout}>
               <ExitToAppIcon />
