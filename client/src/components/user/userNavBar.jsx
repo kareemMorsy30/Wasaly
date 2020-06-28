@@ -143,9 +143,9 @@ const NavBar = (props) => {
 
                 <Search />
                 {!isLoggedIn() &&( <div style={{fontSize:'14px', fontWeight:500, marginLeft:'15px'}}>  <Link to="/login">Login</Link> <Link to="/register">Register</Link></div> )}
-                <IconButton color="inherit">
-                    <MatBadge badgeContent={4} color="primary">
-                    <NotificationsIcon onClick={notifications}/>
+                <IconButton color="inherit" onClick={notifications}>
+                    <MatBadge badgeContent={props.notificationsNo} color="error">
+                    <NotificationsIcon/>
                     </MatBadge>
                 </IconButton>
             </div>

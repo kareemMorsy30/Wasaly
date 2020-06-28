@@ -1,4 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
+import { NotificationsProvider } from '../notificationsContext';
+import NotificationsContext from '../notificationsContext';
+import { getNotifications } from '../../../endpoints/notifications';
 import { logout } from '../../../endpoints/logout';
 import { subscribe } from '../../../services/authServices';
 import { useHistory } from "react-router-dom";
@@ -25,6 +28,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Card from '../../layouts/dashboard/card';
+import { notification } from 'antd';
 
 function Copyright() {
   return (
@@ -37,6 +41,14 @@ function Copyright() {
       {'.'}
     </Typography>
   );
+}
+
+const Layout = ({children}) => {
+  return (
+    <NotificationsProvider>
+      <Dashboard children={children}/>
+    </NotificationsProvider>
+  )
 }
 
 const drawerWidth = 240;
@@ -123,11 +135,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Dashboard({children}) {
+function Dashboard({children}) {
+  const [notificationsNo, setNotificationsNo] = useState(0);
+    
+  const {
+    notifications, setNotifcations
+  } = useContext(NotificationsContext);
+
   const classes = useStyles();
   useEffect(() => {
     subscribe();
-  }, []);
+    let counter = notificationsNo;
+    notifications && notifications.map(notification => {
+      if(!notification.read) {
+        counter++;
+        setNotificationsNo(counter);
+      }
+    })
+  }, [notifications]);
+  console.log(notifications)
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -142,7 +168,7 @@ export default function Dashboard({children}) {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   const handleLogout = () => logout();
-  const notifications = () => {
+  const checkNotifications = () => {
     const path = window.location.pathname;
 
     if (path.includes('admin/')) history.push("/admin/notifications");
@@ -167,13 +193,13 @@ export default function Dashboard({children}) {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             <h3>Dashboard</h3>
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="primary">
-              <NotificationsIcon onClick={notifications}/>
+          <IconButton color="inherit" onClick={checkNotifications}>
+            <Badge badgeContent={notificationsNo} color="primary">
+              <NotificationsIcon/>
             </Badge>
           </IconButton>
-          <IconButton color="inherit">
-              <ExitToAppIcon onClick={handleLogout} />
+          <IconButton color="inherit" onClick={handleLogout}>
+              <ExitToAppIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -200,13 +226,13 @@ export default function Dashboard({children}) {
           <Grid container spacing={3}>
             {/* Chart */}
             <Grid item xs={12} md={8} lg={12}>
-              {
-              children 
-              ?
-              children
-              :
-              <Card>Landing Page</Card>
-              }
+                {
+                children 
+                ?
+                children
+                :
+                <Card>Landing Page</Card>
+                }
             </Grid>
           </Grid>
           <Box pt={4}>
@@ -217,3 +243,5 @@ export default function Dashboard({children}) {
     </div>
   );
 }
+
+export default Layout;

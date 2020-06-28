@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react';
+import NotificationsContext from '../notificationsContext';
 import { subscribe } from '../../../services/authServices';
 import {Link, NavLink} from 'react-router-dom'
 import UserNavBar from "../../user/userNavBar";
@@ -20,6 +21,11 @@ var styles={
 const NavBar = () => {
     const [categories, setCategories] = useState([])
     const [sideBarColor, setSideBarColor]= useState({  'backgroundColor': 'rgba(76, 175, 80, 0)'})
+    const [notificationsNo, setNotificationsNo] = useState(0);
+    const {
+        notifications, setNotifcations
+    } = useContext(NotificationsContext);
+
     useEffect(() => {
         axios.get(`${domain}/customers/categories`).
             then((res) => {
@@ -29,12 +35,18 @@ const NavBar = () => {
             })
 
         subscribe();
-
-    }, [])
+        let counter = notificationsNo;
+        notifications && notifications.map(notification => {
+        if(!notification.read) {
+            counter++;
+            setNotificationsNo(counter);
+        }
+        })
+    }, [notifications])
 
     return (
         <>
-            <UserNavBar user={Auth} />
+            <UserNavBar user={Auth} notificationsNo={notificationsNo}/>
             <SideNav            
                 style={sideBarColor}
                 onToggle={(expanded)=>
