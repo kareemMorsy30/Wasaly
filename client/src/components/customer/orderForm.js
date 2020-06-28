@@ -343,7 +343,7 @@ console.log('====================props.user.userData.address[0].areap===========
 
 
             
-               { props.user.userData.address[0].area && !props.user.userData.address[0].location && !show &&
+               { (props.user.userData.address[0].area && !props.user.userData.address[0].location)||(props.user.userData.address[0].area && props.user.userData.address[0].location) && show &&
 
 
 <>
