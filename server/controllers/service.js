@@ -196,8 +196,15 @@ const notifications = (req, res) => {
     const { user } = req;
 
     User.findById(user._id)
-    .sort({ 'notifications.createdAt': -1 })
-    .then(user => res.status(200).json(user.notifications))
+    .then(user => {
+        let notifications = user.notifications;
+        notifications.reverse();
+
+        if(notifications.length > 10) {
+            notifications.length = 10;
+        }
+        res.status(200).json(notifications);
+    })
     .catch(error => res.status(500).end());
 }
 
