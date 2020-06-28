@@ -1,25 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {Link} from 'react-router-dom';
 import Moment from 'react-moment';
 import Info from "../alerts/info";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
-import { getNotifications } from '../../endpoints/notifications';
 import '../../styles/order.scss';
+import NotificationsContext from './notificationsContext';
 
 const Notifications = () => {
-    const [notifications,setNotifications] = useState([]);
-    
-    useEffect(()=>{
-        getNotifications().then(data => setNotifications(data))
-    },[])
+    const {
+        notifications, setNotifcations
+    } = useContext(NotificationsContext);
 
     return(
-        notifications.length > 0 
-        ?
         <div className="container">
             <h2 style={{width:'80%', padding:' 10px', margin: '10px auto'}}>All your notifications</h2>
-            {notifications.map(notification=>
+            {
+            notifications.length > 0 
+            ?
+            notifications.map(notification=>
             <a href={notification.link}>
             <div className="row order">
                 <div className="col-8">
@@ -35,10 +34,11 @@ const Notifications = () => {
                 </div>
             </div>
             </a>
-            )}
+            )
+            :
+            <Info msg="You do not have any notifications yet!"/>
+            }
         </div>
-        :
-        <Info msg="You do not have any notifications yet!"/>
     )
 
 }
