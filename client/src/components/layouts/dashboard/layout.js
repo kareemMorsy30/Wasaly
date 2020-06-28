@@ -142,17 +142,30 @@ function Dashboard({children}) {
     notifications, setNotifications
   } = useContext(NotificationsContext);
 
+  let counter = notificationsNo;
+
   const classes = useStyles();
   useEffect(() => {
-    subscribe();
-    let counter = notificationsNo;
-    notifications.length > 0 && notifications.map(notification => {
-      if(!notification.read) {
-        counter++;
-        setNotificationsNo(counter);
-      }
-    })
-  }, [notifications]);
+    getNotifications().then(notifications => {
+      setNotifications(notifications);
+      const data = notifications;
+      data && data.map(item => {
+          if(!item.read) {
+              counter++;
+          }
+      })
+      setNotificationsNo(counter);
+    });
+  }, []);
+
+  useEffect(() => {
+    subscribe({
+        notifications, setNotifications
+    }, {
+        counter, setNotificationsNo
+    });
+  }, [notifications])
+
   console.log(notifications)
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {

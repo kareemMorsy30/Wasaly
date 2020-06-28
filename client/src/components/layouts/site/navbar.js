@@ -12,6 +12,7 @@ import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/rea
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import {isUser, getEmail} from '../../../services/authServices'
 import Auth from '../../product owner/Cart/UserCart';
+import { getNotifications } from '../../../endpoints/notifications';
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 var styles={
@@ -26,22 +27,27 @@ const NavBar = () => {
         notifications, setNotifications
     } = useContext(NotificationsContext);
 
-    useEffect(() => {
-        axios.get(`${domain}/customers/categories`).
-            then((res) => {
-                setCategories(res.data)
-            }).catch(e => {
-                console.log(e)
-            })
+    let counter = notificationsNo;
 
-        subscribe();
-        let counter = notificationsNo;
-        notifications && notifications.map(notification => {
-        if(!notification.read) {
-            counter++;
+    useEffect(() => {
+        getNotifications().then(notifications => {
+            setNotifications(notifications);
+            const data = notifications;
+            data && data.map(item => {
+                if(!item.read) {
+                    counter++;
+                }
+            })
             setNotificationsNo(counter);
-        }
-        })
+        });
+    }, []);
+
+    useEffect(() => {
+        subscribe({
+            notifications, setNotifications
+        }, {
+            counter, setNotificationsNo
+        });
     }, [notifications])
 
     return (
