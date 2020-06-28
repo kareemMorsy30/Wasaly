@@ -64,9 +64,12 @@ userController.regesiter = async (req, res, next) => {
             const serviceOwner = await newServiceOwner.save();
             console.log("\n Service owner ::    :      :    ".serviceOwner);
             console.log("i'm in role");
-            sendEmail(newUser)
+            console.log(newUser)
+            sendEmail(req,res,newUser)
         }
         catch (e) {
+            console.log(e)
+            
             if (e.name === "MongoError" && e.code === 11000) {
                 const error = new Error(`Email address ${newUser.email} is already taken`);
                 error.status = 400
@@ -90,7 +93,7 @@ userController.regesiter = async (req, res, next) => {
             const productOwner = await newProductOwner.save();
             console.log("\n pOwner ::    :      :    ".productowner);
             console.log("i'm in role");
-            sendEmail(newUser)
+            sendEmail(req,res,newUser)
         } catch (e) {
             if (e.name === "MongoError" && e.code === 11000) {
                 const error = new Error(`Email address ${newUser.email} is already taken`);
@@ -105,6 +108,8 @@ userController.regesiter = async (req, res, next) => {
 };
 
 const sendEmail = (req, res, user) => {
+    console.log('send emaiiil')
+    console.log(user)
     try {
         var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
 
@@ -440,7 +445,16 @@ userController.saveProductOwnerReport = (req, res, next) => {
             $push: {
                 reports: { 'message': report, user: customer }
             }
-        }).catch(err => console.log(err));
+        }).populate('user')
+        .then(owner => {
+            const info = { 
+                title: 'Product owner reported',
+                message: `Customer ${req.user.name} has reported product owner ${owner.user.name}`,
+                link: 'http://localhost:3000/admin/product-owners'
+            }
+            User.findOne({role: 'admin'}).then(admin => pushNotification(admin.email, info));
+        })
+        .catch(err => console.log(err));
         res.json("Reported Successfully");
     }
     catch (err) {
@@ -504,10 +518,10 @@ userController.test = async (req, res) => {
     await new Order(
         {
             products: [{
-                product: "5ef4bd41f7f36c192851980c",
+                product: "5ee39ad707d185258b6b4696",
                 amount: 3
             },{
-                product: "5ef4bd41f7f36c192851980c",
+                product: "5ee39ad707d185258b6b4696",
                 amount: 3
             }],
             status: "Canceled",

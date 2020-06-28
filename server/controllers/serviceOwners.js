@@ -1,6 +1,7 @@
 const { pushNotification } = require('./controller');
 const { Order, ServiceOwner, User } = require('./../models/allModels');
 const { getDistance, asyncFilter } = require('./controller');
+const productOwner = require('../models/productOwner');
 
 // Get all service owner orders
 const allIncomingOrders = (req, res) => {
@@ -265,6 +266,22 @@ const deliverNewProduct = (req, res) => {
             res.status(200).json(order);
         }).catch(error => console.log(error));
     })
+}
+
+const getPendingOrdersOfConnectedProductOwner=(req,res)=>{
+    const order = req.body;
+    const serviceOwnerId =req.user._id;
+    try{
+        const connectedProductOwners= productOwner.find()
+        Order.find({ 'products.product': { $in: array } }, function (err, result) {
+            result = result.map(function (document) {
+              return document.value;
+            });
+          });
+
+    }catch(e){
+        
+    }
 }
 
 module.exports = {

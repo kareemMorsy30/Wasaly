@@ -311,10 +311,10 @@ const Authentication = (props) => {
                 }).then( (response) => {
 
                     console.log('====================================');
-                    console.log(response.data.productOwner.user);
+                    console.log(response.data.user);
                     console.log('====================================');
-                    console.log(response.data.productOwner.user.toString());
-                    let userId = response.data.productOwner.user.toString();
+                    console.log(response.data.user.toString());
+                    let userId = response.data.user._id.toString();
                     if (avatarInput) {
                         const formData = new FormData();
                         formData.append('avatar', avatarInput);
@@ -399,8 +399,8 @@ const Authentication = (props) => {
                     console.log('====================================');
                     console.log(response);
                     console.log('====================================');
-                    console.log(response.data.serviceOwner.user.toString());
-                    let userId = response.data.serviceOwner.user.toString()
+                    console.log(response.data.user.toString());
+                    let userId = response.data.user._id.toString()
                     if (avatarInput) {
                         const formData = new FormData();
                         formData.append('avatar', avatarInput);
