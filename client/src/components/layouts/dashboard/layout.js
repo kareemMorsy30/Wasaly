@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useContext} from 'react';
 import { NotificationsProvider } from '../notificationsContext';
 import NotificationsContext from '../notificationsContext';
-import { getNotifications } from '../../../endpoints/notifications';
+import { getNotifications, readNotification } from '../../../endpoints/notifications';
 import { logout } from '../../../endpoints/logout';
 import { subscribe } from '../../../services/authServices';
 import { useHistory } from "react-router-dom";
@@ -139,14 +139,14 @@ function Dashboard({children}) {
   const [notificationsNo, setNotificationsNo] = useState(0);
     
   const {
-    notifications, setNotifcations
+    notifications, setNotifications
   } = useContext(NotificationsContext);
 
   const classes = useStyles();
   useEffect(() => {
     subscribe();
     let counter = notificationsNo;
-    notifications && notifications.map(notification => {
+    notifications.length > 0 && notifications.map(notification => {
       if(!notification.read) {
         counter++;
         setNotificationsNo(counter);
@@ -170,6 +170,13 @@ function Dashboard({children}) {
   const handleLogout = () => logout();
   const checkNotifications = () => {
     const path = window.location.pathname;
+
+    readNotification().then(data => {
+      setNotificationsNo(0);
+      setTimeout(() => {
+        setNotifications(data)
+      }, 4000);
+    });
 
     if (path.includes('admin/')) history.push("/admin/notifications");
     else if (path.includes('service-owner/')) history.push("/service-owner/notifications");

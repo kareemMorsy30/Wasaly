@@ -208,6 +208,27 @@ const notifications = (req, res) => {
     .catch(error => res.status(500).end());
 }
 
+// Read notifications
+const readNotifications = (req, res) => {
+    const { user } = req;
+
+    User.findByIdAndUpdate(user._id, {
+        '$set': {
+            'notifications.$[].read': true
+        }
+    }, {
+        new: true
+    }).then(user => {
+        let notifications = user.notifications;
+        notifications.reverse();
+
+        if(notifications.length > 10) {
+            notifications.length = 10;
+        }
+        res.status(200).json(notifications);
+    })
+    .catch(error => console.log(error));
+}
 
 module.exports = {
     filteredServiceOwners,
@@ -218,5 +239,6 @@ module.exports = {
     saveReview,
     saveRate,
     getUserRateForOrder,
-    notifications
+    notifications,
+    readNotifications
 }

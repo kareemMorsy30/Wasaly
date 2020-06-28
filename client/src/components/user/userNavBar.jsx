@@ -9,6 +9,7 @@ import {
     Button,
 
 } from "reactstrap";
+import { readNotification } from '../../endpoints/notifications';
 import { Form, FormControl } from 'react-bootstrap';
 import { useHistory } from "react-router-dom";
 import { Link } from 'react-router-dom';
@@ -51,6 +52,12 @@ const NavBar = (props) => {
 
     const toggle = () => setIsOpen(!isOpen);
     const notifications = () => {
+        readNotification().then(data => {
+            props.setNotificationsNo(0);
+            setTimeout(() => {
+              props.setNotifications(data)
+            }, 4000);
+        });
         history.push("/notifications");
     }
 

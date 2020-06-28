@@ -9,7 +9,7 @@ import NotificationsContext from './notificationsContext';
 
 const Notifications = () => {
     const {
-        notifications, setNotifcations
+        notifications,setNotifications
     } = useContext(NotificationsContext);
 
     return(

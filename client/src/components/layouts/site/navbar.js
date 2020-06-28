@@ -23,7 +23,7 @@ const NavBar = () => {
     const [sideBarColor, setSideBarColor]= useState({  'backgroundColor': 'rgba(76, 175, 80, 0)'})
     const [notificationsNo, setNotificationsNo] = useState(0);
     const {
-        notifications, setNotifcations
+        notifications, setNotifications
     } = useContext(NotificationsContext);
 
     useEffect(() => {
@@ -46,7 +46,12 @@ const NavBar = () => {
 
     return (
         <>
-            <UserNavBar user={Auth} notificationsNo={notificationsNo}/>
+            <UserNavBar 
+            user={Auth} 
+            notificationsNo={notificationsNo} 
+            setNotifications={setNotifications}
+            setNotificationsNo={setNotificationsNo}
+            />
             <SideNav            
                 style={sideBarColor}
                 onToggle={(expanded)=>
