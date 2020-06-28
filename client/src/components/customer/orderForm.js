@@ -14,8 +14,34 @@ import {
 } from '../product owner/Cart/actions/user_actions';
 import Axios from 'axios';
 import { authHeader } from '../config/config';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import Icon from '@material-ui/core/Icon';
+import SaveIcon from '@material-ui/icons/Save';
+
+const useStyles = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+}));
+
+
+ 
+
+
+
 
 const OrderForm = ({ props, setShowSuccess, ShowTotals }) => {
+    //    <Button
+    //     variant="contained"
+    //     color="primary"
+    //     className={classes.button}
+    //     endIcon={<Icon>send</Icon>}
+    //   >
+    //     Send
+    //   </Button>  
+    const classes = useStyles();
+
     const [Total, setTotal] = useState(0)
     const [ShowTotal, setShowTotal] = useState(false)
     const [item, setItem] = useState('')
@@ -305,7 +331,11 @@ const OrderForm = ({ props, setShowSuccess, ShowTotals }) => {
 
 
             }
-            {props.user.userData.address[0].area&&  props.user.userData.address[0].location && <button  onClick={() =>{ setShow((prevstate) => !prevstate)}}>{show ? "Choose my address" : "Choose Another Address"}</button>}
+            {props.user.userData.address[0].area&&  props.user.userData.address[0].location &&
+            
+            
+             <Button variant="contained"  color="primary"className={classes.button}    endIcon={<Icon></Icon>}  onClick={() =>{ setShow((prevstate) => !prevstate)}}>{show ? "Choose my address" : "Choose Another Address"}</Button>
+             }
 
 
             
