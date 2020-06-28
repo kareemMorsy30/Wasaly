@@ -92,6 +92,11 @@ function App() {
           ]}
           component={Landing}
           />
+           <Route
+            exact
+            path="/serviceownerprofile"
+            component={ServiceOwnerProfile}
+          />
           <Route
             exact
             path="/service-owner/orders"
@@ -138,11 +143,7 @@ function App() {
       </Route>
 
         <Switch>
-          <Route
-            exact
-            path="/serviceownerprofile"
-            component={ServiceOwnerProfile}
-          />
+         
           
           <Route
             exact
