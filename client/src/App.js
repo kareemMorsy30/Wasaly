@@ -58,12 +58,13 @@ import Auth from "./components/product owner/Cart/UserCart";
 import table from "./components/table";
 import Layout from "./components/layouts/dashboard/layout";
 import SiteLayout from "./components/layouts/site/layout";
+import Welcome from "./components/user/welcome"
 import Notifications from "./components/layouts/notifications";
-import {Welcome} from "./components/user/welcome"
 
 function App() {
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+
       {/* <NavBar/> */}
       <Route
         exact
@@ -96,6 +97,11 @@ function App() {
           ]}
           component={Landing}
           />
+           <Route
+            exact
+            path="/serviceownerprofile"
+            component={ServiceOwnerProfile}
+          />
           <Route
             exact
             path="/service-owner/orders"
@@ -108,7 +114,6 @@ function App() {
           />
           <Route exact path="/service-owner/reviews" component={Reviews} />
           {/* Product owner routes */}
-          <Route exact path="/welcome" component={Welcome} />
           <Route
             exact
             path="/product-owner/connections"
@@ -150,11 +155,7 @@ function App() {
       </Route>
 
         <Switch>
-          <Route
-            exact
-            path="/serviceownerprofile"
-            component={ServiceOwnerProfile}
-          />
+         
           
           <Route
             exact
@@ -185,11 +186,14 @@ function App() {
                 "/cart",
                 "/login",
                 "/table",
+                "/welcome",
                 "/notifications"
               ]}
             >
               <SiteLayout>
+
               <div style={{ flex: "1 0 auto", marginTop: "12vh" }}>
+              <Route exact path="/welcome" component={Welcome} />
 
               <Route exact path="/notifications">
                 <Notifications />

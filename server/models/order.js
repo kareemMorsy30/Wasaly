@@ -58,27 +58,35 @@ orderSchema.post('save', function (doc, next) {
     let serviceOwners
     let services=[]
 
-    this.products.forEach(async product => {
-        productInf = await Product.findById(product.product).populate({ path: 'owner', populate: { path: 'user' } }).select('owner.user')
-        serviceOwners = await ServiceOwner.find({ 'productOwner.user': productInf.owner.user, 'productOwner.status':'Connected'}).populate('user')
-
-        let info = {
-            title: 'new order',
-            message: `New order from ${productInf.owner.user.name}`,
-            link: 'http://localhost:3000/service-owner/product-orders',
-            body: this
-        }
-      
-        serviceOwners.forEach((serviceOwner) => {                        
-            if (serviceOwner.user.status === "online" && !services.includes(serviceOwner.user.name) ){
-                services.push(serviceOwner.user.name)
-                User.findOneAndUpdate({ email: serviceOwner.user.email }, { $push: { notifications: info } })
-                    .then(user => {
-                        io.sockets.in(`${serviceOwner.user.email}`).emit('pushNotification', info);
-                    })
+    try{
+        this.products.forEach(async product => {
+            console.log(product)
+            productInf = await Product.findById(product.product).populate({ path: 'owner', populate: { path: 'user' } }).select('owner.user')
+            console.log(productInf)
+            serviceOwners = await ServiceOwner.find({ 'productOwner.user': productInf.owner.user, 'productOwner.status':'Connected'}).populate('user')
+    
+            let info = {
+                title: 'new order',
+                message: `New order from ${productInf.owner.user.name}`,
+                link: 'http://localhost:3000/service-owner/product-orders',
+                body: this
             }
+          
+            serviceOwners.forEach((serviceOwner) => {                        
+                if (serviceOwner.user.status === "online" && !services.includes(serviceOwner.user.name) ){
+                    services.push(serviceOwner.user.name)
+                    User.findOneAndUpdate({ email: serviceOwner.user.email }, { $push: { notifications: info } })
+                        .then(user => {
+                            io.sockets.in(`${serviceOwner.user.email}`).emit('pushNotification', info);
+                        })
+                }
+            })
         })
-    })
+
+
+    }catch(e){
+        console.log(e)
+    }
     services=[]
     next()
 });

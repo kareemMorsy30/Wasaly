@@ -119,9 +119,9 @@ const NavBar = (props) => {
                         <NavItem>
                             <Link className="nav-link" to="/users">users</Link>
                         </NavItem>
-                        <NavItem>
+                        {/* <NavItem>
                             <Link className="nav-link" to="/serviceownerprofile">My profile</Link>
-                        </NavItem>
+                        </NavItem> */}
                         {console.log(isLoggedIn())}
 
 
