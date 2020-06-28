@@ -1,7 +1,9 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { logout } from '../../../endpoints/logout';
 import { subscribe } from '../../../services/authServices';
+import { useHistory } from "react-router-dom";
 import clsx from 'clsx';
+import { Button, Popover, PopoverHeader, PopoverBody } from 'reactstrap';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -133,9 +135,20 @@ export default function Dashboard({children}) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const history = useHistory();
+
+  const toggle = () => setPopoverOpen(!popoverOpen);
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   const handleLogout = () => logout();
+  const notifications = () => {
+    const path = window.location.pathname;
+
+    if (path.includes('admin/')) history.push("/admin/notifications");
+    else if (path.includes('service-owner/')) history.push("/service-owner/notifications");
+    else if (path.includes('product-owner/')) history.push("/product-owner/notifications");
+  }
 
   return (
     <div className={classes.root}>
@@ -156,7 +169,7 @@ export default function Dashboard({children}) {
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="primary">
-              <NotificationsIcon />
+              <NotificationsIcon onClick={notifications}/>
             </Badge>
           </IconButton>
           <IconButton color="inherit">

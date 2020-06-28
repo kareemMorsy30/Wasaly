@@ -10,7 +10,7 @@ import {
 
 } from "reactstrap";
 import { Form, FormControl } from 'react-bootstrap';
-
+import { useHistory } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import Login from "../login";
@@ -19,7 +19,9 @@ import Search from "../search"
 import { isLoggedIn, isProductOwner } from '../../services/authServices'
 import { Badge, Menu } from "antd";
 import { ShoppingCartOutlined } from '@ant-design/icons';
-
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import IconButton from '@material-ui/core/IconButton';
+import MatBadge from '@material-ui/core/Badge';
 
 // import ShoppingCart from "@bit/mui-org.material-ui-icons.shopping-cart";
 
@@ -45,8 +47,12 @@ const NavBar = (props) => {
         // console.log('The link was clicked.'); 
     }
     const [isOpen, setIsOpen] = useState(false);
+    const history = useHistory();
 
     const toggle = () => setIsOpen(!isOpen);
+    const notifications = () => {
+        history.push("/notifications");
+    }
 
 
     // const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -79,6 +85,7 @@ const NavBar = (props) => {
     //         }
     //     })();
     // }, []);
+    console.log(props);
 
 
     return (
@@ -106,7 +113,7 @@ const NavBar = (props) => {
                             <Link className="nav-link" to="/users">users</Link>
                         </NavItem>
                         <NavItem>
-                            <Link className="nav-link" to="/serviceownerprofile/5ef284d743ed7e1916f4aa22">My profile</Link>
+                            <Link className="nav-link" to="/serviceownerprofile">My profile</Link>
                         </NavItem>
                         {console.log(isLoggedIn())}
 
@@ -136,6 +143,11 @@ const NavBar = (props) => {
 
                 <Search />
                 {!isLoggedIn() &&( <div style={{fontSize:'14px', fontWeight:500, marginLeft:'15px'}}>  <Link to="/login">Login</Link> <Link to="/register">Register</Link></div> )}
+                <IconButton color="inherit">
+                    <MatBadge badgeContent={4} color="primary">
+                    <NotificationsIcon onClick={notifications}/>
+                    </MatBadge>
+                </IconButton>
             </div>
         </Navbar>
     );
