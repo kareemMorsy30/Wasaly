@@ -109,6 +109,7 @@ console.log('====================================');
                         <h2>Total amount: ${Total} </h2>
                     </div>
 <OrderForm    props={props} ShowTotals={setShowTotal}  setShowSuccess={setShowSuccess} />
+{/* <h1>sdsdsdsdsdsd</h1> */}
 </>
 
                     :

@@ -72,6 +72,9 @@ userController.regesiter = async (req, res, next) => {
             console.log(e);
             console.log('====================================');
             if (e.name === "MongoError" && e.code === 11000) {
+                console.log('====================================');
+                console.log(e);
+                console.log('====================================');
                 const error = new Error(`Email address ${newUser.email} is already taken`);
                 error.status = 400
                 next(error);

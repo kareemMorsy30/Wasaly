@@ -32,6 +32,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 const OrderForm = ({ props, setShowSuccess, ShowTotals }) => {
+    console.log("ORDER FORM");
+    
     //    <Button
     //     variant="contained"
     //     color="primary"
@@ -292,7 +294,9 @@ const OrderForm = ({ props, setShowSuccess, ShowTotals }) => {
 
 
 
-
+console.log('==============props.user.userData.address[0].area======================');
+console.log(props.user.userData.address[0].area);
+console.log('====================props.user.userData.address[0].areap================');
 
 
 
@@ -324,14 +328,14 @@ const OrderForm = ({ props, setShowSuccess, ShowTotals }) => {
 
                             <input type="text" placeholder="phone" value={phone} onChange={event => setPhone(event.target.value)} style={{ border: alert.type === 'error' && !phone && '1px red solid' }} />
                             <textarea placeholder="More info" value={description} onChange={event => setDescription(event.target.value)} style={{ border: alert.type === 'error' && !description && '1px red solid' }} />
-                            <button type="submit" onSubmit={handleSubmit} className="submit-btn">Submit</button>
+                            <button type="submit" onSubmit={handleSubmit} className="submit-btn">PurchaseOrder</button>
                         </div>
                     </form>
                 </>
 
 
             }
-            {props.user.userData.address[0].area&&  props.user.userData.address[0].location &&
+            {props.user.userData.address[0].area&&props.user.userData.address[0].location&&
             
             
              <Button variant="contained"  color="primary"className={classes.button}    endIcon={<Icon></Icon>}  onClick={() =>{ setShow((prevstate) => !prevstate)}}>{show ? "Choose my address" : "Choose Another Address"}</Button>
@@ -339,7 +343,7 @@ const OrderForm = ({ props, setShowSuccess, ShowTotals }) => {
 
 
             
-               { props.user.userData.address[0].area && props.user.userData.address[0].location && show &&
+               { props.user.userData.address[0].area && !props.user.userData.address[0].location && !show &&
 
 
 <>
@@ -353,13 +357,12 @@ const OrderForm = ({ props, setShowSuccess, ShowTotals }) => {
 
                         <input type="text" placeholder="phone" value={phone} onChange={event => setPhone(event.target.value)} style={{ border: alert.type === 'error' && !phone && '1px red solid' }} />
                         <textarea placeholder="More info" value={description} onChange={event => setDescription(event.target.value)} style={{ border: alert.type === 'error' && !description && '1px red solid' }} />
-                        <button type="submit" onSubmit={handleSubmit} className="submit-btn">SubmitChooseAnotherAddrress</button>
+                        <button type="submit" onSubmit={handleSubmit} className="submit-btn">PurchaseOrder</button>
                     </div>
                 </form>
         </>
 
             }
-
         </div>
         
     )
