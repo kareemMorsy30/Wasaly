@@ -55,6 +55,7 @@ import Auth from "./components/product owner/Cart/UserCart";
 import table from "./components/table";
 import Layout from "./components/layouts/dashboard/layout";
 import SiteLayout from "./components/layouts/site/layout";
+import Notifications from "./components/layouts/notifications";
 
 function App() {
   return (
@@ -77,7 +78,10 @@ function App() {
           "/product-owner/products/create",
           "/product-owner/products/:id/edit",
           "/product-owner/products",
-          "/product-owner/orders"
+          "/product-owner/orders",
+          "/service-owner/notifications",
+          "/product-owner/notifications",
+          "/admin/notifications"
         ]}
       >
         <Layout>
@@ -129,6 +133,14 @@ function App() {
           <Route exact path="/admin/product-owners/">
             <AdminProductOwners />
           </Route>
+
+          <Route exact path={[
+            "/service-owner/notifications",
+            "/product-owner/notifications",
+            "/admin/notifications"
+          ]}>
+            <Notifications />
+          </Route>
         </Layout>
       </Route>
 
@@ -167,11 +179,17 @@ function App() {
                 "/:id/ownerinfo",
                 "/cart",
                 "/login",
-                "/table"
+                "/table",
+                "/notifications"
               ]}
             >
               <SiteLayout>
               <div style={{ flex: "1 0 auto", marginTop: "12vh" }}>
+
+              <Route exact path="/notifications">
+                <Notifications />
+              </Route>
+
               <Route exact path="/register" component={Register} />
 
               <Route exact path="/" component={LandingPage} />
