@@ -340,16 +340,22 @@ userController.addToCart = (req, res) => {
 
 
         if (duplicate) {
+            Product.findByIdAndUpdate({'_id':req.query.productId}, { '$inc': {'quantity':-1}}).exec(),(productss=>console.log(productss)
+            )
             User.findOneAndUpdate(
-                { _id: userID, "cart.id": req.query.productId },
+                { _id: userID, "cart.id": req.query.productId ,},
                 { $inc: { "cart.$.amount": 1 } },
                 { new: true },
                 (err, userInfo) => {
+                    
+
                     if (err) return res.json({ success: false, err });
                     res.status(200).json(userInfo.cart)
                 }
             )
         } else {
+            Product.findByIdAndUpdate({'_id':req.query.productId}, { '$inc': {'quantity':-1}}).exec(),(productss=>console.log(productss)
+            )
 
             Product.findOne({_id:req.query.productId},(err,productCart)=>{
                 console.log('=================Product Cart===================');
