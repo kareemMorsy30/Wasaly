@@ -8,12 +8,13 @@ const corsOptions = {
   console.log(CORS_WHITELIST);
   console.log(origin);
   console.log(CORS_WHITELIST[0] == origin);
-    
-  if(CORS_WHITELIST[0] == origin){
-        callback(null, true)
-    }else{
-        callback(new Error('Not allowed by CORS'))
-    } 
+            callback(null, true)
+
+  // if(CORS_WHITELIST[0] == origin){
+  //       callback(null, true)
+  //   }else{
+  //       callback(new Error('Not allowed by CORS'))
+  //   } 
       
 }};
 

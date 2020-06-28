@@ -18,7 +18,7 @@ const allIncomingOrders = (req, res) => {
 
 const changeStatus = async(req,res)=>{
     try{
-        const serviceUser = await ServiceOwner.findOne({_id : req.params.id})
+        const serviceUser = await ServiceOwner.findOne({user : req.user._id})
         const user = await User.updateOne({_id:serviceUser.user._id},{$set:{"status":"online"}},{new:true})
         console.log(user);
         res.json({
@@ -32,6 +32,7 @@ const changeStatus = async(req,res)=>{
 
 const getServiceOwner = async(req,res)=>{
     try{
+        console.log(req.user._id);
         let user =await ServiceOwner.findOne({user: req.user._id})
         .populate('user');
         res.send(user)
@@ -52,9 +53,9 @@ const updateServiceOwner = async(req,res)=>{
     // let {image_path,...owner}=req.body;
     try{
     let service = 
-    await ServiceOwner.findOneAndUpdate({_id: req.params.id},{$set:req.body},{new: true}).populate('user')
+    await ServiceOwner.findOneAndUpdate({user: req.user._id},{$set:req.body},{new: true}).populate('user')
     await User.findOneAndUpdate({_id:service.user._id},{'avatar':image_path})
-    let newServiceObj = await (await ServiceOwner.findOne({_id:req.params.id})).populate('user')
+    let newServiceObj = await (await ServiceOwner.findOne({user:req.user._id})).populate('user')
     res.status(200).json({"data": newServiceObj});
 }catch(err) {
         console.log(err);
