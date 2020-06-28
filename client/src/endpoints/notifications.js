@@ -13,3 +13,15 @@ export const getNotifications = () => {
     })
     .catch(err => err);
 }
+
+export const readNotification = () => {
+    const url = `${domain}/services/notifications`;
+    return axios.put(url, null,
+    {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data) return res.data;
+    })
+    .catch(err => err);
+}
