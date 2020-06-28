@@ -9,7 +9,7 @@ const multer  = require('multer');
 
 const storage = multer.diskStorage({
 destination: (req, file, cb) => {
-    cb(null, 'public/uploads/');
+    cb(null, 'public/uploads/users/images');
 },
 filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname);
@@ -51,12 +51,12 @@ router.patch('/disconnect', productOwnerController.disconnect);
 router.get('', productOwnerController.getAllproductsOwner);
 
 //get specific product owner by id
-router.get('/:id', productOwnerController.getProductOwner);
+router.get('/one', productOwnerController.getProductOwner);
 
 //changing status of product owners
-router.get('/:id/status',productOwnerController.changeStatus);
+router.get('/one/status',productOwnerController.changeStatus);
 
 //update data of product owner
-router.patch('/:id',upload.single('avatar'),productOwnerController.updateProducteOwner);
+router.patch('/one/modify',upload.single('avatar'),productOwnerController.updateProducteOwner);
 
 module.exports = router;

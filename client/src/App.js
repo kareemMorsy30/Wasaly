@@ -17,6 +17,7 @@ import AdminLogin from "./components/admin/adminLogin";
 import ServiceOwnerProfile from "./components/service owner/serviceOwnerProfile";
 import Checkout from "./components/checkout";
 import Payment from "./components/payment";
+import ProductOwnerProfile from "./components/product owner/productOwnerProfile";
 import UserNavBar from "./components/user/userNavBar";
 import UserAndCustomerNavBar from "./components/layouts/site/navbar";
 /*** Service owners */
@@ -97,11 +98,7 @@ function App() {
           ]}
           component={Landing}
           />
-           <Route
-            exact
-            path="/serviceownerprofile"
-            component={ServiceOwnerProfile}
-          />
+           
           <Route
             exact
             path="/service-owner/orders"
@@ -156,7 +153,9 @@ function App() {
 
         <Switch>
          
-          
+        <Route exact path="/serviceownerprofile" component={ServiceOwnerProfile}/>
+        <Route exact path="/productownerprofile" component={ProductOwnerProfile} />
+
           <Route
             exact
             path="/payment"
@@ -210,12 +209,13 @@ function App() {
                 exact
                 path="/categoryproducts/:id"
                 component={ListCatProducts}
-              />
+            />
               <div className="container">
 
                 {/* <Route exact path="/test" >
               < Category />
             </Route> */}
+           
                 <Route exact path="/sO" component={ServiceOrderForm} />
                 {/* <Route exact path="/" component={Delivery} /> */}
 
