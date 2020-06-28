@@ -440,7 +440,16 @@ userController.saveProductOwnerReport = (req, res, next) => {
             $push: {
                 reports: { 'message': report, user: customer }
             }
-        }).catch(err => console.log(err));
+        }).populate('user')
+        .then(owner => {
+            const info = { 
+                title: 'Product owner reported',
+                message: `Customer ${req.user.name} has reported product owner ${owner.user.name}`,
+                link: 'http://localhost:3000/admin/product-owners'
+            }
+            User.findOne({role: 'admin'}).then(admin => pushNotification(admin.email, info));
+        })
+        .catch(err => console.log(err));
         res.json("Reported Successfully");
     }
     catch (err) {

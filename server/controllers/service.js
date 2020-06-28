@@ -79,7 +79,7 @@ const updateOrderStatus = (req, res) => {
         const info = { 
             title: 'Order status has been updated',
             message: `Your order has been ${order.status}`,
-            link: 'http://localhost:3000/orders',
+            link: `http://localhost:3000/orders/${order._id}`,
             body: order
         }
         pushNotification(order.customer.email, info);
@@ -191,8 +191,15 @@ const getUserRateForOrder = async (req, res, next) => {
 
 }
 
+// Get all notifications for current authenticated user
+const notifications = (req, res) => {
+    const { user } = req;
 
-
+    User.findById(user._id)
+    .sort({ 'notifications.createdAt': -1 })
+    .then(user => res.status(200).json(user.notifications))
+    .catch(error => res.status(500).end());
+}
 
 
 module.exports = {
@@ -203,5 +210,6 @@ module.exports = {
     updateOrderStatus,
     saveReview,
     saveRate,
-    getUserRateForOrder
+    getUserRateForOrder,
+    notifications
 }

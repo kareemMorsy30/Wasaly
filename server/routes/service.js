@@ -1,12 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { serviceController,serviceOwnerController, userController } = require('./../controllers/allControllers');
+const { serviceController,serviceOwnerController, userController, service } = require('./../controllers/allControllers');
 const { Auth } = require('../middlewares/Auth');
 
 // Get all transportation methods
 router.get('/transportations', serviceController.transportation);
 
 Auth(router);
+
+// Get all users notifications
+router.get('/notifications', service.notifications);
 
 // Request a service owner for delivery
 router.post('/available/owners', serviceController.filteredServiceOwners);
