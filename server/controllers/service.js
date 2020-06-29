@@ -245,7 +245,7 @@ const statistics = (req, res) => {
         }, { $sort : { '_id.month' : 1 } }]).then(data => res.json(data))
     }else if(user.role === 'productowner'){
         Order.aggregate([
-        { $match : { productOwner : ObjectId(user._id) } },
+        { $match : { 'productOwners.productOwner': ObjectId(user._id) } },
         { 
             $group : { 
                 _id : { month: { $month : "$createdAt" } }, 
