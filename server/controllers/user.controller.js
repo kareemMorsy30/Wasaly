@@ -214,6 +214,7 @@ userController.login = async (request, response, next) => {
                 userTemp.role = user.role
                 userTemp.email = user.email
                 userTemp.name = user.name
+                userTemp.id= user._id
 
                 response.send({ token, user: userTemp });
             } else {
@@ -313,6 +314,7 @@ userController.googleSignIn = async (req, res) => {
         userTemp.role = user.role
         userTemp.email = user.email
         userTemp.name = user.name
+        userTemp.id= user._id
         res.send({ token, user: userTemp });
 
     } catch (e) {
@@ -525,7 +527,7 @@ userController.test = async (req, res) => {
                 product: "5ee39ad707d185258b6b4696",
                 amount: 3
             }],
-            status: "Canceled",
+            status: "Pending",
             customer: "5eecaf2197167b16ae927edd",
             service: "5ee810c50365db49dececf99",
             to: {

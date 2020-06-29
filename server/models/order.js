@@ -82,10 +82,26 @@ orderSchema.pre('save', function (next) {
                 if (!productOwners.includes(productInf.owner.user)) {
                     productOwners.push(productInf.owner.user)
                     this.productOwners.push({ productOwner: productInf.owner.user, status: 'Pending' })
+
+                    let info = {
+                        title: 'New Order',
+                        message: `New order from customer`,
+                        link: 'http://localhost:3000/product-owner/orders',
+                        body: this
+                    }
+
+                    User.findOneAndUpdate({ _id: productInf.owner.user }, { $push: { notifications: info } })
+                        .then(user => {
+                            io.sockets.in(`${user.email}`).emit('pushNotification', info);
+
+                            next()
+                        }).catch((e) =>
+                            next(e)
+                        )
                 }
 
                 let info = {
-                    title: 'new order',
+                    title: 'New Order',
                     message: `New order from ${productInf.owner.user.name}`,
                     link: 'http://localhost:3000/service-owner/product-orders',
                     body: this
@@ -111,7 +127,7 @@ orderSchema.pre('save', function (next) {
             })
             services = []
             productOwners = []
-            
+
         } catch (e) {
             console.log(e)
         }

@@ -62,7 +62,7 @@ import SiteLayout from "./components/layouts/site/layout";
 import Welcome from "./components/user/welcome"
 import Notifications from "./components/layouts/notifications";
 import ConnectedProductOwnerOrders from "./components/service owner/productOwnerOrders"
-
+import ProductOwnerOrders from "./components/product owner/orders"
 
 
 function App() {
@@ -135,6 +135,9 @@ function App() {
 
           <ProductOwnerRoute exact path="/product-owner/products/create">
             <CreateProduct />
+          </ProductOwnerRoute>
+          <ProductOwnerRoute exact path="/product-owner/orders">
+            <ProductOwnerOrders />
           </ProductOwnerRoute>
 
           <ProductOwnerRoute exact path="/product-owner/products/:id/edit">
