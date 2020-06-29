@@ -50,7 +50,8 @@ const orderSchema = new mongoose.Schema({
     rate: {
         rating: { type: Number, default: 0 },
         reviews: [{ type: String }]
-    }
+    },
+    createdAt: { type: Date, default: Date.now() }
 })
 
 orderSchema.post('save', function (doc, next) {
