@@ -1,5 +1,6 @@
 import Push from 'push.js';
 import io from 'socket.io-client';
+import { notification } from 'antd';
 
 const isAdmin=()=>{
     const user= JSON.parse(localStorage.getItem('user'));
@@ -28,11 +29,12 @@ const isLoggedIn=()=>{
 
 const getEmail = () => isLoggedIn() && JSON.parse(localStorage.getItem("user")).email;
 
-export const subscribe = () => {
+export const subscribe = (notifications = null, notificationsNo = null) => {
     const socket = io(`${process.env.REACT_APP_BACKEND_DOMAIN}`);
     socket.emit("subscribe", { room: getEmail() });
 
     socket.on("pushNotification", function(data) {
+        let counter = notificationsNo.counter;
         console.log(data.body);
         Push.create(data.title, {
             body: data.message, //this should print Msg of owner
@@ -45,6 +47,22 @@ export const subscribe = () => {
                 this.close();
             }
         });
+
+        console.log(notifications.notifications);
+
+        if(notifications){
+            notifications.setNotifications([{
+                message: data.message,
+                link: data.link,
+                read: false,
+                createdAt: new Date()
+            }, ...notifications.notifications])
+        }
+
+        if(notificationsNo){
+            counter++;
+            notificationsNo.setNotificationsNo(counter);
+        }
     });
 }
 

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react';
+import NotificationsContext from '../notificationsContext';
 import { subscribe } from '../../../services/authServices';
 import {Link, NavLink} from 'react-router-dom'
 import UserNavBar from "../../user/userNavBar";
@@ -11,6 +12,7 @@ import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/rea
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import {isUser, getEmail} from '../../../services/authServices'
 import Auth from '../../product owner/Cart/UserCart';
+import { getNotifications } from '../../../endpoints/notifications';
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 var styles={
@@ -20,21 +22,42 @@ var styles={
 const NavBar = () => {
     const [categories, setCategories] = useState([])
     const [sideBarColor, setSideBarColor]= useState({  'backgroundColor': 'rgba(76, 175, 80, 0)'})
+    const [notificationsNo, setNotificationsNo] = useState(0);
+    const {
+        notifications, setNotifications
+    } = useContext(NotificationsContext);
+
+    let counter = notificationsNo;
+
     useEffect(() => {
-        axios.get(`${domain}/customers/categories`).
-            then((res) => {
-                setCategories(res.data)
-            }).catch(e => {
-                console.log(e)
+        getNotifications().then(notifications => {
+            setNotifications(notifications);
+            const data = notifications;
+            data && data.length > 0 && data.map(item => {
+                if(!item.read) {
+                    counter++;
+                }
             })
+            setNotificationsNo(counter);
+        });
+    }, []);
 
-        subscribe();
-
-    }, [])
+    useEffect(() => {
+        subscribe({
+            notifications, setNotifications
+        }, {
+            counter, setNotificationsNo
+        });
+    }, [notifications])
 
     return (
         <>
-            <UserNavBar user={Auth} />
+            <UserNavBar 
+            user={Auth} 
+            notificationsNo={notificationsNo} 
+            setNotifications={setNotifications}
+            setNotificationsNo={setNotificationsNo}
+            />
             <SideNav            
                 style={sideBarColor}
                 onToggle={(expanded)=>

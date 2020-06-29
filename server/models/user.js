@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
         message: String,
         link: String,
         read: { type: Boolean, default: false },
-        createdAt: { type: Date, default: new Date() }
+        createdAt: { type: Date, default: Date.now() }
     }],
     isVerified: { type: Boolean, default: false },
     googleId:{type:String, unique:true}

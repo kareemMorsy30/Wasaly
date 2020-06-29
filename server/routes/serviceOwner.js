@@ -50,10 +50,10 @@ router.get('/product-owner', productOwnerController.productOwnerDetails);
 router.get('/',serviceOwnerController.getServiceOwner);
 
 //update service owner data
-router.put('/:id', upload.single('avatar'),serviceOwnerController.updateServiceOwner);
+router.patch('/modify', upload.single('avatar'),serviceOwnerController.updateServiceOwner);
 
 //change status of service owner
-router.get('/:id/status',serviceOwnerController.changeStatus);
+router.get('/status',serviceOwnerController.changeStatus);
 
 // Accept or reject product owner connection request
 router.patch('/connection/:status', serviceOwnerController.updateConnection);
