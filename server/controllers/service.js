@@ -3,6 +3,8 @@ const { Order, ServiceOwner, User } = require('./../models/allModels');
 const serviceOwner = require('../config/serviceOwner');
 const { io } = require("../server");
 const serviceOwners = require('./serviceOwners');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const availableServiceOwners = async ({ body }) => {
     const transportation = body.transportation;
@@ -230,6 +232,34 @@ const readNotifications = (req, res) => {
     .catch(error => console.log(error));
 }
 
+const statistics = (req, res) => {
+    const { user } = req;
+
+    if(user.role === 'serviceowner'){
+        Order.aggregate([
+        { $match : { service : ObjectId(user._id) } },
+        { 
+            $group : { 
+                _id : { month: { $month : "$createdAt" } }, 
+                count : { $sum : 1 }}
+        }, { $sort : { '_id.month' : 1 } }]).then(data => res.json(data))
+    }else if(user.role === 'productowner'){
+        Order.aggregate([
+        { $match : { productOwner : ObjectId(user._id) } },
+        { 
+            $group : { 
+                _id : { month: { $month : "$createdAt" } }, 
+                count : { $sum : 1 }}
+        }, { $sort : { '_id.month' : 1 } }]).then(data => res.json(data))
+    }else {
+        Order.aggregate([{ 
+            $group : { 
+                _id : { month: { $month : "$createdAt" } }, 
+                count : { $sum : 1 }}
+        }, { $sort : { '_id.month' : 1 } }]).then(data => res.json(data))
+    }
+}
+
 module.exports = {
     filteredServiceOwners,
     transportation,
@@ -240,5 +270,6 @@ module.exports = {
     saveRate,
     getUserRateForOrder,
     notifications,
-    readNotifications
+    readNotifications,
+    statistics
 }
