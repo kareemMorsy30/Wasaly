@@ -16,7 +16,7 @@ const DropDown = (props) => {
 
     return (
         <div className="dropdown" >
-            <input type="text"  value={searchInput} onChange={handleChange} onClick={()=>setOptions(props.options)} />
+            <input className="landing-search-input" type="text" placeholder="Search..." value={searchInput} onChange={handleChange} onClick={()=>setOptions(props.options)} />
             {
                 options.length >= 1  &&
                 <div className="dropdown-content" >

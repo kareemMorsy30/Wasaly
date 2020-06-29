@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import './search.css';
+import '../styles/search.scss';
 import { Link } from "react-router-dom";
 import DropDown from './dropDown';
 
