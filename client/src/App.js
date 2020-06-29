@@ -188,6 +188,7 @@ function App() {
                 "/register",
                 "/",
                 "/search/:id",
+                "/service",
                 "/categoryproducts/:id",
                 "/products/create",
                 "/products/:id/edit",
@@ -238,7 +239,7 @@ function App() {
                 {/* http://localhost:3000/5ef231d4a5a9572baa78364f/ownerinfo */}
                 <Route exact path="/:id/ownerinfo" component={ProductDetails} />
                 <Route exact path="/cart" component={Auth(CartPage, true)} />
-
+                <Route exact path="/service" component={Delivery} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/table" component={table} />
                 </div>
