@@ -29,7 +29,6 @@ import { mainListItems, secondaryListItems } from './listItems';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Card from '../../layouts/dashboard/card';
-import { notification } from 'antd';
 
 function Copyright() {
   return (
@@ -251,11 +250,7 @@ function Dashboard({children}) {
             {/* Chart */}
             <Grid item xs={12} md={8} lg={12}>
                 {
-                children 
-                ?
                 children
-                :
-                <Card>Landing Page</Card>
                 }
             </Grid>
           </Grid>
