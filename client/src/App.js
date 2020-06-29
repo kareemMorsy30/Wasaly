@@ -9,7 +9,6 @@ import UpdateProduct from "./components/product owner/updateProduct";
 import ListProducts from "./components/product owner/listProducts";
 import Connections from "./components/product owner/connection";
 import ProductOwnerDetails from "./components/product owner/productOwnerDetails";
-import AdminProductOwners from "./components/admin/productOwners";
 import ListCatProducts from "./components/product owner/CategoryProducts";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
@@ -18,13 +17,16 @@ import ServiceOwnerProfile from "./components/service owner/serviceOwnerProfile"
 import Checkout from "./components/checkout";
 import Payment from "./components/payment";
 import ProductOwnerProfile from "./components/product owner/productOwnerProfile";
+import CustomerProfile from "./components/customer/customerProfile";
 import UserNavBar from "./components/user/userNavBar";
 import UserAndCustomerNavBar from "./components/layouts/site/navbar";
 /*** Service owners */
 import ServiceOwnerOrders from "./components/service owner/orders";
-import Reviews from "./components/service owner/reviews/reviews";
 /**** Admin ****/
 import AdminServiceOwners from "./components/admin/serviceOwners";
+
+import AdminProductOwners from "./components/admin/productOwners";
+
 import All from "./components/admin/categories/all";
 import Landing from "./components/layouts/dashboard/landing";
 /**
@@ -61,6 +63,9 @@ import Layout from "./components/layouts/dashboard/layout";
 import SiteLayout from "./components/layouts/site/layout";
 import Welcome from "./components/user/welcome"
 import Notifications from "./components/layouts/notifications";
+import ConnectedProductOwnerOrders from "./components/service owner/productOwnerOrders"
+import ProductOwnerOrders from "./components/product owner/orders"
+
 
 function App() {
   return (
@@ -94,7 +99,7 @@ function App() {
           <Route exact path={[
             "/service-owner/landing",
             "/product-owner/landing",
-            "/admin/landing"
+            "/admin/landing",
           ]}
           component={Landing}
           />
@@ -109,12 +114,16 @@ function App() {
             path="/service-owner/connection"
             component={ProductOwnerDetails}
           />
-          <Route exact path="/service-owner/reviews" component={Reviews} />
           {/* Product owner routes */}
           <Route
             exact
             path="/product-owner/connections"
             component={Connections}
+          />
+           <Route
+            exact
+            path="/service-owner/product-orders"
+            component={ConnectedProductOwnerOrders}
           />
 
           {/* Admin routes */}
@@ -127,6 +136,9 @@ function App() {
 
           <ProductOwnerRoute exact path="/product-owner/products/create">
             <CreateProduct />
+          </ProductOwnerRoute>
+          <ProductOwnerRoute exact path="/product-owner/orders">
+            <ProductOwnerOrders />
           </ProductOwnerRoute>
 
           <ProductOwnerRoute exact path="/product-owner/products/:id/edit">
@@ -154,7 +166,9 @@ function App() {
         <Switch>
          
         <Route exact path="/serviceownerprofile" component={ServiceOwnerProfile}/>
-        <Route exact path="/productownerprofile" component={ProductOwnerProfile} />
+        <Route exact path="/productownerprofile" component={ProductOwnerProfile}/>
+        <Route exact path="/customerprofile" component={CustomerProfile}/>
+
 
           <Route
             exact
