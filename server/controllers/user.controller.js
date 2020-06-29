@@ -1,7 +1,8 @@
 const User = require("../models/user");
 const allModels = require('../models/allModels');
-const userModel = require('../models/user');
+// const userModel = require('../models/user');
 const { Product } = allModels;
+const Order = require('../models/order')
 const jwt = require("jsonwebtoken");
 let userController = {};
 const port = process.env.PORT
@@ -11,8 +12,7 @@ const Token = require('../models/tokenVerification')
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 var mongoose = require('mongoose');
-
-
+const { pushNotification } = require('./controller');
 
 
 
@@ -65,12 +65,12 @@ userController.regesiter = async (req, res, next) => {
             const serviceOwner = await newServiceOwner.save();
             console.log("\n Service owner ::    :      :    ".serviceOwner);
             console.log("i'm in role");
-            sendEmail(newUser)
+            console.log(newUser)
+            sendEmail(req,res,newUser)
         }
         catch (e) {
-            console.log('====================================');
-            console.log(e);
-            console.log('====================================');
+            console.log(e)
+            
             if (e.name === "MongoError" && e.code === 11000) {
                 console.log('====================================');
                 console.log(e);
@@ -97,9 +97,10 @@ userController.regesiter = async (req, res, next) => {
             const productOwner = await newProductOwner.save();
             console.log("\n pOwner ::    :      :    ".productowner);
             console.log("i'm in role");
-            sendEmail(newUser)
+            sendEmail(req,res,newUser)
         } catch (e) {
             if (e.name === "MongoError" && e.code === 11000) {
+                console.log(e);
                 const error = new Error(`Email address ${newUser.email} is already taken`);
                 error.status = 400
                 next(error);
@@ -112,6 +113,8 @@ userController.regesiter = async (req, res, next) => {
 };
 
 const sendEmail = (req, res, user) => {
+    console.log('send emaiiil')
+    console.log(user)
     try {
         var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
 
@@ -211,8 +214,12 @@ userController.login = async (request, response, next) => {
                  * we will use this token with passport to make sure that the server can recognize the toke :)
                  */
                 // request.headers.authorization = token;
+                let userTemp = {}
+                userTemp.role = user.role
+                userTemp.email = user.email
+                userTemp.name = user.name
 
-                response.send({ token, user });
+                response.send({ token, user: userTemp });
             } else {
                 response.status(401).send({
                     error: "Invalid email or password",
@@ -281,12 +288,12 @@ userController.googleSignIn = async (req, res) => {
                     await user.save()
                 }
                 else {
-                    user = await new User({ name: Name, email, avatar: Image, googleId: userid, username: Name, role: 'customer', password, isVerified:true })
+                    user = await new User({ name: Name, email, avatar: Image, googleId: userid, username: Name, role: 'customer', password, isVerified: true })
                     await user.save()
                     try {
                         // Send the email
                         var transporter = nodemailer.createTransport({ service: 'Gmail', auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS } });
-                        var mailOptions = { from: process.env.GMAIL_USER, to: user.email, subject: 'Auto Generated Password', text: 'Hello,\n\n' + 'This is your Auto generated password:'  + " "+password +' .\n' };
+                        var mailOptions = { from: process.env.GMAIL_USER, to: user.email, subject: 'Auto Generated Password', text: 'Hello,\n\n' + 'This is your Auto generated password:' + " " + password + ' .\n' };
                         transporter.sendMail(mailOptions, function (err) {
                             if (err) console.log(err)
                         });
@@ -306,7 +313,11 @@ userController.googleSignIn = async (req, res) => {
             expiresIn: expire,
         });
 
-        res.send({ token, user });
+        let userTemp = {}
+        userTemp.role = user.role
+        userTemp.email = user.email
+        userTemp.name = user.name
+        res.send({ token, user: userTemp });
 
     } catch (e) {
         console.log(e)
@@ -407,23 +418,42 @@ userController.getAllUsers = async (req, res) => {
     }
 }
 userController.getUser = async (req, res) => {
-    try {
-        let user = await userModel.findById({ _id: req.params.id })
-        res.send(user)
+    // console.log("body",req.body);
+    if(req.user){
+        return res.send(req.user)
+    }else{
+        return res.send({err:"user not found"});
     }
-    catch (err) {
-        res.send(err);
-        console.log(err);
-    }
+    
+    // try {
+    //     let user = await userModel.findOne({ user: req.user })
+    //     console.log("here",req.body);
+    //     console.log("hi",req.user);
+    //     console.log(user);
+    //     res.send(user)
+    // }
+    // catch (err) {
+    //     res.send(err);
+    //     console.log(err);
+    // }
 
 }
-userController.updateUser = (req, res) => {
-    userModel.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (error, user) => {
-        res.status(200).json({ "data": user });
-    }).catch((err) => {
-        console.log(err);
-        res.status(400).json({ "error": err });
-    })
+userController.updateUser =async (req, res) => {
+    console.log("first",req.user._id);
+    const {name,username,status} = req.body;
+    console.log("body",req.body);
+    let image_path = 'public/uploads/users/images/' +req.file.filename ;
+    // userModel.findByIdAndUpdate( req.user._id , { new: true },{'avatar':image_path}, (error, user) => {
+    //     res.status(200).json({ "data": user });
+    const user = await User.findOneAndUpdate({_id:req.user._id},{'avatar':image_path,name,username,status})
+    res.status(200).json({"data": user});
+        // console.log(error);
+        console.log("user",user);
+        console.log("userID",req.user._id);
+//     }).catch((err) => {
+//         console.log(err);
+//         res.status(400).json({ "error": err });
+//     })
 }
 userController.saveReport = (req, res, next) => {
     try {
@@ -436,7 +466,16 @@ userController.saveReport = (req, res, next) => {
             $push: {
                 reports: { 'message': report, user: customer }
             }
-        }).catch(err => console.log(err));
+        }).populate('user')
+        .then(owner => {
+            const info = { 
+                title: 'Service owner reported',
+                message: `Customer ${req.user.name} has reported service owner ${owner.user.name}`,
+                link: 'http://localhost:3000/admin/service-owners'
+            }
+            User.findOne({role: 'admin'}).then(admin => pushNotification(admin.email, info));
+        })
+        .catch(err => console.log(err));
         res.json("Reported Successfully");
     }
     catch (err) {
@@ -444,18 +483,27 @@ userController.saveReport = (req, res, next) => {
     }
 }
 
-userController.saveProductOwnerReport= (req, res, next ) => {
+userController.saveProductOwnerReport = (req, res, next) => {
     try {
-        const {report} = req.body
-        const {id}= req.params
+        const { report } = req.body
+        const { id } = req.params
         const customer = req.user._id;
-        allModels.productOwner.findOneAndUpdate({ 
+        allModels.productOwner.findOneAndUpdate({
             user: id
         }, {
             $push: {
-                reports: {'message': report, user: customer}
+                reports: { 'message': report, user: customer }
             }
-        }).catch(err => console.log(err));
+        }).populate('user')
+        .then(owner => {
+            const info = { 
+                title: 'Product owner reported',
+                message: `Customer ${req.user.name} has reported product owner ${owner.user.name}`,
+                link: 'http://localhost:3000/admin/product-owners'
+            }
+            User.findOne({role: 'admin'}).then(admin => pushNotification(admin.email, info));
+        })
+        .catch(err => console.log(err));
         res.json("Reported Successfully");
     }
     catch (err) {
@@ -543,9 +591,50 @@ userController.userCartInfo= async (req, res) => {
     )
 }
 
-
-
-
+// ,{
+//     product: "5ee39afd07d185258b6b4697",
+//     amount: 3
+// }
+userController.test = async (req, res) => {
+    await new Order(
+        {
+            products: [{
+                product: "5ee39ad707d185258b6b4696",
+                amount: 3
+            },{
+                product: "5ee39ad707d185258b6b4696",
+                amount: 3
+            }],
+            status: "Canceled",
+            customer: "5eecaf2197167b16ae927edd",
+            service: "5ee810c50365db49dececf99",
+            to: {
+                street: "qaraqoul",
+                city: "cairo",
+                area: "abbasia",
+                longitude: 1.25,
+                latitude: 1.25
+            },
+            from: {
+                street: "qaraqoul",
+                city: "cairo",
+                area: "abbasia",
+                longitude: 1.25,
+                latitude: 1.25
+            },
+            item: "adidas shoessssss",
+            amount: 5,
+            rate: {
+                rating: 1,
+                reviews: []
+            },
+            cost: 1000,
+            description: "adidas shoes red colorrrrrrr",
+            targetedServiceOwners: []
+        }).save()
+    console.log('oj')
+    res.send('done')
+}
 module.exports = userController;
 /**
  *

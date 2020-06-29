@@ -1,3 +1,4 @@
+const { pushNotification } = require('./controller');
 const { ServiceOwner, productOwner, User } = require('../models/allModels');
 const { populate } = require('../models/user');
 
@@ -12,7 +13,16 @@ const connect = (req, res) => {
     }, {
         new: true
     }).populate('user')
-    .then(owner => res.status(200).json(owner))
+    .then(owner => {
+        const info = { 
+            title: 'New connection request',
+            message: `Product owner ${req.user.name} sent a connection request to you`,
+            link: 'http://localhost:3000/service-owner/connection',
+            body: owner
+        }
+        pushNotification(owner.user.email, info);
+        res.status(200).json(owner);
+    })
     .catch(error => res.status(500).end());
 }
 
@@ -24,10 +34,24 @@ const disconnect = (req, res) => {
             user: req.user._id,
             status: 'Not connected'
         }
-    }, {
-        new: true
     }).populate('user')
-    .then(owner => res.status(200).json(owner))
+    .populate('productOwner.user')
+    .then(owner => {
+        const info = { 
+            title: 'User disconnected',
+            message: `User ${req.user.name} has disconnected with you`,
+            link: req.user.role === 'serviceowner' ? 'http://localhost:3000/product-owner/connections' : 'http://localhost:3000/service-owner/connection',
+            body: owner
+        }
+
+        if(req.user._id.toString() !== owner.user._id.toString()){
+            pushNotification(owner.user.email, info);
+        }else{
+            pushNotification(owner.productOwner.user.email, info);
+        }
+
+        res.status(200).json(owner);
+    })
     .catch(error => res.status(500).end());
 }
 
@@ -78,7 +102,10 @@ const getAllproductsOwner = async(req,res)=>{
 
 const getProductOwner = async(req,res)=>{
     try{
-        let productuser =await productOwner.findById({_id: req.params.id})
+        
+        let productuser =await productOwner.findOne({user: req.user._id})
+        .populate('user');
+        
         res.send(productuser)
         }
         catch(err){
@@ -88,7 +115,7 @@ const getProductOwner = async(req,res)=>{
 }
 const changeStatus = async(req,res)=>{
     try{
-        const productuser = await productOwner.findOne({_id : req.params.id})
+        const productuser = await productOwner.findOne({user : req.user._id})
         const user = await User.updateOne({_id:productuser.user._id},{$set:{"status":"online"}},{new:true})
         console.log(user);
         console.log('hello');
@@ -100,13 +127,26 @@ const changeStatus = async(req,res)=>{
 }
     
 }
-const updateProducteOwner = (req,res)=>{
-    productOwner.findOneAndUpdate({_id: req.params.id},req.body,{new: true},(error,user)=>{
-        res.status(200).json({"data": user});
-    }).catch((err) => {
+const updateProducteOwner =async (req,res)=>{
+    // productOwner.findOneAndUpdate({_id: req.params.id},req.body,{new: true},(error,user)=>{
+    //     res.status(200).json({"data": user});
+    // }).catch((err) => {
+    //     console.log(err);
+    //     res.status(400).json({"error": err});
+    // })
+    const url = req.protocol + '://' + req.get('host')
+    let image_path = url + '/public/uploads/users/images/' +req.file.filename ;
+    console.log(req.file);
+    try{
+    let product = 
+    await productOwner.findOneAndUpdate({user: req.user._id},{$set:req.body},{new: true}).populate('user')
+    await User.findOneAndUpdate({_id:product.user._id},{'avatar':image_path})
+    let newProductObj = await (await productOwner.findOne({user:req.user._id})).populate('user')
+    res.status(200).json({"data": newProductObj});
+}catch(err) {
         console.log(err);
         res.status(400).json({"error": err});
-    })
+    }
 } 
 module.exports = {
     connect,

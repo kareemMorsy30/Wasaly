@@ -12,8 +12,7 @@ const rate = new mongoose.Schema({
         createdAt: { type: Date, default: new Date() }
     }],
     user: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
+        type: mongoose.Schema.Types.ObjectId,       
         ref: 'User'
     },
     order:{  type: mongoose.Schema.Types.ObjectId, ref: 'Order'}

@@ -162,7 +162,9 @@ exports.addOrder = async (req, res, next) => {
                 })
 
         }
-    )
+    
+    
+        )
 
 
     // console.log("checkout");

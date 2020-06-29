@@ -5,7 +5,7 @@ import ReactStars from 'react-rating-stars-component';
 const Modal = ({ record, Flag, Description }) => {
     return (
         <>
-        <ModalHeader className="modal-layout"><div className="modal-title">{record.user && record.user.name}</div><div className="modal-flag"><Flag record={record}/></div></ModalHeader>
+        <ModalHeader className="modal-layout"><div className="modal-title">{record.user && record.user.name}</div><div className="modal-flag">{Flag && <Flag record={record}/>}</div></ModalHeader>
         <ModalBody>
             <div className="body-section">
                 <div className="image-section">
@@ -17,7 +17,7 @@ const Modal = ({ record, Flag, Description }) => {
                     <label>Email</label>
                     <input type="text" placeholder="Email" value={record.user && record.user.email} readOnly/>
                     <label>Phone</label>
-                    <input type="text" placeholder="Phone" value={record.user && record.user.phones[0]} readOnly/>
+                    <input type="text" placeholder="Phone" value={record.user && (record.user.phones.length > 0 ? record.user.phones : '')} readOnly/>
                     <label>Address</label>
                     <input type="text" placeholder="Address" value={record.user && record.user.address.length > 0 ? record.user.address[0].area && `${record.user.address[0].area} ${record.user.address[0].city}` : ''} readOnly/>
                 </div>

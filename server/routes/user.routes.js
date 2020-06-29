@@ -25,7 +25,7 @@ const upload = imageUploader('public/uploads/users/images');
 // Customize auth message Protect the  routes
 // and prevent copy paste {passport.authenticate('jwt', { session: false }),}
 router.post('/register', userController.regesiter);
-
+router.get('/test', userController.test)
 router.get('/confirmation/:token', userController.confirmationPost);
 router.post('/resend', userController.resendTokenPost);
 router.post('/googlesigin',userController.googleSignIn)
@@ -99,7 +99,32 @@ router.post('/admin', adminAuth,
     (req, res, next) => {
         return res.send({ msg: "okey you are authorized user now :)", user: req.user });
     });
-    router.get('/userCartInfo',userController.userCartInfo);
+    const multer  = require('multer');
+
+
+    const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/uploads/users/images');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+    });
+    
+    // Set filters to image upload
+    const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg'){
+        cb(null,true)
+    } else {
+        cb(new Error('only allowed types are jpeg, png, jpg'), false)
+    }
+    }
+    
+    // Apply multer option to image upload
+    const uploading = multer({
+    storage,
+    fileFilter
+    });
 
 
 
@@ -107,10 +132,12 @@ router.post('/admin', adminAuth,
     router.get("", userController.getAllUsers);
 
     //update users
-    router.patch('/:id', userController.updateUser);
+    router.patch('/one/modify',uploading.single('avatar') ,userController.updateUser);
 
     //get user by id
-    router.get('/:id/',userController.getUser);
+    router.get('/one',userController.getUser);
+
+
     router.post('/addToCart',userController.addToCart);
 router.delete('/removeFromCart',userController.removeFromCart);
 router.delete('/removeCart',userController.removeCart);

@@ -99,11 +99,11 @@ export default function Login() {
       else if(user.role === 'productowner') window.location.href = "http://localhost:3000/product-owner/landing";
     }, (error) => {
       console.log('====================================');
-      console.log(error.response.data.msg, "ERRROR");
+      // console.log(error.response.data.msg, "ERRROR");
 
       console.log('====================================');
 
-      if (error.response.data.msg == "Please Confirm your email to login") {
+      if (error.response && error.response.data.msg == "Please Confirm your email to login") {
         seterror("Please Confirm your email to login");
         error.message = "Please Confirm your email to login";
       }

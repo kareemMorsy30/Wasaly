@@ -16,12 +16,17 @@ import AdminLogin from "./components/admin/adminLogin";
 import ServiceOwnerProfile from "./components/service owner/serviceOwnerProfile";
 import Checkout from "./components/checkout";
 import Payment from "./components/payment";
+import ProductOwnerProfile from "./components/product owner/productOwnerProfile";
+import CustomerProfile from "./components/customer/customerProfile";
 import UserNavBar from "./components/user/userNavBar";
 import UserAndCustomerNavBar from "./components/layouts/site/navbar";
 /*** Service owners */
 import ServiceOwnerOrders from "./components/service owner/orders";
 /**** Admin ****/
 import AdminServiceOwners from "./components/admin/serviceOwners";
+
+import AdminProductOwners from "./components/admin/productOwners";
+
 import All from "./components/admin/categories/all";
 import Landing from "./components/layouts/dashboard/landing";
 /**
@@ -39,6 +44,9 @@ import CartPage from "./components/product owner/Cart/CartPage";
 
 // import MainCart  from './components/product owner/Cart/AddCart';
 import LandingPage from "./pages/landingPage";
+
+// import user cart info(AUTH)
+import UserCart from './components/product owner/Cart/UserCart';
 import {
   isUser,
   isCustomer,
@@ -53,10 +61,16 @@ import Auth from "./components/product owner/Cart/UserCart";
 import table from "./components/table";
 import Layout from "./components/layouts/dashboard/layout";
 import SiteLayout from "./components/layouts/site/layout";
+import Welcome from "./components/user/welcome"
+import Notifications from "./components/layouts/notifications";
+import ConnectedProductOwnerOrders from "./components/service owner/productOwnerOrders"
+
+
 
 function App() {
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+
       {/* <NavBar/> */}
       <Route
         exact
@@ -75,17 +89,21 @@ function App() {
           "/product-owner/products/create",
           "/product-owner/products/:id/edit",
           "/product-owner/products",
-          "/product-owner/orders"
+          "/product-owner/orders",
+          "/service-owner/notifications",
+          "/product-owner/notifications",
+          "/admin/notifications"
         ]}
       >
         <Layout>
           <Route exact path={[
             "/service-owner/landing",
             "/product-owner/landing",
-            "/admin/landing"
+            "/admin/landing",
           ]}
           component={Landing}
           />
+           
           <Route
             exact
             path="/service-owner/orders"
@@ -101,6 +119,11 @@ function App() {
             exact
             path="/product-owner/connections"
             component={Connections}
+          />
+           <Route
+            exact
+            path="/service-owner/product-orders"
+            component={ConnectedProductOwnerOrders}
           />
 
           {/* Admin routes */}
@@ -122,16 +145,28 @@ function App() {
           <ProductOwnerRoute exact path="/product-owner/products">
             <ListProducts />
           </ProductOwnerRoute>
+
+          <Route exact path="/admin/product-owners/">
+            <AdminProductOwners />
+          </Route>
+
+          <Route exact path={[
+            "/service-owner/notifications",
+            "/product-owner/notifications",
+            "/admin/notifications"
+          ]}>
+            <Notifications />
+          </Route>
         </Layout>
       </Route>
 
         <Switch>
-          <Route
-            exact
-            path="/serviceownerprofile/:id"
-            component={ServiceOwnerProfile}
-          />
-          
+         
+        <Route exact path="/serviceownerprofile" component={ServiceOwnerProfile}/>
+        <Route exact path="/productownerprofile" component={ProductOwnerProfile}/>
+        <Route exact path="/customerprofile" component={CustomerProfile}/>
+
+
           <Route
             exact
             path="/payment"
@@ -160,15 +195,24 @@ function App() {
                 "/:id/ownerinfo",
                 "/cart",
                 "/login",
-                "/table"
+                "/table",
+                "/welcome",
+                "/notifications"
               ]}
             >
               <SiteLayout>
+
               <div style={{ flex: "1 0 auto", marginTop: "12vh" }}>
+              <Route exact path="/welcome" component={Welcome} />
+
+              <Route exact path="/notifications">
+                <Notifications />
+              </Route>
+
               <Route exact path="/register" component={Register} />
 
               <Route exact path="/" component={LandingPage} />
-              {/* <UserNavBar /> */}
+              {/* <UserNavBar  /> */}
               {/* <Route exact path="/" component={Delivery} /> */}
 
               <Route exact path="/search/:id" component={SearchResults} />
@@ -176,12 +220,13 @@ function App() {
                 exact
                 path="/categoryproducts/:id"
                 component={ListCatProducts}
-              />
+            />
               <div className="container">
 
                 {/* <Route exact path="/test" >
               < Category />
             </Route> */}
+           
                 <Route exact path="/sO" component={ServiceOrderForm} />
                 {/* <Route exact path="/" component={Delivery} /> */}
 

@@ -37,7 +37,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('unsubscribe', function(data) { socket.leave(data.room); })
 
 });
-app.use(cors({origin: true, credentials: true}));
+app.use(cors({origin: "http://localhost:3000", credentials: true,methods:"GET,POST,PUt,PATCH,OPTIONS"}));
 app.use(express.json())
 // app.use(express.static('public'));
 app.use('/public', express.static(path.join(__dirname, 'public'))) ;
@@ -108,13 +108,13 @@ app.use('/customers', CustomerRouter)
 /*-------------payment---------------------------*/
 const SERVER_CONFIGS = require('./constants/backend');
 
-const configureServer = require('./index');
-const configureRoutes = require('./routes/paymentIndex');
+// const configureServer = require('./index');
+// const configureRoutes = require('./routes/paymentIndex');
 
-// const app = express();
+// // const app = express();
 
-configureServer(app);
-configureRoutes(app);
+// configureServer(app);
+// configureRoutes(app);
 
 // app.listen(SERVER_CONFIGS.PORT, error => {
 //   if (error) throw error;
@@ -125,6 +125,7 @@ configureRoutes(app);
 app.use('/product-owners', productOwnerRouter);
 
 /* --------------- Service owner routes -------------------------*/
+
 app.use('/service-owners', serviceOwnerRouter);
 
 /* --------------- Admin routes -------------------------*/

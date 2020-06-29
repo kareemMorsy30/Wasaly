@@ -53,9 +53,13 @@ const order = (req, res) => {
                     });
 
                     newOrder.save().then(order => {
-                        io.on('connection', (socket) => {
-                            socket.emit(`notify:${owner && owner.user.email}`, { success: true, msg: `A new request delivery from ${req.user ? req.user.username : 'Anonymous'}` });
-                        });
+                        const info = { 
+                            title: 'New order request',
+                            message: `Congratulations you have received a new order request`,
+                            link: 'http://localhost:3000/service-owner/orders',
+                            body: order
+                        }
+                        pushNotification(owner.user.email, info);
 
                         res.status(200).json(order);
                     }).catch(error => console.log(error));
@@ -75,7 +79,7 @@ const updateOrderStatus = (req, res) => {
         const info = { 
             title: 'Order status has been updated',
             message: `Your order has been ${order.status}`,
-            link: 'http://localhost:3000/orders',
+            link: `http://localhost:3000/orders/${order._id}`,
             body: order
         }
         pushNotification(order.customer.email, info);
@@ -104,6 +108,7 @@ const saveReview = async (req, res, next) => {
         serviceOwner.save()
         //save review to order
         await Order.updateOne({ _id: order }, { $push: { 'rate.reviews': review } })
+
         return res.json("Review added successfully")
     } catch (err) {
         next(err)
@@ -117,7 +122,7 @@ const saveRate = async (req, res, next) => {
     const { rating, order } = req.body
 
     try {
-        const serviceOwner = await ServiceOwner.findOne({ user: serviceOwnerID })
+        const serviceOwner = await ServiceOwner.findOne({ user: serviceOwnerID }).populate('user')
         let averageRating = 0;
 
 
@@ -127,6 +132,13 @@ const saveRate = async (req, res, next) => {
                 serviceOwner.rates[i].rating = rating
                 //save rate to order
                 await Order.updateOne({ _id: order }, { "rate.rating": rating })
+
+                const info = { 
+                    title: 'New customer rating',
+                    message: `A new user rated you ${rating} stars`,
+                    link: 'http://localhost:3000/service-owner/reviews'
+                }
+                pushNotification(serviceOwner.user.email, info);
                 return res.json("Rate added successfully")
             }
         }
@@ -146,6 +158,13 @@ const saveRate = async (req, res, next) => {
             serviceOwner.rating = averageRating
         }
         serviceOwner.save()
+
+        const info = { 
+            title: 'New customer rating',
+            message: `A new user rated you ${rating} stars`,
+            link: 'http://localhost:3000/service-owner/reviews'
+        }
+        pushNotification(serviceOwner.user.email, info);
         return res.json("Rate added successfully")
     } catch (err) {
         next(err)
@@ -172,9 +191,44 @@ const getUserRateForOrder = async (req, res, next) => {
 
 }
 
+// Get all notifications for current authenticated user
+const notifications = (req, res) => {
+    const { user } = req;
 
+    User.findById(user._id)
+    .then(user => {
+        let notifications = user.notifications;
+        notifications.reverse();
 
+        if(notifications.length > 10) {
+            notifications.length = 10;
+        }
+        res.status(200).json(notifications);
+    })
+    .catch(error => res.status(500).end());
+}
 
+// Read notifications
+const readNotifications = (req, res) => {
+    const { user } = req;
+
+    User.findByIdAndUpdate(user._id, {
+        '$set': {
+            'notifications.$[].read': true
+        }
+    }, {
+        new: true
+    }).then(user => {
+        let notifications = user.notifications;
+        notifications.reverse();
+
+        if(notifications.length > 10) {
+            notifications.length = 10;
+        }
+        res.status(200).json(notifications);
+    })
+    .catch(error => console.log(error));
+}
 
 module.exports = {
     filteredServiceOwners,
@@ -184,5 +238,7 @@ module.exports = {
     updateOrderStatus,
     saveReview,
     saveRate,
-    getUserRateForOrder
+    getUserRateForOrder,
+    notifications,
+    readNotifications
 }

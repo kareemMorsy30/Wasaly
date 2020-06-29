@@ -49,7 +49,7 @@ const Modal = ({ record }) => {
                     <>
                     <label className="modal-title">{record.user && record.user.name}:</label>
                     <Moment style={{color: 'black', fontSize: 'small'}} format="D MMM YYYY" withTitle>{record.createdAt && record.createdAt}</Moment>
-                    <textarea placeholder="More info" value={report} readOnly/>
+                    <textarea placeholder="More info" value={report.review} readOnly/>
                     </>
                     );
                 })
