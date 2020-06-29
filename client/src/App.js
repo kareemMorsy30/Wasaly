@@ -18,6 +18,7 @@ import ServiceOwnerProfile from "./components/service owner/serviceOwnerProfile"
 import Checkout from "./components/checkout";
 import Payment from "./components/payment";
 import ProductOwnerProfile from "./components/product owner/productOwnerProfile";
+import CustomerProfile from "./components/customer/customerProfile";
 import UserNavBar from "./components/user/userNavBar";
 import UserAndCustomerNavBar from "./components/layouts/site/navbar";
 /*** Service owners */
@@ -154,7 +155,9 @@ function App() {
         <Switch>
          
         <Route exact path="/serviceownerprofile" component={ServiceOwnerProfile}/>
-        <Route exact path="/productownerprofile" component={ProductOwnerProfile} />
+        <Route exact path="/productownerprofile" component={ProductOwnerProfile}/>
+        <Route exact path="/customerprofile" component={CustomerProfile}/>
+
 
           <Route
             exact

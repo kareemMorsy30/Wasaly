@@ -1,6 +1,6 @@
 const User = require("../models/user");
 const allModels = require('../models/allModels');
-const userModel = require('../models/user');
+// const userModel = require('../models/user');
 const { Product } = allModels;
 const Order = require('../models/order')
 const jwt = require("jsonwebtoken");
@@ -389,23 +389,42 @@ userController.getAllUsers = async (req, res) => {
     }
 }
 userController.getUser = async (req, res) => {
-    try {
-        let user = await userModel.findById({ _id: req.params.id })
-        res.send(user)
+    // console.log("body",req.body);
+    if(req.user){
+        return res.send(req.user)
+    }else{
+        return res.send({err:"user not found"});
     }
-    catch (err) {
-        res.send(err);
-        console.log(err);
-    }
+    
+    // try {
+    //     let user = await userModel.findOne({ user: req.user })
+    //     console.log("here",req.body);
+    //     console.log("hi",req.user);
+    //     console.log(user);
+    //     res.send(user)
+    // }
+    // catch (err) {
+    //     res.send(err);
+    //     console.log(err);
+    // }
 
 }
-userController.updateUser = (req, res) => {
-    userModel.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (error, user) => {
-        res.status(200).json({ "data": user });
-    }).catch((err) => {
-        console.log(err);
-        res.status(400).json({ "error": err });
-    })
+userController.updateUser =async (req, res) => {
+    console.log("first",req.user._id);
+    const {name,username,status} = req.body;
+    console.log("body",req.body);
+    let image_path = 'public/uploads/users/images/' +req.file.filename ;
+    // userModel.findByIdAndUpdate( req.user._id , { new: true },{'avatar':image_path}, (error, user) => {
+    //     res.status(200).json({ "data": user });
+    const user = await User.findOneAndUpdate({_id:req.user._id},{'avatar':image_path,name,username,status})
+    res.status(200).json({"data": user});
+        // console.log(error);
+        console.log("user",user);
+        console.log("userID",req.user._id);
+//     }).catch((err) => {
+//         console.log(err);
+//         res.status(400).json({ "error": err });
+//     })
 }
 userController.saveReport = (req, res, next) => {
     try {
