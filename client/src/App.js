@@ -60,6 +60,9 @@ import Layout from "./components/layouts/dashboard/layout";
 import SiteLayout from "./components/layouts/site/layout";
 import Welcome from "./components/user/welcome"
 import Notifications from "./components/layouts/notifications";
+import ConnectedProductOwnerOrders from "./components/service owner/productOwnerOrders"
+
+
 
 function App() {
   return (
@@ -93,7 +96,7 @@ function App() {
           <Route exact path={[
             "/service-owner/landing",
             "/product-owner/landing",
-            "/admin/landing"
+            "/admin/landing",
           ]}
           component={Landing}
           />
@@ -113,6 +116,11 @@ function App() {
             exact
             path="/product-owner/connections"
             component={Connections}
+          />
+           <Route
+            exact
+            path="/service-owner/product-orders"
+            component={ConnectedProductOwnerOrders}
           />
 
           {/* Admin routes */}

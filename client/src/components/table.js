@@ -18,7 +18,7 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, Button, details, chi
         setModal(!modal)
         setRecord(record);
     };
-    
+    console.log(cols)
     return (
         <>
         <table id="table">
@@ -26,7 +26,7 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, Button, details, chi
                 <tr>
                     {cols.map((col, id) => {
                         return (
-                            <th className="data-field" key={id}>{Array.isArray(col) ? col[0].toUpperCase() : col.toUpperCase()}</th>
+                            <th className="data-field" key={id}>{ Array.isArray(col) ? col.length===3?col[2].toUpperCase(): col[0].toUpperCase() : col.toUpperCase()}</th>
                         );
                     })}
                     <th className="actions">Actions</th>

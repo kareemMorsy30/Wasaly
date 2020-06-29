@@ -51,3 +51,36 @@ export const allRatings = () => {
     })
     .catch(err => console.log(err));
 }
+
+export const getConnectedProductOwnerOrders = () => {
+    const url = `${domain}/service-owners/orders/connectedwithproductowner`;
+
+    return axios.get(url, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data) return res.data;
+    })
+    .catch(err => console.log(err));
+}
+export const updateOrderStatusOfProductOwner = (orderId,status) => {
+    const url = `${domain}/service-owners/order/${orderId}/status/productowner/`;
+    
+    return axios.patch(url, {status},
+    {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        console.log('joooooooooooooooooooooooooo')
+        console.log(res.error)
+        console.log(res)
+        if(res.data){
+            console.log(res.data)
+            return res.data;
+        }
+    })
+    .catch(err =>{
+        throw new Error(err)
+        console.log('hiiiiiiiiiiiiii')
+    });
+}
