@@ -40,11 +40,11 @@ const orderSchema = new mongoose.Schema({
     item: { type: String, required: true },
     amount: {
         type: Number,
-        required: true
+        // required: true
     },
     cost: {
         type: Number,
-        required: true
+        // required: true
     },
     description: {
         type: String

@@ -9,7 +9,6 @@ import UpdateProduct from "./components/product owner/updateProduct";
 import ListProducts from "./components/product owner/listProducts";
 import Connections from "./components/product owner/connection";
 import ProductOwnerDetails from "./components/product owner/productOwnerDetails";
-import AdminProductOwners from "./components/admin/productOwners";
 import ListCatProducts from "./components/product owner/CategoryProducts";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
@@ -18,13 +17,16 @@ import ServiceOwnerProfile from "./components/service owner/serviceOwnerProfile"
 import Checkout from "./components/checkout";
 import Payment from "./components/payment";
 import ProductOwnerProfile from "./components/product owner/productOwnerProfile";
+import CustomerProfile from "./components/customer/customerProfile";
 import UserNavBar from "./components/user/userNavBar";
 import UserAndCustomerNavBar from "./components/layouts/site/navbar";
 /*** Service owners */
 import ServiceOwnerOrders from "./components/service owner/orders";
-import Reviews from "./components/service owner/reviews/reviews";
 /**** Admin ****/
 import AdminServiceOwners from "./components/admin/serviceOwners";
+
+import AdminProductOwners from "./components/admin/productOwners";
+
 import All from "./components/admin/categories/all";
 import Landing from "./components/layouts/dashboard/landing";
 /**
@@ -112,7 +114,6 @@ function App() {
             path="/service-owner/connection"
             component={ProductOwnerDetails}
           />
-          <Route exact path="/service-owner/reviews" component={Reviews} />
           {/* Product owner routes */}
           <Route
             exact
@@ -165,7 +166,9 @@ function App() {
         <Switch>
          
         <Route exact path="/serviceownerprofile" component={ServiceOwnerProfile}/>
-        <Route exact path="/productownerprofile" component={ProductOwnerProfile} />
+        <Route exact path="/productownerprofile" component={ProductOwnerProfile}/>
+        <Route exact path="/customerprofile" component={CustomerProfile}/>
+
 
           <Route
             exact

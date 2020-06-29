@@ -1,6 +1,6 @@
 const User = require("../models/user");
 const allModels = require('../models/allModels');
-const userModel = require('../models/user');
+// const userModel = require('../models/user');
 const { Product } = allModels;
 const Order = require('../models/order')
 const jwt = require("jsonwebtoken");
@@ -34,6 +34,7 @@ userController.regesiter = async (req, res, next) => {
 
     if (newUser._id != undefined && newUser.role === "customer") {
         try {
+         
             const user = await newUser.save()
 
             sendEmail(req, res, user)
@@ -71,6 +72,9 @@ userController.regesiter = async (req, res, next) => {
             console.log(e)
             
             if (e.name === "MongoError" && e.code === 11000) {
+                console.log('====================================');
+                console.log(e);
+                console.log('====================================');
                 const error = new Error(`Email address ${newUser.email} is already taken`);
                 error.status = 400
                 next(error);
@@ -219,7 +223,7 @@ userController.login = async (request, response, next) => {
                 response.send({ token, user: userTemp });
             } else {
                 response.status(401).send({
-                    error: "Invalid username or password",
+                    error: "Invalid email or password",
                 });
             }
         });
@@ -349,33 +353,58 @@ userController.addToCart = (req, res) => {
 
 
         if (duplicate) {
+            Product.findByIdAndUpdate
+            ({'_id':req.query.productId}
+            , { '$inc': {'quantity':-1}},
+            
+            )
+            .exec()
+            ,
+            (productss=>productss
+            
+            
+            )
             User.findOneAndUpdate(
-                { _id: userID, "cart.id": req.query.productId },
-                { $inc: { "cart.$.quantity": 1 } },
+                { _id: userID, "cart.id": req.query.productId ,},
+                { $inc: { "cart.$.amount": 1 } },
                 { new: true },
                 (err, userInfo) => {
+                    
+
                     if (err) return res.json({ success: false, err });
                     res.status(200).json(userInfo.cart)
                 }
             )
         } else {
-            User.findOneAndUpdate(
-                { _id: req.user._id },
-                {
-                    $push: {
-                        cart: {
-                            id: req.query.productId,
-                            quantity: 1,
-                            date: Date.now()
-                        }
-                    }
-                },
-                { new: true },
-                (err, userInfo) => {
-                    if (err) return res.json({ success: false, err });
-                    res.status(200).json(userInfo.cart)
-                }
+            Product.findByIdAndUpdate({'_id':req.query.productId}, { '$inc': {'quantity':-1}}).exec(),(productss=>console.log(productss)
             )
+
+            Product.findOne({_id:req.query.productId},(err,productCart)=>{
+                console.log('=================Product Cart===================');
+                console.log(productCart);
+                console.log('====================================');
+                User.findOneAndUpdate(
+                    { _id: req.user._id },
+                    {
+                        $push: {
+                            cart: {
+                                id: req.query.productId,
+                                amount: 1,
+                                price:productCart.price,
+                                date: Date.now()
+                            }
+                        }
+                    },
+                    { new: true },
+                    (err, userInfo) => {
+                        if (err) return res.json({ success: false, err });
+                        res.status(200).json(userInfo.cart)
+                    }
+                )
+
+            }
+            )
+        
         }
     })
 };
@@ -391,23 +420,42 @@ userController.getAllUsers = async (req, res) => {
     }
 }
 userController.getUser = async (req, res) => {
-    try {
-        let user = await userModel.findById({ _id: req.params.id })
-        res.send(user)
+    // console.log("body",req.body);
+    if(req.user){
+        return res.send(req.user)
+    }else{
+        return res.send({err:"user not found"});
     }
-    catch (err) {
-        res.send(err);
-        console.log(err);
-    }
+    
+    // try {
+    //     let user = await userModel.findOne({ user: req.user })
+    //     console.log("here",req.body);
+    //     console.log("hi",req.user);
+    //     console.log(user);
+    //     res.send(user)
+    // }
+    // catch (err) {
+    //     res.send(err);
+    //     console.log(err);
+    // }
 
 }
-userController.updateUser = (req, res) => {
-    userModel.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (error, user) => {
-        res.status(200).json({ "data": user });
-    }).catch((err) => {
-        console.log(err);
-        res.status(400).json({ "error": err });
-    })
+userController.updateUser =async (req, res) => {
+    console.log("first",req.user._id);
+    const {name,username,status} = req.body;
+    console.log("body",req.body);
+    let image_path = 'public/uploads/users/images/' +req.file.filename ;
+    // userModel.findByIdAndUpdate( req.user._id , { new: true },{'avatar':image_path}, (error, user) => {
+    //     res.status(200).json({ "data": user });
+    const user = await User.findOneAndUpdate({_id:req.user._id},{'avatar':image_path,name,username,status})
+    res.status(200).json({"data": user});
+        // console.log(error);
+        console.log("user",user);
+        console.log("userID",req.user._id);
+//     }).catch((err) => {
+//         console.log(err);
+//         res.status(400).json({ "error": err });
+//     })
 }
 userController.saveReport = (req, res, next) => {
     try {
@@ -481,7 +529,7 @@ userController.removeFromCart = (req, res) => {
             })
 
             Product.find({ '_id': { $in: array } })
-                .populate('writer')
+                .populate('user')
                 .exec((err, cartDetail) => {
                     return res.status(200).json({
                         cartDetail,
@@ -492,8 +540,39 @@ userController.removeFromCart = (req, res) => {
     )
 }
 
-userController.userCartInfo = (req, res) => {
-    User.findOne(
+userController.removeCart = (req, res) => {
+
+    User.findOneAndUpdate(
+        { _id: req.user._id },
+        {
+            "$pull":
+                { "cart": {  } }
+        },
+        { new: true },
+        (err, userInfo) => {
+            let cart = userInfo.cart;
+            let array = cart.map(item => {
+                return item.id
+            })
+
+            Product.find({ '_id': { $in: array } })
+                .populate('user')
+                .exec((err, cartDetail) => {
+                    return res.status(200).json({
+                        cartDetail,
+                        cart
+                    })
+                })
+        }
+    )
+}
+
+userController.userCartInfo= async (req, res) => {
+    console.log('====================================');
+    console.log("5555555555555555555555555");
+    console.log('====================================');
+
+    await    User.findOne(
         { _id: req.user._id },
         (err, userInfo) => {
             let cart = userInfo.cart;
@@ -501,12 +580,13 @@ userController.userCartInfo = (req, res) => {
                 return item.id
             })
 
-
             Product.find({ '_id': { $in: array } })
-                .populate('user')
-                .exec((err, cartDetail) => {
+                .populate('owner')
+                .exec( (err, cartDetail) => {
+                    console.log("ssssssss",cartDetail);
+                    
                     if (err) return res.status(400).send(err);
-                    return res.status(200).json({ success: true, cartDetail, cart })
+                    return res.status(200).send({ success: true, cartDetail, cart })
                 })
 
         }

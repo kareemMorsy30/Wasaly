@@ -3,17 +3,23 @@ import { Card, Button, Spinner } from 'react-bootstrap'
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
-const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
+const ShowProducts = ({ products, setProducts,lastProductElementRef,showAddToCartButton=true ,addToCart}) => {
   // const {state:{products}}= useLocation()
   const [filteredProducts, setFilteredProducts] = useState(products)
   const [productName, setProductName] = useState('')
   const [brandName, setBrandName] = useState('')
+const [showButton, setshowButton] = useState(showAddToCartButton)
+
+console.log('====================================');
+// console.log(product.q);
+console.log('====================================');
+// const [forceRerender, setForceRerender] = React.useState(true);
+
   // const [minValue, setMinValue ]=useState(0)
   // const [maxValue, setMaxValue ]=useState(20000)
   // const [step, setStep ]=useState(150)
   // const [firstValue, setFirstValue ]=useState(0)
   // const [secondValue, setSecondValue ]=useState(10000)
-
 
   useEffect(() => {
     setFilteredProducts(() => [...products])
@@ -35,15 +41,62 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
     } else setFilteredProducts(products)
   }
 
-  const addToCarthandler = (id) => {
+  const addToCarthandler = (prod) => {
     console.log('====================================');
-    console.log("id ", id);
+    console.log("id ", prod._id);
     console.log('====================================');
-    addToCart(id)
+    console.log('***************************************',
+    setProducts(products.map(product => {
+      if(product._id.toString() === prod._id.toString()){
+        product.quantity = --prod.quantity;
+      }
+      return product;
+    })));
+    addToCart(prod._id)
+    
     
     
 }
-  // const filterByPrice=(event,name)=>{    
+
+
+
+// const showAddToCart = (showAddToCartButton,product) => {
+//   // setquantity(product.quantity)
+
+//   return (
+//     showAddToCartButton && (
+    
+
+//     )
+//   );
+// };
+
+const showStock = (product) => {
+console.log(product.quantity);
+
+  { if(product.quantity > 0) { 
+
+    return(
+    
+    <>
+   <Button variant="danger" onClick={()=>{
+        
+        addToCarthandler(product)
+      
+      }} className="btn-card">Add to Cart</Button>
+    <span className="badge badge-primary badge-pill mb-2">In Stock</span>
+    <h1>{product.quantity}</h1>
+
+</>
+  )} else { return ( <>
+      <span className ="badge badge-primary badge-pill mb-2">Out of Stock</span>
+        {()=>setshowButton(false)}
+</>
+    )
+    }
+};
+}
+// const filterByPrice=(event,name)=>{    
   //   let value = event.target.value;
   //   if(name === "second"){        
   //   		if(parseInt(firstValue) < parseInt(value)){
@@ -52,7 +105,7 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
   //   }
   //   else{
   //   		if(parseInt(value) < parseInt(secondValue)){      
-  //         setFirstValue(value)
+  //         setFirstValue(value) 
   //       }
   //   }  
   //   if (products.length > 0 && event.target.value != "") {
@@ -85,6 +138,7 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
           <div className="row">
             {filteredProducts && filteredProducts.map((product, index) => {
               if (products.length === index + 1) {
+
                 return (
                   <Card style={{ width: '20rem', marginTop: '10px' }} key={product._id} ref={lastProductElementRef}>
                     <Card.Img variant="top" src={`${domain}/${product.images_path[0]}`} style={{ width: '90%', margin: 'auto', marginTop: '10px', flex: '1 0 auto' , height:'10rem'}} />
@@ -93,11 +147,13 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
                       <Card.Text style={{ color: '#006fcc' }}>
                         {product.price} <span style={{ fontSize: '10px' }}>EGP</span>
                       </Card.Text>
-                    
+                      <Card.Text style={{ color: '#006fcc' }}>
+                      {showStock(product)}
+                         <span style={{ fontSize: '10px' }}></span>
+                      </Card.Text>
             
                       <div style={{ display: 'flex', 'justifyContent': 'space-around', flexShrink: 0 }}>
                         <Button variant="danger" className="btn-card" >View</Button>
-                        <Button variant="danger" onClick={()=>addToCarthandler(product._id)} className="btn-card">Add to Cart</Button>
                       </div>
                     </Card.Body>
                   </Card>
@@ -113,9 +169,14 @@ const ShowProducts = ({ products, lastProductElementRef ,addToCart}) => {
                       <Card.Text style={{ color: '#006fcc' }}>
                         {product.price} <span style={{ fontSize: '10px' }}>EGP</span>
                       </Card.Text>
+                      <Card.Text style={{ color: '#006fcc' }}>
+                        
+                      {showStock(product)}
+
+                        <span style={{ fontSize: '10px' }}></span>
+                      </Card.Text>
                       <div style={{ display: 'flex', 'justifyContent': 'space-around' }}>
                         <Button variant="danger" className="btn-card" >View</Button>
-                        <Button variant="danger" onClick={()=>addToCarthandler(product._id)}  className="btn-card">Add to Cart</Button>
                       </div>
                     </Card.Body>
                   </Card>
