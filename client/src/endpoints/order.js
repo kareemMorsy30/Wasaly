@@ -16,7 +16,6 @@ export const getAvailableTransportations = () => {
 
 export const getAvailableServiceOwners = (order, owner) => {
     const url = `${domain}/services/available/owners`;
-    console.log(localStorage.getItem("token"));
 
     return axios.post(url, {
         ...order
@@ -46,4 +45,23 @@ export const submitOrder = (order, owner) => {
             return res.data;
     })
     .catch(err => err);
+}
+
+//For a Customer
+export const MakeOrder = (order) => {
+    const url = `${domain}/orders/addOrder`;
+
+    return axios.post(url, {
+        ...order,
+        // serviceOwnerId: owner._id
+    },
+    {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+        if(res.data)
+            return res.data;
+    })
+    .catch(err => err);
+
 }

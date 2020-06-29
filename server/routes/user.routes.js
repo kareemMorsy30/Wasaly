@@ -140,6 +140,7 @@ router.post('/admin', adminAuth,
 
     router.post('/addToCart',userController.addToCart);
 router.delete('/removeFromCart',userController.removeFromCart);
-router.get('/userCartInfo',userController.userCartInfo);
+router.delete('/removeCart',userController.removeCart);
+
 
 module.exports = router;

@@ -5,6 +5,8 @@ const {
  } = require('../controllers/product')
 var multer = require('multer')
 const Product = require('../models/product')
+// const {pro} = require('../models/allModels')
+
 const { route } = require('./search')
 const productOwner= require('../config/productOwner')
 const { Auth } = require('../middlewares/Auth');
@@ -25,8 +27,15 @@ router.get('/:id/ownerinfo', productDetails)
 
 Auth(router);
 // router.get('/categoryproducts',showCategoryProducts);
+
+
+//Get Cart Items CART PAGE 
 router.get("/products_by_id", (req, res) => {
     let type = req.query.type
+    console.log(type);
+    console.log(typeof type);
+    
+    
     let productIds = req.query.id
 
     console.log("req.query.id", req.query.id)
@@ -35,6 +44,8 @@ router.get("/products_by_id", (req, res) => {
         let ids = req.query.id.split(',');
         productIds = [];
         productIds = ids.map(item => {
+            console.log("item",item);
+            
             return item
         })
     }
@@ -43,8 +54,8 @@ router.get("/products_by_id", (req, res) => {
 
 
     //we need to find the product information that belong to product Id 
-    Product.find({ '_id': { $in: productIds } })
-        .populate('user')
+    Product.find({ '_id': { $in: productIds } }).
+        populate({path:"owner",populate:{path:"user"} }).populate('user')
         .exec((err, product) => {
             if (err) return res.status(400).send(err)
             return res.status(200).send(product)

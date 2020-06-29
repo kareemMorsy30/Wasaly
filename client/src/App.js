@@ -9,7 +9,6 @@ import UpdateProduct from "./components/product owner/updateProduct";
 import ListProducts from "./components/product owner/listProducts";
 import Connections from "./components/product owner/connection";
 import ProductOwnerDetails from "./components/product owner/productOwnerDetails";
-import AdminProductOwners from "./components/admin/productOwners";
 import ListCatProducts from "./components/product owner/CategoryProducts";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
@@ -23,9 +22,11 @@ import UserNavBar from "./components/user/userNavBar";
 import UserAndCustomerNavBar from "./components/layouts/site/navbar";
 /*** Service owners */
 import ServiceOwnerOrders from "./components/service owner/orders";
-import Reviews from "./components/service owner/reviews/reviews";
 /**** Admin ****/
 import AdminServiceOwners from "./components/admin/serviceOwners";
+
+import AdminProductOwners from "./components/admin/productOwners";
+
 import All from "./components/admin/categories/all";
 import Landing from "./components/layouts/dashboard/landing";
 /**
@@ -63,7 +64,7 @@ import SiteLayout from "./components/layouts/site/layout";
 import Welcome from "./components/user/welcome"
 import Notifications from "./components/layouts/notifications";
 import ConnectedProductOwnerOrders from "./components/service owner/productOwnerOrders"
-
+import ProductOwnerOrders from "./components/product owner/orders"
 
 
 function App() {
@@ -116,7 +117,6 @@ function App() {
             path="/service-owner/connection"
             component={ProductOwnerDetails}
           />
-          <Route exact path="/service-owner/reviews" component={Reviews} />
           {/* Product owner routes */}
           
         <Route exact path="/productownerprofile" component={ProductOwnerProfile}/>
@@ -141,6 +141,9 @@ function App() {
 
           <ProductOwnerRoute exact path="/product-owner/products/create">
             <CreateProduct />
+          </ProductOwnerRoute>
+          <ProductOwnerRoute exact path="/product-owner/orders">
+            <ProductOwnerOrders />
           </ProductOwnerRoute>
 
           <ProductOwnerRoute exact path="/product-owner/products/:id/edit">
@@ -189,6 +192,7 @@ function App() {
                 "/register",
                 "/",
                 "/search/:id",
+                "/service",
                 "/categoryproducts/:id",
                 "/products/create",
                 "/products/:id/edit",
@@ -239,7 +243,7 @@ function App() {
                 {/* http://localhost:3000/5ef231d4a5a9572baa78364f/ownerinfo */}
                 <Route exact path="/:id/ownerinfo" component={ProductDetails} />
                 <Route exact path="/cart" component={Auth(CartPage, true)} />
-
+                <Route exact path="/service" component={Delivery} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/table" component={table} />
                 </div>

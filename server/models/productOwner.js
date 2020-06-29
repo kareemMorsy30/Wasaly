@@ -13,7 +13,7 @@ const ProductOwnerSchema = new mongoose.Schema({
             ref: "User", 
             required: [true, 'Provide User who submitted the report'] 
         },
-        createdAt: { type: Date, default: new Date() }
+        createdAt: { type: Date, default: Date.now() }
     }],
 })
 

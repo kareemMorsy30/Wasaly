@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import axios from 'axios'
-import {  Spinner } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom'
 import VerticallyCenteredModal from '../verticallCenteredModal'
 import { authHeader } from '../config/config'
@@ -32,6 +32,7 @@ const ListCatProducts = (props) => {
     const [state, setstate] = useState({})
 
 
+
     const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
     useEffect(() => {
         setProducts([])
@@ -49,6 +50,8 @@ const ListCatProducts = (props) => {
         })
             .then(response => {
                 console.log(response.data.products)
+
+
                 response.data.products.length > 0 && (
                     setProducts(prevProducts => {
                         return [...prevProducts, ...response.data.products]
@@ -67,29 +70,15 @@ const ListCatProducts = (props) => {
 
     const observer = useRef()
     const addToCartHandler = (productId) => {
-       console.log('====================================');
-       console.log(productId);
-       console.log('====================================');      
-         axios.post(`${domain}/users/addToCart?productId=${productId}`
-        ,authHeader
-        ,
-
-    {   
-                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-}
-    
-    
-    ).then(response=>       response.data
-        
-       
-    ).catch((e)=>{e.message="please Signin"
-        toast(e.message);
-        
-    }
-    )
-
-
-
+        axios.post(`${domain}/users/addToCart?productId=${productId}`, authHeader,
+            {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            }
+        ).then(response => {
+            console.log(response.data)
+        }).catch((e) => {
+            console.log(e);
+        })
     }
 
     const lastProductElementRef = useCallback(node => {
@@ -104,9 +93,9 @@ const ListCatProducts = (props) => {
     }, [loading, hasMore])
 
     return (
-        
         <>
-            <ShowProducts products={products} addToCart={addToCartHandler}  lastProductElementRef={lastProductElementRef} />
+            <ShowProducts products={products} setProducts={setProducts} addToCart={addToCartHandler} showAddToCartButton={false}
+                lastProductElementRef={lastProductElementRef} />
             <div className="container" style={{ margin: 'auto', marginTop: '20vh', width: '20%' }}>
                 {
                     loading &&
@@ -117,37 +106,10 @@ const ListCatProducts = (props) => {
                     </div>
                 }
             </div>
-            <ToastContainer/>
+            <ToastContainer />
             {error}
         </>
     )
 
 }
 export default ListCatProducts
-
-
-
-/**
- *   const addToCartHandler = (productId) => {
-        console.log('====================================');
-        console.log(productId);
-        console.log('====================================');
-        axios.post(`${domain}/users/addToCart?productId=${productId}`
-        ,authHeader,
-
-    {   
-                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-}
-    
-    
-    ).then(response=>       response.data
-        
-       
-    ).catch(e=>console.log(e)
-    )
-
-
-
-    }
-
- */

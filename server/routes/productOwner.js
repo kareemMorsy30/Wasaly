@@ -59,4 +59,10 @@ router.get('/one/status',productOwnerController.changeStatus);
 //update data of product owner
 router.patch('/one/modify',upload.single('avatar'),productOwnerController.updateProducteOwner);
 
+//get product owner orders
+router.get('/orders',productOwnerController.getProductOwnerOrders);
+
+//change status of product owner products of order
+router.patch('/orders/:orderId/',productOwnerController.changeProductsStatus);
+
 module.exports = router;

@@ -42,6 +42,9 @@ router.get('/notifications', service.notifications);
 // Read notifications
 router.put('/notifications', service.readNotifications);
 
+// Get user statistics
+router.get('/statistics', service.statistics);
+
 // Request a service owner for delivery
 router.post('/available/owners', serviceController.filteredServiceOwners);
 

@@ -233,14 +233,14 @@ const Authentication = (props) => {
 
 
                             }).then(res => { 
-                                toast.success('upload success')
+                                // toast.success('upload success')
                             })
                             .catch(err => { 
-                                toast.error('upload fail')
+                                // toast.error('upload fail')
                             });
                         }
                         if (response.status==250) {
-                            setErrorsRegister(response.data.message)
+                            // setErrorsRegister(response.data.message)
 
                             // toast(errorsRegister)
 
@@ -269,10 +269,10 @@ const Authentication = (props) => {
                         
                         console.log('====================================');
                             error.message=" Email address  is already taken";
-                            setErrorsRegister(error.message)
+                            // setErrorsRegister(error.message)
 
-                          seterror(error.message)
-                          toast(error.message)
+                        //   seterror(error.message)
+                        //   toast(error.message)
                       }
                       )
 
@@ -327,17 +327,17 @@ const Authentication = (props) => {
 
 
                         }).then(res => { 
-                            toast.success('upload success')
+                            // toast.success('upload success')
                         })
                         .catch(err => { 
                             
-                            toast.error('upload fail')
+                            // toast.error('upload fail')
                         });
                     }
 
                     if (response.status == 250) {
 
-                        setErrorsRegister(response.data.message)
+                        // setErrorsRegister(response.data.message)
 
                     } else if (response.status == 200) {
 
@@ -360,10 +360,10 @@ const Authentication = (props) => {
                     
                     console.log('====================================');
                         error.message=" Email address is already taken";
-                        setErrorsRegister(error.message)
+                        // setErrorsRegister(error.message)
                       
                         seterror(error.message)
-                      toast(error.message)
+                    //   toast(error.message)
                   }
                 
                 )
@@ -418,7 +418,7 @@ const Authentication = (props) => {
 
                     if (response.status == 250) {
 
-                        setErrorsRegister(response.data.message)
+                        // setErrorsRegister(response.data.message)
 
                     } else if (response.status == 200) {
 
@@ -441,10 +441,10 @@ const Authentication = (props) => {
                     
                     console.log('====================================');
                         error.message=" Email address is already taken";
-                        setErrorsRegister(error.message)
+                        // setErrorsRegister(error.message)
                     
                         seterror(error.message)
-                      toast(error.message)
+                    //   toast(error.message)
                   }
                 
                 
@@ -516,7 +516,7 @@ noValidate
           }}                       
             {...bindname}
 
-                    />*
+                    />
 
                 </FormGroup>
              
@@ -614,18 +614,27 @@ pattern: {value: '/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/', errorMessage: 
                         <Label >serviceowner</Label>
 
 
-                        <Input type="number" name="distance" placeholder="distance"
-
+                        <AvField type="number" name="distance" placeholder="distance"
+    validate={{
+            required: {value: true,errorMessage: 'Please enter distance'},
+           
+          }}   
                             {...bindD}
 
                         />
-                        <Input type="number" name="region" placeholder="region"
-
+                        <AvField type="number" name="region" placeholder="region"
+validate={{
+            required: {value: true,errorMessage: 'Please enter region'},
+           
+          }}
                             {...bindR}
 
                         />
-                        <Input type="text" name="transportation" placeholder="transportation"
-
+                        <AvField type="text" name="transportation" placeholder="transportation"
+validate={{
+            required: {value: true,errorMessage: 'Please enter transportation'},
+           
+          }}
                             {...bindT}
 
                         />
@@ -637,7 +646,10 @@ pattern: {value: '/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/', errorMessage: 
                 <FormGroup >
                     {phones.map((phone, index) => {
                         return (<div key={index}>
-                        <Input className="form-input" placeholder="Phone" value={phone}
+                        <AvField className="form-input" placeholder="Phone" value={phone} name="phone"
+                     validate={{
+                        pattern:{value:'^(012|011|010|015)[0-9]{8}$',errorMessage: 'You phpne must be a valid number'}
+                         }}
                             onChange={handleChangePhone(index)} />
                             
                             {
@@ -742,9 +754,9 @@ pattern: {value: '/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/', errorMessage: 
 
 
             </AvForm>
-            {errorsRegister ? <div className="errors-div">
+            {/* {errorsRegister ? <div className="errors-div">
                 <small> {errorsRegister}</small>
-            </div> : null}
+            </div> : null} */}
         </div>
     )
 }

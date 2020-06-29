@@ -6,11 +6,19 @@ import 'react-toastify/dist/ReactToastify.css';
 import '../../styles/form.scss';
 import { getAvailableTransportations, getAvailableServiceOwners } from '../../endpoints/order';
 import { getGeoLocation } from '../../endpoints/geocoding';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../../styles/delivery-section.scss';
 
 const ServiceOrderForm = ({ setServiceOwners, setWaiting, setOrder }) => {
+    const error = () => {
+        toast.error("Check all required fields!", {
+          position: toast.POSITION.TOP_LEFT
+        });
+    };
+
     const [item, setItem] = useState('')
-    const [amount, setAmount] = useState(1)
+    const [amount, setAmount] = useState('')
     const [description, setDescription] = useState('')
     const [transportation, setTransportation] = useState('');
     const [from, setFrom] = useState({
@@ -68,6 +76,14 @@ const ServiceOrderForm = ({ setServiceOwners, setWaiting, setOrder }) => {
                     setFromValue(data.area);
                 }
             })
+        }else if(input.length <= 2){
+            setFrom({ 
+                ...from,
+                area: '',
+                city: '',
+                longitude: null,
+                latitude: null,
+            })
         }
     }
 
@@ -91,17 +107,30 @@ const ServiceOrderForm = ({ setServiceOwners, setWaiting, setOrder }) => {
                     setToValue(data.area);
                 }
             })
+        }else if(input.length <= 2){
+            setTo({ 
+                ...to,
+                area: '',
+                city: '',
+                longitude: null,
+                latitude: null,
+            })
         }
     }
 
     const handleSubmit = event => {
-        setWaiting(true);
         event.preventDefault();
-        if(!item || !amount || !description || !transportation || !from || !to)
+        
+        if(!item || !amount || !description || !transportation || !from.area || !from.city || !to.area || !to.city){
             setAlert({
                 message: 'Check required inputs',
                 type: 'error'
             })
+            toast('Check required inputs!');
+            return;
+        }
+
+        setWaiting(true);
 
         const order = {
             item,
@@ -116,7 +145,12 @@ const ServiceOrderForm = ({ setServiceOwners, setWaiting, setOrder }) => {
 
         getAvailableServiceOwners(order)
         .then(owners => {
-            setServiceOwners(owners);
+            if(owners.length > 0){
+                setServiceOwners(owners);
+            }else {
+                toast('No serivce owner available for provided criteria');
+            }
+            
             setWaiting(false);
         })
         .catch(err => console.error(err));
@@ -140,13 +174,14 @@ const ServiceOrderForm = ({ setServiceOwners, setWaiting, setOrder }) => {
 
     return (
         <div className="delivery-form">
+            <ToastContainer />
             <form onSubmit={handleSubmit}>
                 <div className="form_container">
-                    <input type="text" placeholder="From" value={fromValue} onChange={insertFrom} list="from" style={{border: alert.type === 'error' && !from.area && '1px red solid'}}/>
+                    <input type="text" placeholder="From" value={fromValue} onChange={insertFrom} list="from" style={{border: alert.type === 'error' && (!from.area || !from.city) && '1px red solid'}}/>
                     <datalist id="from">
                         <option key="source" value={from.area}/>
                     </datalist>
-                    <input type="text" placeholder="To" value={toValue} onChange={insertTo} list="to-list" style={{border: alert.type === 'error' && !to.area && '1px red solid'}}/>
+                    <input type="text" placeholder="To" value={toValue} onChange={insertTo} list="to-list" style={{border: alert.type === 'error' && (!to.area || !to.city) && '1px red solid'}}/>
                     <datalist id="to-list">
                         <option key="destination" value={to.area}/>
                     </datalist>

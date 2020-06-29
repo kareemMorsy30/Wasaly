@@ -23,6 +23,7 @@
     "push.js": "^1.0.12",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
+    "react-charts": "^2.0.0-beta.7",
     "react-dom": "^16.13.1",
     "react-dropdown-select": "^4.4.1",
     "react-google-login": "^5.1.20",

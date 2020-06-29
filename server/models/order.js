@@ -40,11 +40,11 @@ const orderSchema = new mongoose.Schema({
     item: { type: String, required: true },
     amount: {
         type: Number,
-        required: true
+        // required: true
     },
     cost: {
         type: Number,
-        required: true
+        // required: true
     },
     description: {
         type: String
@@ -63,7 +63,9 @@ const orderSchema = new mongoose.Schema({
                 default: "Pending"
             }
         }
-    ]
+    ],
+    createdAt: { type: Date, default: Date.now() },
+    phone: { type: String, mathc: '(01)[0-9]{9}'}
 })
 
 orderSchema.pre('save', function (next) {
@@ -77,15 +79,32 @@ orderSchema.pre('save', function (next) {
         try {
             this.products.forEach(async product => {
                 productInf = await Product.findById(product.product).populate({ path: 'owner', populate: { path: 'user' } }).select('owner.user')
+             
                 serviceOwners = await ServiceOwner.find({ 'productOwner.user': productInf.owner.user, 'productOwner.status': 'Connected' }).populate('user')
 
                 if (!productOwners.includes(productInf.owner.user)) {
                     productOwners.push(productInf.owner.user)
                     this.productOwners.push({ productOwner: productInf.owner.user, status: 'Pending' })
+
+                    let info = {
+                        title: 'New Order',
+                        message: `New order from customer`,
+                        link: 'http://localhost:3000/product-owner/orders',
+                        body: this
+                    }
+
+                    User.findOneAndUpdate({ _id: productInf.owner.user }, { $push: { notifications: info } })
+                        .then(user => {
+                            io.sockets.in(`${user.email}`).emit('pushNotification', info);
+
+                            next()
+                        }).catch((e) =>
+                            next(e)
+                        )
                 }
 
                 let info = {
-                    title: 'new order',
+                    title: 'New Order',
                     message: `New order from ${productInf.owner.user.name}`,
                     link: 'http://localhost:3000/service-owner/product-orders',
                     body: this
@@ -111,7 +130,7 @@ orderSchema.pre('save', function (next) {
             })
             services = []
             productOwners = []
-            
+
         } catch (e) {
             console.log(e)
         }

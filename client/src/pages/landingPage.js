@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Delivery from '../components/customer/delivery';
 import CardWithImage from '../components/cardWithImage'
 import UserNavBar from "../components/user/userNavBar";
 import axios from 'axios'
@@ -24,7 +23,6 @@ const LandingPage = () => {
     return (
         <>
             <div className="container">
-                <Delivery />
                 <br />
                 <div className="container" style={{ marginTop: '80px' }}>
                     <div className="row">
