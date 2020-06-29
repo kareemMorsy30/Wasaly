@@ -64,7 +64,8 @@ const orderSchema = new mongoose.Schema({
             }
         }
     ],
-    createdAt: { type: Date, default: Date.now() }
+    createdAt: { type: Date, default: Date.now() },
+    phone: { type: String, mathc: '(01)[0-9]{9}'}
 })
 
 orderSchema.pre('save', function (next) {
@@ -78,6 +79,7 @@ orderSchema.pre('save', function (next) {
         try {
             this.products.forEach(async product => {
                 productInf = await Product.findById(product.product).populate({ path: 'owner', populate: { path: 'user' } }).select('owner.user')
+             
                 serviceOwners = await ServiceOwner.find({ 'productOwner.user': productInf.owner.user, 'productOwner.status': 'Connected' }).populate('user')
 
                 if (!productOwners.includes(productInf.owner.user)) {

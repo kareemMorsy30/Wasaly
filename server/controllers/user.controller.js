@@ -20,13 +20,10 @@ const { pushNotification } = require('./controller');
 userController.regesiter = async (req, res, next) => {
 
     const { name, username, email, password, role, phones, address } = req.body;
-    console.log(role)
     const newUser = new User({
         name, username, email, password, phones, role, address
     });
-    console.log('====================================');
-    console.log("PHONES ", phones);
-    console.log('====================================');
+ 
     if (newUser.role === "admin") {
 
         res.send({ message: "You Are Not Allowrd to be an Admin " })
@@ -63,18 +60,14 @@ userController.regesiter = async (req, res, next) => {
             });
             // console.log("\n  new USER :::     ", newUser.role);
             const serviceOwner = await newServiceOwner.save();
-            console.log("\n Service owner ::    :      :    ".serviceOwner);
-            console.log("i'm in role");
-            console.log(newUser)
+         
             sendEmail(req,res,newUser)
         }
         catch (e) {
             console.log(e)
             
             if (e.name === "MongoError" && e.code === 11000) {
-                console.log('====================================');
-                console.log(e);
-                console.log('====================================');
+               
                 const error = new Error(`Email address ${newUser.email} is already taken`);
                 error.status = 400
                 next(error);
@@ -91,12 +84,9 @@ userController.regesiter = async (req, res, next) => {
             const newProductOwner = new allModels.productOwner({
                 user: newUser._id, marketName, ownerName, marketPhone
             });
-            console.log("\n  new  newProductOwner:::     ", newProductOwner.role);
-            console.log("\n  new newProductOwner.user :::     ", newProductOwner.user);
-            console.log("\n  new newProductOwner :::     ", newProductOwner);
+         
             const productOwner = await newProductOwner.save();
-            console.log("\n pOwner ::    :      :    ".productowner);
-            console.log("i'm in role");
+           
             sendEmail(req,res,newUser)
         } catch (e) {
             if (e.name === "MongoError" && e.code === 11000) {
@@ -113,8 +103,7 @@ userController.regesiter = async (req, res, next) => {
 };
 
 const sendEmail = (req, res, user) => {
-    console.log('send emaiiil')
-    console.log(user)
+   
     try {
         var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
 
@@ -236,9 +225,7 @@ userController.login = async (request, response, next) => {
 userController.uploadAvatar = async (req, res) => {
     User.findById(req.params.id, (err, user) => {
 
-        console.log('====================================');
-        console.log(user);
-        console.log('====================================');
+     
 
         if (!user) {
             res.status(404).send("user is not found")
@@ -333,17 +320,12 @@ userController.googleSignIn = async (req, res) => {
 
 
 userController.addToCart = (req, res) => {
-    // console.log('====================================');
-    console.log("ssssss");
-    // console.log('====================================');
-    //     res.send({mesg:okey})
+ 
     const userID = req.user._id;
-    console.log(userID);
 
     User.findOne({ _id: userID }, (err, userInfo) => {
         let duplicate = false;
 
-        console.log(userInfo)
 
         userInfo.cart.forEach((item) => {
             if (item.id == req.query.productId) {
@@ -380,9 +362,7 @@ userController.addToCart = (req, res) => {
             )
 
             Product.findOne({_id:req.query.productId},(err,productCart)=>{
-                console.log('=================Product Cart===================');
-                console.log(productCart);
-                console.log('====================================');
+               
                 User.findOneAndUpdate(
                     { _id: req.user._id },
                     {
@@ -412,15 +392,12 @@ userController.addToCart = (req, res) => {
 userController.getAllUsers = async (req, res) => {
     try {
         let user = await userModel.find()
-        console.log(user);
         res.send(user)
     } catch (err) {
-        console.log(err);
         res.send(err);
     }
 }
 userController.getUser = async (req, res) => {
-    // console.log("body",req.body);
     if(req.user){
         return res.send(req.user)
     }else{
@@ -441,9 +418,7 @@ userController.getUser = async (req, res) => {
 
 }
 userController.updateUser =async (req, res) => {
-    console.log("first",req.user._id);
     const {name,username,status} = req.body;
-    console.log("body",req.body);
     let image_path = 'public/uploads/users/images/' +req.file.filename ;
     // userModel.findByIdAndUpdate( req.user._id , { new: true },{'avatar':image_path}, (error, user) => {
     //     res.status(200).json({ "data": user });
@@ -514,7 +489,7 @@ userController.saveProductOwnerReport = (req, res, next) => {
 }
 
 userController.removeFromCart = (req, res) => {
-
+    
     User.findOneAndUpdate(
         { _id: req.user._id },
         {
@@ -541,7 +516,6 @@ userController.removeFromCart = (req, res) => {
 }
 
 userController.removeCart = (req, res) => {
-
     User.findOneAndUpdate(
         { _id: req.user._id },
         {
@@ -568,9 +542,7 @@ userController.removeCart = (req, res) => {
 }
 
 userController.userCartInfo= async (req, res) => {
-    console.log('====================================');
-    console.log("5555555555555555555555555");
-    console.log('====================================');
+   
 
     await    User.findOne(
         { _id: req.user._id },
@@ -583,7 +555,6 @@ userController.userCartInfo= async (req, res) => {
             Product.find({ '_id': { $in: array } })
                 .populate('owner')
                 .exec( (err, cartDetail) => {
-                    console.log("ssssssss",cartDetail);
                     
                     if (err) return res.status(400).send(err);
                     return res.status(200).send({ success: true, cartDetail, cart })
@@ -593,10 +564,7 @@ userController.userCartInfo= async (req, res) => {
     )
 }
 
-// ,{
-//     product: "5ee39afd07d185258b6b4697",
-//     amount: 3
-// }
+
 userController.test = async (req, res) => {
     await new Order(
         {
@@ -634,50 +602,6 @@ userController.test = async (req, res) => {
             description: "adidas shoes red colorrrrrrr",
             targetedServiceOwners: []
         }).save()
-    console.log('oj')
     res.send('done')
 }
 module.exports = userController;
-/**
- *
- * {
-
-    "phones": ["01097567990"],
-    "name": "SHaBAN",
-    "username": "SHaBAN",
-    "email": "shshshs@gmail.com",
-    "password": "12345678d",
-    "role": "customer",
-    "address": [{
-
-        "street": "ss",
-        "city": "ooooo",
-        "area": "xsssx",
-		"location":{"latitude":220,"longitude":220}
-    }],
-    "image_path": "axxx.png",
-	"distance":2802,
-	"region":"66",
-	"transportation":"car"
- */
-
-
-// {
-
-    // "name":"adham",
-    // "username":"ssadham",
-    // "email": "adham@gmail.com",
-    // "password": "12345678d",
-    // "role": "customer",
-    // "address": [{
-
-    //     "street": "ss",
-    //     "city": "ooooo",
-    //     "area": "xsssx",
-	// 	"location":{"latitude":220,"longitude":220}
-    // }],
-    // "image_path": "axxx.png",
-	// "marketName":"sports",
-    // "ownerName": "adham" ,
-    // "marketPhone": "01143632151"
-// }

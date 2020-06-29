@@ -79,13 +79,13 @@ console.log(product.quantity);
     return(
     
     <>
+    <span className="badge badge-primary badge-pill mb-2">In Stock</span>
+    <h1>{product.quantity}</h1>
    <Button variant="danger" onClick={()=>{
         
         addToCarthandler(product)
       
       }} className="btn-card">Add to Cart</Button>
-    <span className="badge badge-primary badge-pill mb-2">In Stock</span>
-    <h1>{product.quantity}</h1>
 
 </>
   )} else { return ( <>

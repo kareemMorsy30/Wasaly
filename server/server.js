@@ -37,7 +37,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('unsubscribe', function(data) { socket.leave(data.room); })
 
 });
-app.use(cors({origin: "http://localhost:3000", credentials: true,methods:"GET,POST,PUT,PATCH,OPTIONS"}));
+app.use(cors({origin: "http://localhost:3000", credentials: true,methods:"GET,POST,PUT,PATCH,DELETE,OPTIONS"}));
 app.use(express.json())
 // app.use(express.static('public'));
 app.use('/public', express.static(path.join(__dirname, 'public'))) ;
