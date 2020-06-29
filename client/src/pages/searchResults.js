@@ -4,7 +4,6 @@ import useProductSearch from '../components/hooks/useProductSearch'
 import axios from 'axios'
 import ShowProducts from '../components/showProducts'
 import {
-  BrowserRouter as Router,
   useParams,
 } from "react-router-dom";
 import { authHeader } from '../components/config/config'
@@ -22,7 +21,6 @@ const SearchResults = () => {
     error
   } = useProductSearch(id, pageNumber)
 
-  console.log(productss)
 
   useEffect(() => {
     setPageNumber(1)
