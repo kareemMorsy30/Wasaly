@@ -6,7 +6,7 @@ export default function useProductSearch(query, pageNumber) {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [hasMore, setHasMore] = useState(false)
-    const [products, setProducts]= useState([])
+    const [productss, setProducts]= useState([])
 
     useEffect(()=>{
         setProducts([])
@@ -33,5 +33,5 @@ export default function useProductSearch(query, pageNumber) {
         })
         return ()=> cancel()
     }, [query, pageNumber])
-    return {loading, error, hasMore,products}
+    return {loading, error, hasMore,productss}
 }

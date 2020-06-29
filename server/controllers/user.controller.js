@@ -564,7 +564,6 @@ userController.userCartInfo= async (req, res) => {
     )
 }
 
-
 userController.test = async (req, res) => {
     await new Order(
         {

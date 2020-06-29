@@ -8,7 +8,7 @@ const ShowProducts = ({ products, setProducts,lastProductElementRef,showAddToCar
   const [filteredProducts, setFilteredProducts] = useState(products)
   const [productName, setProductName] = useState('')
   const [brandName, setBrandName] = useState('')
-const [showButton, setshowButton] = useState(showAddToCartButton)
+  const [showButton, setshowButton] = useState(showAddToCartButton)
 
 console.log('====================================');
 // console.log(product.q);
@@ -53,7 +53,6 @@ console.log('====================================');
       return product;
     })));
     addToCart(prod._id)
-    
     
     
 }
