@@ -50,8 +50,6 @@ const ShowProducts = ({ products, setProducts, lastProductElementRef, showAddToC
         return product;
       })));
     addToCart(prod._id)
-
-
   }
 
   const showStock = (product) => {
