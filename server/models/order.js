@@ -6,6 +6,8 @@ const { controller } = require('../controllers/allControllers')
 const { io } = require("../server");
 const service = require('../controllers/service');
 const serviceOwner = require('../config/serviceOwner');
+const { Order } = require('./allModels');
+const { serviceOwnerRouter } = require('../routes/allRoutes');
 
 const orderSchema = new mongoose.Schema({
     products: [{
@@ -50,45 +52,71 @@ const orderSchema = new mongoose.Schema({
     rate: {
         rating: { type: Number, default: 0 },
         reviews: [{ type: String }]
-    }
+    },
+    productOwners: [
+        {
+            productOwner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+            serviceOwner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+            status: {
+                type: String,
+                enum: ['Pending', 'Canceled', 'Accepted', 'Rejected', 'Out for delivery', 'Delivered'],
+                default: "Pending"
+            }
+        }
+    ]
 })
 
-orderSchema.post('save', function (doc, next) {
-    let productInf
-    let serviceOwners
-    let services=[]
+orderSchema.pre('save', function (next) {
 
-    try{
-        this.products.forEach(async product => {
-            console.log(product)
-            productInf = await Product.findById(product.product).populate({ path: 'owner', populate: { path: 'user' } }).select('owner.user')
-            console.log(productInf)
-            serviceOwners = await ServiceOwner.find({ 'productOwner.user': productInf.owner.user, 'productOwner.status':'Connected'}).populate('user')
-    
-            let info = {
-                title: 'new order',
-                message: `New order from ${productInf.owner.user.name}`,
-                link: 'http://localhost:3000/service-owner/product-orders',
-                body: this
-            }
-          
-            serviceOwners.forEach((serviceOwner) => {                        
-                if (serviceOwner.user.status === "online" && !services.includes(serviceOwner.user.name) ){
-                    services.push(serviceOwner.user.name)
-                    User.findOneAndUpdate({ email: serviceOwner.user.email }, { $push: { notifications: info } })
-                        .then(user => {
-                            io.sockets.in(`${serviceOwner.user.email}`).emit('pushNotification', info);
-                        })
+    if (this.productOwners.length < 1) {
+
+        let productInf
+        let serviceOwners
+        let services = []
+        let productOwners = []
+        try {
+            this.products.forEach(async product => {
+                productInf = await Product.findById(product.product).populate({ path: 'owner', populate: { path: 'user' } }).select('owner.user')
+                serviceOwners = await ServiceOwner.find({ 'productOwner.user': productInf.owner.user, 'productOwner.status': 'Connected' }).populate('user')
+
+                if (!productOwners.includes(productInf.owner.user)) {
+                    productOwners.push(productInf.owner.user)
+                    this.productOwners.push({ productOwner: productInf.owner.user, status: 'Pending' })
                 }
+
+                let info = {
+                    title: 'new order',
+                    message: `New order from ${productInf.owner.user.name}`,
+                    link: 'http://localhost:3000/service-owner/product-orders',
+                    body: this
+                }
+
+                serviceOwners.forEach((serviceOwner) => {
+                    if (serviceOwner.user.status === "online" && !services.includes(serviceOwner.user.name)) {
+                        services.push(serviceOwner.user.name)
+                        this.targetedServiceOwners.push(serviceOwner.user)
+
+                        User.findOneAndUpdate({ email: serviceOwner.user.email }, { $push: { notifications: info } })
+                            .then(user => {
+                                io.sockets.in(`${serviceOwner.user.email}`).emit('pushNotification', info);
+
+                                next()
+                            }).catch((e) =>
+                                next(e)
+                            )
+                    }
+                })
+
+
             })
-        })
-
-
-    }catch(e){
-        console.log(e)
+            services = []
+            productOwners = []
+            
+        } catch (e) {
+            console.log(e)
+        }
     }
-    services=[]
-    next()
+    else next()
 });
 
 
