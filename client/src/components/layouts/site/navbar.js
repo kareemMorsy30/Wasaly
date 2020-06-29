@@ -40,6 +40,12 @@ const NavBar = () => {
             })
             setNotificationsNo(counter);
         });
+        axios.get(`${domain}/customers/categories`).
+        then((res) => {
+            setCategories(res.data)
+        }).catch(e => {
+            console.log(e)
+        })
     }, []);
 
     useEffect(() => {
@@ -49,6 +55,7 @@ const NavBar = () => {
             counter, setNotificationsNo
         });
     }, [notifications])
+
 
     return (
         <>

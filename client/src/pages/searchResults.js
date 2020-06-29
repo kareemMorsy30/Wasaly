@@ -4,26 +4,33 @@ import useProductSearch from '../components/hooks/useProductSearch'
 import axios from 'axios'
 import ShowProducts from '../components/showProducts'
 import {
-  BrowserRouter as Router,
   useParams,
 } from "react-router-dom";
+import { authHeader } from '../components/config/config'
 
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
 const SearchResults = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const { id } = useParams()
-
-  useEffect(()=>{
-    setPageNumber(1)
-  },[id])
-  
+  const [products, setProducts] = useState([])
   const {
-    products,
+    productss,
     hasMore,
     loading,
     error
   } = useProductSearch(id, pageNumber)
+
+
+  useEffect(() => {
+    setPageNumber(1)
+  }, [id])
+
+  useEffect(() => {
+    setProducts(productss)
+  }, [productss])
+
+
 
   const observer = useRef()
 
@@ -38,14 +45,27 @@ const SearchResults = () => {
     if (node) observer.current.observe(node)
   }, [loading, hasMore])
 
+
+  const addToCartHandler = (productId) => {
+    axios.post(`${domain}/users/addToCart?productId=${productId}`, authHeader,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      }
+    ).then(response => {
+      console.log(response)
+    }
+    ).catch(
+        (e) => {
+          console.log(e);
+        }
+      )
+  }
   return (
     <>
-
       {
         products &&
-        <ShowProducts products={products} lastProductElementRef={lastProductElementRef} />
+        <ShowProducts products={products} setProducts={setProducts} addToCart={addToCartHandler} showAddToCartButton={false} lastProductElementRef={lastProductElementRef} />
       }
-
       <div className="container" style={{ margin: 'auto', marginTop: '20vh', width: '20%' }}>
         {
           loading &&
@@ -58,7 +78,6 @@ const SearchResults = () => {
       </div>
       <div>{error && 'Error'}</div>
     </>
-
   )
 
 }

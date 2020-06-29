@@ -85,8 +85,6 @@ exports.getOrder = async (req, res, next) => {
 }
 exports.addOrder = async (req, res, next) => {
     const { to, status, phone, description } = req.body
-    // console.log(from,to,status);
-
     await User.findOne(
         { _id: req.user._id },
         (err, userInfo) => {
@@ -95,7 +93,6 @@ exports.addOrder = async (req, res, next) => {
                 return item.id
             })
 
-            console.log("cart", cart);
             let total = 0;
 
             Product.find({ '_id': { $in: array } })
@@ -103,68 +100,29 @@ exports.addOrder = async (req, res, next) => {
                 ((err, cartDetail) => {
 
                     cart.map((cartproduct) => {
-                        // cartDetail.map((product)=>{
                         total += cartproduct.price * cartproduct.amount;
-                        // console.log(product);
-
-                        console.log("CART DETAIL ", cartDetail);
-                        // console.log("CART Product ",cartproduct);
-
-                        // console.log(product.price*cartproduct.amount);
-                        // console.log(product.name);
-                        console.log('====================================');
-                        console.log("CART IN  PRODUCTS ", cart);
-                        console.log('====================================');
-
+                        cartproduct.product = cartproduct.id
                         const products = [...cart]
-                        console.log('====================================');
-                        // console.log(products);
-                        console.log('====================================');
-                   
-                        // console.log("new Order",newOrder);
-                        // const order =  newOrder.save()
-                        // res.send(order)
-                        // console.log(" Order",order);
-
-
-
-
                     });
-                    // User.findOneAndUpdate({ _id: req.user._id }, {
-                    //     address: {
-                    //         area: to.area
-                    //     }
-                    // }, { new: true }, (error, user) => {
-                       
-
-                    //     // res.status(200).json({ "data": user });
-                    // }).catch((err) => {
-                    //     console.log(err);
-                    //     res.status(400).json({ "error": err });
-                    // })
                     const newOrder = new Order({
                         products: [...cart]
-
-                        // products:[...cartDetail]
                         ,
                         item: 'item',
                         cost: total,
-
-                        to: to, customer: req.user._id, phone, description, from: { area: "undefined", latitude: 0, longitude: 0, }
+                        to: to,
+                        customer: req.user._id,
+                        phone,
+                        description,
+                        from: { area: "undefined", latitude: 0, longitude: 0, }
 
                     }).save().then((result) => {
                         res.send(result)
                     }).catch(err => console.log(err)
                     );
-
                     if (err) return res.status(400).send(err);
-                    // return res.status(200).send({ success: true, cartDetail, cart })
                 })
-
         }
-    
-    
-        )
+    )
 
 
     // console.log("checkout");

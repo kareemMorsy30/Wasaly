@@ -1,37 +1,41 @@
 import React, { useEffect, useState } from 'react'
 import './Product.css';
 import { Link, Switch, Route, Redirect } from 'react-router-dom'
-import { Card, Button } from 'react-bootstrap'
+import { Card, Button, Spinner } from 'react-bootstrap'
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 
 import ProductDetails from './ProductDetails'
-// import productOwner from '../../../../../server/config/productOwner';
+
 function ProductInfo(props) {
+
   const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
+
   let showAddToCartButton= props.showAddToCartButton;
   showAddToCartButton=true;
   const [Product, setProduct] = useState({})
-
+  const [render,rerender]=useState(false)
   useEffect(() => {
     setProduct(props.detail)
-
-  }, [props.detail])
-
+  }, [props.detail,render])
+  console.log(props.detail)
   const addToCarthandler = () => {
-    props.addToCart(props.detail._id)
-    console.log("props", props);
-    console.log('====================================');
-    console.log(props.detail);
-    console.log('====================================');
-
+    props.setProductt(prevProduct=>{
+      return [{...prevProduct[0],quantity:prevProduct[0].quantity-1}]
+    });
+    setProduct(prevProduct=>{
+      return [{...prevProduct[0],quantity:prevProduct[0].quantity-1}]
+    });
+    props.addToCart(props.detail[0]._id)
   }
-  const showStock = quantity => {
-    return quantity > 0 ? (
+
+  const showStock = product => {
+    return product.quantity > 0 ? (
      <>
      <span className="badge badge-primary badge-pill mb-2">In Stock</span>
+     <br></br>
         <Button variant="danger"  onClick={addToCarthandler}   className="btn-card">Add to Cart</Button>
-</>
+      </>
       )
      : (
         <span className="badge badge-primary badge-pill mb-2">Out of Stock</span>
@@ -57,12 +61,12 @@ function ProductInfo(props) {
   // console.log(Product)
 
 
-  const images = Product&&Product.images_path&& Product.images_path.map(image =>( <div><img src={`${domain}/${image}`} />  </div>) )
+  const images = Product[0]&&Product[0].images_path&& Product[0].images_path.map(image =>( <div><img src={`${domain}/${image}`} />  </div>) )
 
 
   return (
+      Product[0]?
     <>
-         
       <div className="container">
         <div className="row">
           <div className="col-6">
@@ -71,16 +75,16 @@ function ProductInfo(props) {
             </Carousel>
           </div>
           <div className="col-3">
-              <h4>{Product.name}</h4>
-              <h4>{showStock(Product.quantity)}</h4>
-              <h4 style={{color:"blue"}}>{Product.price}<span style={{fontSize:"10px", color:"blue"}}>EGP</span></h4>
-              <h4>Description: </h4>
-             <p>{Product.description}</p>
+              <h4>{Product[0].name}</h4>
+              <h4>{Product[0].quantity}</h4>
+              <h4 style={{color:"blue"}}>{Product[0].price}<span style={{fontSize:"10px", color:"blue"}}>EGP</span></h4>
+             <p>{Product[0].description}</p>
              
              {/* {showAddToCart(showAddToCartButton)} */}
 
              {/* <Button variant="danger"  onClick={addToCarthandler}   className="btn-card">Add to Cart</Button> */}
-             <p style={{marginTop:'10px'}}>Sold by:    <span style={{fontSize:'13px', fontWeight:400}}>{Product.owner&&Product.owner.ownerName}</span></p>
+             <p style={{marginTop:'10px'}}>Sold by:    <span style={{fontSize:'13px', fontWeight:400}}>{Product[0].owner&&Product[0].owner.ownerName}</span></p>
+             <h4>{showStock(Product[0])}</h4>
 
           </div>
       
@@ -89,13 +93,14 @@ function ProductInfo(props) {
       <h4>Product Information: </h4>
       <div className="order" style={{width:'100%'}}>
         <h6>SPECIFICATIONS</h6>
-        <p>Brand Name:    <span style={{fontSize:'13px'}}>{Product.owner&&Product.owner.marketName}</span></p>
-        <p>Description:    <span style={{fontSize:'13px'}}>{Product.Description&&Product.Description}</span></p>
+        <p>Brand Name:    <span style={{fontSize:'13px'}}>{Product[0].owner&&Product[0].owner.marketName}</span></p>
+        <p>Description:    <span style={{fontSize:'13px'}}>{Product[0].description&&Product[0].description}</span></p>
 
       </div>
-
       
       </>
+    
+    :<Spinner />
   )
 
  

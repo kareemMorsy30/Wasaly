@@ -51,10 +51,10 @@ const ListCatProducts = (props) => {
             .then(response => {
                 console.log(response.data.products)
 
-                
+
                 response.data.products.length > 0 && (
                     setProducts(prevProducts => {
-                                             return [...prevProducts, ...response.data.products]
+                        return [...prevProducts, ...response.data.products]
                     })
                 )
                 setHasMore(response.data.products.length > 0)
@@ -70,36 +70,15 @@ const ListCatProducts = (props) => {
 
     const observer = useRef()
     const addToCartHandler = (productId) => {
-        console.log('====================================');
-        console.log(productId);
-        console.log('====================================');
-        
-        axios.post(`${domain}/users/addToCart?productId=${productId}`
-            , authHeader
-            ,
-
+        axios.post(`${domain}/users/addToCart?productId=${productId}`, authHeader,
             {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
             }
-        ).then(response =>{
-
-            console.log('+++++++++++++++++++++++++++++++++',response.data)
-            // response
-            // response.data.products.map((product) =>{
-            //     console.log(product.quantity);
-
-            //     // setQuantity(product.quantity)
-            // console.log('====================================');
-            // console.log(product.quantity);
-            // console.log('====================================');
-            // }
-        }
-            )
-            .catch(
-                (e) => {
-                    console.log(e);
-                }
-            )
+        ).then(response => {
+            console.log(response.data)
+        }).catch((e) => {
+            console.log(e);
+        })
     }
 
     const lastProductElementRef = useCallback(node => {
@@ -114,9 +93,8 @@ const ListCatProducts = (props) => {
     }, [loading, hasMore])
 
     return (
-
         <>
-            <ShowProducts products={products} setProducts={setProducts} addToCart={addToCartHandler}  showAddToCartButton={false}
+            <ShowProducts products={products} setProducts={setProducts} addToCart={addToCartHandler} showAddToCartButton={false}
                 lastProductElementRef={lastProductElementRef} />
             <div className="container" style={{ margin: 'auto', marginTop: '20vh', width: '20%' }}>
                 {
@@ -135,30 +113,3 @@ const ListCatProducts = (props) => {
 
 }
 export default ListCatProducts
-
-
-
-/**
- *   const addToCartHandler = (productId) => {
-        console.log('====================================');
-        console.log(productId);
-        console.log('====================================');
-        axios.post(`${domain}/users/addToCart?productId=${productId}`
-        ,authHeader,
-
-    {
-                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-}
-
-
-    ).then(response=>       response.data
-
-
-    ).catch(e=>console.log(e)
-    )
-
-
-
-    }
-
- */
