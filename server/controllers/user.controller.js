@@ -1,6 +1,6 @@
 const User = require("../models/user");
 const allModels = require('../models/allModels');
-// const userModel = require('../models/user');
+const userModel = require('../models/user');
 const { Product } = allModels;
 const Order = require('../models/order')
 const jwt = require("jsonwebtoken");
@@ -409,11 +409,17 @@ userController.getUser = async (req, res) => {
     // }
 
 }
+userController.updateAddres = async(req,res)=>{
+    const user = await User.findByIdAndUpdate({_id:req.user._id},{address:req.body.address},{new:true})
+    res.status(200).json({"data":user});
+    console.log(req.body.address);
+    console.log("address",user);
+}
 userController.updateUser =async (req, res) => {
     console.log("first",req.user._id);
     const {name,username,status} = req.body;
     console.log("body",req.body);
-    let image_path = 'public/uploads/users/images/' +req.file.filename ;
+    let image_path = '/public/uploads/users/images/' +req.file.filename ;
     // userModel.findByIdAndUpdate( req.user._id , { new: true },{'avatar':image_path}, (error, user) => {
     //     res.status(200).json({ "data": user });
     const user = await User.findOneAndUpdate({_id:req.user._id},{'avatar':image_path,name,username,status})

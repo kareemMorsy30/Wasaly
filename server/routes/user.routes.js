@@ -43,7 +43,6 @@ router.post('/login', userController.login);
 
 
 // Auth(router);
-
 router.all('*', (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user) => {
     
@@ -99,6 +98,7 @@ router.post('/admin', adminAuth,
     (req, res, next) => {
         return res.send({ msg: "okey you are authorized user now :)", user: req.user });
     });
+   
     const multer  = require('multer');
 
 
@@ -125,15 +125,15 @@ router.post('/admin', adminAuth,
     storage,
     fileFilter
     });
-
-
-
+    //update Address
+    router.patch('/one/modify/address',userController.updateAddres);
+    //update users
+    router.patch('/one/modify',uploading.single('avatar') ,userController.updateUser);
+    
     //get all users
     router.get("", userController.getAllUsers);
 
-    //update users
-    router.patch('/one/modify',uploading.single('avatar') ,userController.updateUser);
-
+    
     //get user by id
     router.get('/one',userController.getUser);
 

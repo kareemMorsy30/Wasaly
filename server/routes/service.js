@@ -8,6 +8,34 @@ router.get('/transportations', serviceController.transportation);
 
 Auth(router);
 
+
+const multer  = require('multer');
+
+
+const storage = multer.diskStorage({
+destination: (req, file, cb) => {
+    cb(null, '/public/uploads/users/images');
+},
+filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+}
+});
+
+// Set filters to image upload
+const fileFilter = (req, file, cb) => {
+if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg'){
+    cb(null,true)
+} else {
+    cb(new Error('only allowed types are jpeg, png, jpg'), false)
+}
+}
+
+// Apply multer option to image upload
+const uploading = multer({
+storage,
+fileFilter
+});
+
 // Get all users notifications
 router.get('/notifications', service.notifications);
 
@@ -25,6 +53,9 @@ router.get('/orders/:id/cancel', serviceController.cancel);
 
 //save review
 router.patch('/:serviceOwnerID/reviews', serviceController.saveReview);
+
+//update customer
+
 
 //save Rating
 router.patch('/:serviceOwnerID/rates', serviceController.saveRate);
