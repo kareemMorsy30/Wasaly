@@ -340,7 +340,16 @@ userController.addToCart = (req, res) => {
 
 
         if (duplicate) {
-            Product.findByIdAndUpdate({'_id':req.query.productId}, { '$inc': {'quantity':-1}}).exec(),(productss=>console.log(productss)
+            Product.findByIdAndUpdate
+            ({'_id':req.query.productId}
+            , { '$inc': {'quantity':-1}},
+            
+            )
+            .exec()
+            ,
+            (productss=>productss
+            
+            
             )
             User.findOneAndUpdate(
                 { _id: userID, "cart.id": req.query.productId ,},
