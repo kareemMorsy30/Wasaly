@@ -154,14 +154,14 @@ const [suggested, setSuggested] = useState([]);
         } catch (error) { console.log(error) }
     }
 console.log("phone",user.phones);
-const handleInput =(e)=>{
-    e.preventDefault();
-    setPrice(e.target.value);
-    console.log(price);
-}
-const submitInput = (e)=>{
-    setPrice(e.target.value);
-}
+// const handleInput =(e)=>{
+//     e.preventDefault();
+//     setPrice(e.target.value);
+//     console.log(price);
+// }
+// const submitInput = (e)=>{
+//     setPrice(e.target.value);
+// }
 console.log(price);
     return (
         <div className="container vh-100">
@@ -212,8 +212,8 @@ console.log(price);
                         <th>phone{index+1}:</th>
                        <td><CardText>{phone} </CardText></td></h3></tr> ) })
                     }
-                    <tr><h3><th>price per distance:</th>
-                    <td><CardText>{price}</CardText></td></h3></tr>
+                    {/* <tr><h3><th>price per distance:</th>
+                    <td><CardText>{price}</CardText></td></h3></tr> */}
 
                 </CardBody>
                 <button onClick={toggle} className="btn btn-primary"> Update</button>
@@ -229,10 +229,10 @@ console.log(price);
                     </datalist>
                     <button type="submit" className="btn btn-success" >Update Address</button>
             </form>
-            <form onSubmit={submitInput}>
+            {/* <form onSubmit={submitInput}>
                 <input type="text" placeholder="price per distance" onChange={handleInput} />
                 <button type="submit" className="btn btn-secondary">type your price per distance</button>
-            </form>
+            </form> */}
             </div>
             </div>
             <Modal isOpen={modal} toggle={toggle}>
