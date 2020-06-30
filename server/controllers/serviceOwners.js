@@ -48,8 +48,8 @@ const getServiceOwner = async (req, res) => {
 }
 const updateAddress = async(req,res)=>{
    try{
-    let serviceUser = await ServiceOwner.findOneAndUpdate({ user: req.user._id }, { $set: req.body }, { new: true }).populate('user')
-    await User.findOneAndUpdate({ _id: serviceUser.user._id }, {address:req.user.address},{new:true})
+    // let serviceUser = await ServiceOwner.findOneAndUpdate({ user: req.user._id }, { $set: req.body }, { new: true }).populate('user')
+    await User.findOneAndUpdate({ _id: req.user._id }, {address:req.body.address},{new:true})
     let newServiceObj = await ServiceOwner.findOne({ user: req.user._id }).populate('user')
         res.status(200).json({ "data": newServiceObj });
     }catch (err) {
