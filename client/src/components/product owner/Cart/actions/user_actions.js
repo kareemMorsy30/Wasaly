@@ -111,8 +111,14 @@ export function removeCartItem(id) {
 
             response.data.cart.forEach(item => {
                 response.data.cartDetail.forEach((k, i) => {
+                    console.log('====================================');
+                    console.log(item.quantity,k.quantity);
+                    console.log('====================================');
                     if (item.id === k._id) {
                         response.data.cartDetail[i].amount = item.amount
+                        console.log('====================================');
+                        console.log(response.data.cartDetail[i].quantity,"response.data.cartDetail[i].quantity",item.quantity,"item.quantity");
+                        console.log('====================================');
                     }
                 })
             })

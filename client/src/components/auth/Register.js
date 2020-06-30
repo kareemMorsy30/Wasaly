@@ -43,17 +43,35 @@ const Authentication = (props) => {
     const { value: transportation, bind: bindT, reset: resetT } = useInput('');
     const [city, setcity] = useState('');
     const [area, setarea] = useState('');
-    const [street, setstreet] = useState('');
+    // const [street, setstreet] = useState('');
     const [latitude, setlatitude] = useState(0);
     const [longitude, setlongitude] = useState(0);
     // const [phone, setphone] = useState('');
     const registerUrl = `${domain}/users/register`;
     const avatarUrl = `${domain}/users/profile/avatar`;
-    const [address, setInputFields] = useState([ ]);
+    const [toValue, setToValue] = useState('');
+    const [Street, setStreet] = useState('')
+    const [address, setAddress] = useState([{
+        area: '',
+        // street:street ,
+        street: Street,
+        city: '',
+        location: {
+            longitude: 0,
+            latitude: 0
+        }
+    }]
+    );
+    const [addressFields, setInputFields] = useState([]);
+
+    const [fromValue, setFromValue] = useState('');
+    const [suggested, setSuggested] = useState([]);
+
     const [phones, setphones] = useState([])
     const [validate, setvalidate] = useState({})
-    const [state, setState] = useState({validate})
-	const [errorsRegister,setErrorsRegister]=useState("");
+    const [state, setState] = useState({ validate })
+    const [errorsRegister, setErrorsRegister] = useState("");
+    const [serviceObj, setServiceObj] = useState({ address: [] })
 
 
     const removePhone = (id) => {
@@ -88,95 +106,69 @@ const Authentication = (props) => {
 
     };
 
-        
+const  handleStreet= (e)=>{
+setStreet(e.target.value)
+console.log(Street);
+
+}
+
 
   
-    const handleAddFields = () => {
-        const values = [...address];
-        values.push({ street: '', city: '', area: '', location: { latitude, longitude } });
-        setInputFields(values);
-    };
-    const handleRemoveFields = index => {
-        const values = [...address];
-        values.splice(index, 1);
-        setInputFields(values);
-    };
-    const [suggested, setSuggested] = useState([]);
-
-    const handleInputChange = (index, event) => {
+    const handlefromValueChange = (event) => {
         /**
          * address is same as values so it dosn;t make sense 
          */
-        const values = [...address];
-        console.log('====================================');
-        console.log("address ::   ", address);
-        console.log('====================================');
-        console.log('====================================');
-        console.log("Values", values);
-        console.log('====================================');
-        if (event.target.name === "street") {
-            values[index].street = event.target.value;
-        } else if (event.target.name === "city") {
-            values[index].city = event.target.value;
-        }
-        else if (event.target.name === "area") {
-            values[index].area = event.target.value;
-        }
-        else {
-            values[index].location.latitude = event.target.value;
-            values[index].location.longitude = event.target.value;
-        }
-        console.log('====================================');
-        console.log("setInputFields", setInputFields);
-        console.log('====================================');
-        setInputFields(values);
-        // const input = event.target.value;
-        // if (input.length >= 3 && input[input.length - 1] !== ' ') {
+     
+        const input = event.target.value;
+        setFromValue(event.target.value)
+        if (input.length >= 3 && input[input.length - 1] !== ' ') {
+            getGeoLocation(input).then(data => {
+                console.log(data);
+                console.log(data.area);
+
+                if (data.area) setAddress([
+
+                     {
+
+                        area: data.fullArea,
+                        city: data.city,
+
+                        location: {
+                            longitude: data.longitude,
+                            latitude: data.latitude
+                        }
+                    }]
 
 
-        //     getGeoLocation(input).then(data => {
-        //         console.log('====================================');
-        //         console.log("DATAAA ", data);
-        //         console.log("DATAAA ", data.fullArea);
-        //         console.log('====================================');
-        //         // address.map((address)=>{
-        //         if (data.area) setInputFields({
-        //             ...address,
-        //             area: data.fullArea,
-        //             city: data.city,
-        //             longitude: data.longitude,
-        //             latitude: data.latitude,
-        //         });
+                );
+               
+                if (input > toValue && data.area && !suggested.includes(data.area) && data.area.toLowerCase().includes(input)) {
+                    console.log('====================================');
+                    console.log(data.area);
+                    console.log('====================================');
+                    setSuggested([...suggested, data.area]);
+                    setFromValue(data.area);
+                }
+            })
+        }
 
-        //         if (data.area && !suggested.includes(data.area && data.area.toLowerCase().includes(input))) {
-        //             setSuggested([...suggested, data.area]);
-        //             // console.log('====================================');
-        //             // console.log("DATAAA ", data.area);
-        //             // console.log("DATAAA ", data.fullArea);
-        //             setcity(data.city);
-        //             setarea(data.fullArea);
-        //             setlatitude(data.latitude);
-        //             setlongitude(data.longitude);
-        //             // setstreet()
-        //             console.log('=======================inside suggest=============');
-        //             // setInputFields([{ street: address.street, area: data.fullArea, city: data.city, location: { latitude: data.latitude, longitude: data.longitude } }]);
-        //             console.log('====================================');
-        //             console.log(address);
-        //             console.log('====================================');
-        //         }
-        //     })
-        //     // })
-        // }
-        // else {
-        //     console.log('====================================');
-        //     console.log("A7a fe aeh");
-        //     console.log('====================================');
-        // }
+        
 
     };
+
+
+
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
+        console.log('====================================');
+        console.log(address);
+        console.log('====================================');
+        let addr = [{ ...address[0]} ]
+        addr[0].street=Street;
+        console.log('====================================');
+        console.log(addr);
+        console.log('====================================');
         if (avatarInput) {
             if (
                 !['image/gif', 'image/jpeg', 'image/png'].includes(avatarInput.type)
@@ -208,7 +200,7 @@ const Authentication = (props) => {
 
                         role,
 
-                        address,
+                        address:addr,
                     }, {
                     withCredentials: true,
 
@@ -216,9 +208,8 @@ const Authentication = (props) => {
 
 
                     .then((response) => {
-                        console.log('====================================');
-                        console.log("response then ",response.data);
-                        console.log('====================================');
+                        // setServiceObj(response.data);
+
                         // console.log(response.data.user._id);
                         let userId = response.data.user._id
                         if (avatarInput) {
@@ -232,26 +223,26 @@ const Authentication = (props) => {
                                 }
 
 
-                            }).then(res => { 
+                            }).then(res => {
                                 // toast.success('upload success')
                             })
-                            .catch(err => { 
-                                // toast.error('upload fail')
-                            });
+                                .catch(err => {
+                                    // toast.error('upload fail')
+                                });
                         }
-                        if (response.status==250) {
+                        if (response.status == 250) {
                             // setErrorsRegister(response.data.message)
 
                             // toast(errorsRegister)
 
-                            
+
 
                         } else if (response.status == 200) {
 
                             console.log("good");
 
                             //Should logged in first by history.push what is the route ?
-                            
+
                             history.push("/welcome");
 
                             // window.location = "http://localhost:3000/home";
@@ -259,32 +250,30 @@ const Authentication = (props) => {
                         }
 
                     },
-                    
-                    
-                    (error) => {
-                        console.log('====================================');
-                        console.log(error.message,"ERRROR");
-                        console.log(error);
-                        
-                        
-                        console.log('====================================');
-                            error.message=" Email address  is already taken";
+
+
+                        (error) => {
+                            console.log(error.message, "ERRROR");
+                            console.log(error);
+
+
+                            error.message = " Email address  is already taken";
                             // setErrorsRegister(error.message)
 
-                        //   seterror(error.message)
-                        //   toast(error.message)
-                      }
-                      )
+                            //   seterror(error.message)
+                            //   toast(error.message)
+                        }
+                    )
 
             }
 
 
-                // axios.post(avatarUrl,authHeader);
+            // axios.post(avatarUrl,authHeader);
 
-            
+
 
             if (passwordRegister === passConfRegister && role === "productowner") {
-// set
+                // set
                 const registerResult = await axios.post(registerUrl,
 
                     {
@@ -300,7 +289,7 @@ const Authentication = (props) => {
 
                         role,
 
-                        address,
+                        address:addr,
                         marketName, marketPhone, ownerName
                         // image_path:data
 
@@ -308,12 +297,11 @@ const Authentication = (props) => {
 
                     withCredentials: true,
 
-                }).then( (response) => {
+                }).then((response) => {
+                    setServiceObj(response.data);
 
-                    console.log('====================================');
-                    console.log(response.data.user);
-                    console.log('====================================');
-                    console.log(response.data.user.toString());
+                    // setAddress(response.data);
+                   
                     let userId = response.data.user._id.toString();
                     if (avatarInput) {
                         const formData = new FormData();
@@ -326,13 +314,13 @@ const Authentication = (props) => {
                             }
 
 
-                        }).then(res => { 
+                        }).then(res => {
                             // toast.success('upload success')
                         })
-                        .catch(err => { 
-                            
-                            // toast.error('upload fail')
-                        });
+                            .catch(err => {
+
+                                // toast.error('upload fail')
+                            });
                     }
 
                     if (response.status == 250) {
@@ -351,25 +339,24 @@ const Authentication = (props) => {
 
                     }
 
-                },     
-                (error) => {
-                    console.log('====================================');
-                    console.log(error.message,"ERRROserR");
-                    console.log(error);
-                    
-                    
-                    console.log('====================================');
-                        error.message=" Email address is already taken";
+                },
+                    (error) => {
+                        console.log(error.message, "ERRROserR");
+                        console.log(error);
+
+
+                        error.message = " Email address is already taken";
                         // setErrorsRegister(error.message)
-                      
+
                         seterror(error.message)
-                    //   toast(error.message)
-                  }
-                
+                        //   toast(error.message)
+                    }
+
                 )
 
             }
             if (passwordRegister === passConfRegister && role === "serviceowner") {
+              
 
                 const registerResult = await axios.post(registerUrl,
 
@@ -386,7 +373,7 @@ const Authentication = (props) => {
 
                         role,
 
-                        address,
+                        address:addr,
                         distance, region, transportation
 
                         // image_path:data
@@ -396,6 +383,9 @@ const Authentication = (props) => {
                     withCredentials: true,
 
                 }).then((response) => {
+                    setServiceObj(response.data);
+
+                    // setAddress(response.data);
                     console.log('====================================');
                     console.log(response);
                     console.log('====================================');
@@ -432,23 +422,23 @@ const Authentication = (props) => {
 
                     }
 
-                },    
-                (error) => {
-                    console.log('====================================');
-                    console.log(error.message,"ERRROserR");
-                    console.log(error);
-                    
-                    
-                    console.log('====================================');
-                        error.message=" Email address is already taken";
+                },
+                    (error) => {
+                        console.log('====================================');
+                        console.log(error.message, "ERRROserR");
+                        console.log(error);
+
+
+                        console.log('====================================');
+                        error.message = " Email address is already taken";
                         // setErrorsRegister(error.message)
-                    
+
                         seterror(error.message)
-                    //   toast(error.message)
-                  }
-                
-                
-                
+                        //   toast(error.message)
+                    }
+
+
+
                 )
 
             }
@@ -472,36 +462,36 @@ const Authentication = (props) => {
             <hr />
 
             <div>
-      {
-        error?
-        <ToastContainer/>:null}
-    </div>
-            <AvForm onSubmit={handleRegisterSubmit}  
-//             style={
-//                 {
-//   width: 98% !important;
-//   display: inline-block !important;
-// }
-  
-//   } 
-noValidate
+                {
+                    error ?
+                        <ToastContainer /> : null}
+            </div>
+            <AvForm onSubmit={handleRegisterSubmit}
+                //             style={
+                //                 {
+                //   width: 98% !important;
+                //   display: inline-block !important;
+                // }
+
+                //   } 
+                noValidate
             >
 
-            <FormGroup>
-            <p className="class1" style={{color: '#c8c0d5'}}> Choose Your Account :</p>
+                <FormGroup>
+                    <p className="class1" style={{ color: '#c8c0d5' }}> Choose Your Account :</p>
 
-<Input type="select" name="role" id="exampleSelect"
+                    <Input type="select" name="role" id="exampleSelect"
 
-    {...bindrole}
+                        {...bindrole}
 
->
-    <option>customer</option>
-    <option>serviceowner</option>
-    <option>productowner</option>
+                    >
+                        <option>customer</option>
+                        <option>serviceowner</option>
+                        <option>productowner</option>
 
-</Input>
+                    </Input>
 
-</FormGroup>
+                </FormGroup>
 
                 <FormGroup>
 
@@ -509,27 +499,27 @@ noValidate
 
                         // pattern='[A-Za-z\\s]*'
                         validate={{
-            required: {value: true,errorMessage: 'Please enter a name'},
-            pattern: {value: '^[A-Za-z][A-Za-z0-9]*$', errorMessage: 'Your name must be composed only with letters first and numbers'},
-            minLength: {value: 6, errorMessage: 'Your name must be between 6 and 16 characters'},
-            maxLength: {value: 16, errorMessage: 'Your name must be between 6 and 16 characters'}
-          }}                       
-            {...bindname}
+                            required: { value: true, errorMessage: 'Please enter a name' },
+                            pattern: { value: '^[A-Za-z][A-Za-z0-9]*$', errorMessage: 'Your name must be composed only with letters first and numbers' },
+                            minLength: { value: 6, errorMessage: 'Your name must be between 6 and 16 characters' },
+                            maxLength: { value: 16, errorMessage: 'Your name must be between 6 and 16 characters' }
+                        }}
+                        {...bindname}
 
                     />
 
                 </FormGroup>
-             
+
                 <FormGroup>
 
-                    <AvField type="text" name="username" placeholder="Username"  label="UserName"
-// required
-validate={{
-            required: {value: true,errorMessage: 'Please enter a name'},
-            pattern: {value: '^[A-Za-z][A-Za-z0-9]*$', errorMessage: 'Your UserName must be composed only with letter first and numbers'},
-            minLength: {value: 6, errorMessage: 'Your name must be between 6 and 16 characters'},
-            maxLength: {value: 16, errorMessage: 'Your name must be between 6 and 16 characters'}
-          }}           
+                    <AvField type="text" name="username" placeholder="Username" label="UserName"
+                        // required
+                        validate={{
+                            required: { value: true, errorMessage: 'Please enter a name' },
+                            pattern: { value: '^[A-Za-z][A-Za-z0-9]*$', errorMessage: 'Your UserName must be composed only with letter first and numbers' },
+                            minLength: { value: 6, errorMessage: 'Your name must be between 6 and 16 characters' },
+                            maxLength: { value: 16, errorMessage: 'Your name must be between 6 and 16 characters' }
+                        }}
                         // pattern='[A-Za-z\\s]*'
 
                         {...bindUsernameRegister}
@@ -540,37 +530,37 @@ validate={{
 
                 <FormGroup>
 
-                    <AvField type="email" name="email" placeholder="E-mail"  label="E-mail"
-                    
-validate={{
-    
-    required: {value: true,errorMessage: 'Please enter a Email'},
+                    <AvField type="email" name="email" placeholder="E-mail" label="E-mail"
+
+                        validate={{
+
+                            required: { value: true, errorMessage: 'Please enter a Email' },
 
 
-pattern: {value: '/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/', errorMessage: 'Email is  invalid '},
+                            pattern: { value: '/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/', errorMessage: 'Email is  invalid ' },
 
-}}
+                        }}
                         {...bindEmail}
-                        
+
                     />
 
                 </FormGroup>
 
 
-            
+
                 <FormGroup>
                     <AvField type="password" name="password" placeholder="password " label="Password"
-                    validate={{ 
-                        minLength: {value: 8, errorMessage: 'Your name must be 8 characters '},
-                     }}
+                        validate={{
+                            minLength: { value: 8, errorMessage: 'Your name must be 8 characters ' },
+                        }}
                         {...bindPasswordRegister}
                     />
                 </FormGroup>
                 <FormGroup>
-                    <AvField type="password" name="password" placeholder="Password-Confirmation"  label="Password-Confirmation"
-                        validate={{ 
-                        minLength: {value: 8, errorMessage: 'Your name must be 8 characters and match the original password '},
-                     }}
+                    <AvField type="password" name="password" placeholder="Password-Confirmation" label="Password-Confirmation"
+                        validate={{
+                            minLength: { value: 8, errorMessage: 'Your name must be 8 characters and match the original password ' },
+                        }}
                         {...bindPassConfRegister}
                     />
                 </FormGroup>
@@ -583,11 +573,11 @@ pattern: {value: '/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/', errorMessage: 
 
 
                         <AvField type="text" name="marketName" placeholder="Brand-Name" label="Brand-Name"
-                        validate={{
-            required: {value: true,errorMessage: 'Please enter a name'},
-            pattern: {value: '^[A-Za-z][A-Za-z0-9]*$', errorMessage: 'Your name must be composed only with letters first and numbers'},
-           
-          }}                              {...bindMn}
+                            validate={{
+                                required: { value: true, errorMessage: 'Please enter a name' },
+                                pattern: { value: '^[A-Za-z][A-Za-z0-9]*$', errorMessage: 'Your name must be composed only with letters first and numbers' },
+
+                            }}                              {...bindMn}
 
                         />
                         <AvField type="text" name="marketPhone" placeholder="marketPhone" label="Market-Phone"
@@ -596,11 +586,11 @@ pattern: {value: '/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/', errorMessage: 
 
                         />
                         <AvField type="text" name="ownerName" placeholder="ownerName"
-           validate={{
-            required: {value: true,errorMessage: 'Please enter a name'},
-            pattern: {value: '^[A-Za-z][A-Za-z0-9]*$', errorMessage: 'Your name must be composed only with letters first and numbers'},
-           
-          }}     
+                            validate={{
+                                required: { value: true, errorMessage: 'Please enter a name' },
+                                pattern: { value: '^[A-Za-z][A-Za-z0-9]*$', errorMessage: 'Your name must be composed only with letters first and numbers' },
+
+                            }}
                             {...bindOn}
 
                         />
@@ -615,136 +605,106 @@ pattern: {value: '/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/', errorMessage: 
 
 
                         <AvField type="number" name="distance" placeholder="distance"
-    validate={{
-            required: {value: true,errorMessage: 'Please enter distance'},
-           
-          }}   
+                            validate={{
+                                required: { value: true, errorMessage: 'Please enter distance' },
+
+                            }}
                             {...bindD}
 
                         />
                         <AvField type="number" name="region" placeholder="region"
-validate={{
-            required: {value: true,errorMessage: 'Please enter region'},
-           
-          }}
+                            validate={{
+                                required: { value: true, errorMessage: 'Please enter region' },
+
+                            }}
                             {...bindR}
 
                         />
                         <AvField type="text" name="transportation" placeholder="transportation"
-validate={{
-            required: {value: true,errorMessage: 'Please enter transportation'},
-           
-          }}
+                            validate={{
+                                required: { value: true, errorMessage: 'Please enter transportation' },
+
+                            }}
                             {...bindT}
 
                         />
                     </FormGroup>
                     : null
                 }
-                <p className="class1" style={{color: '#c8c0d5'}}> Add Optional Information :</p>
+                <p className="class1" style={{ color: '#c8c0d5' }}> Add Optional Information :</p>
 
                 <FormGroup >
                     {phones.map((phone, index) => {
                         return (<div key={index}>
-                        <AvField className="form-input" placeholder="Phone" value={phone} name="phone"
-                     validate={{
-                        pattern:{value:'^(012|011|010|015)[0-9]{8}$',errorMessage: 'You phpne must be a valid number'}
-                         }}
-                            onChange={handleChangePhone(index)} />
-                            
+                            <AvField className="form-input" placeholder="Phone" value={phone} name="phone"
+                                validate={{
+                                    pattern: { value: '^(012|011|010|015)[0-9]{8}$', errorMessage: 'You phpne must be a valid number' }
+                                }}
+                                onChange={handleChangePhone(index)} />
+
                             {
                                 <button
-                                   className="btn btn-link"
-                                   type="button"
-                                   onClick={removePhone(index)}
-                               >
-                                   Remove Phone
+                                    className="btn btn-link"
+                                    type="button"
+                                    onClick={removePhone(index)}
+                                >
+                                    Remove Phone
                                  </button>
-                                                                
-                                
-                                }</div>
-                                
-                                
-                                )
+
+
+                            }</div>
+
+
+                        )
                     })}
                     {
                         // <Button size="sm" onClick={() => {
                         //     setphones(phones.concat([""]))
                         // }} >Add Phone</Button>
-                        
+
                         <button
-                        className="btn btn-link"
-                        type="button"
+                            className="btn btn-link"
+                            type="button"
 
-                        onClick={() =>  setphones(phones.concat([""]))}
-                    >
-                        Add Phone
+                            onClick={() => setphones(phones.concat([""]))}
+                        >
+                            Add Phone
                       </button>
-                        }
+                    }
                 </FormGroup>
-             
-                {address.length>0 && address.map((inputField, index) => (
 
-                    <Fragment key={`${inputField}~${index}`
-                    }>
-<br/>
-
+               
                         <FormGroup >
                             <Label for="exampleAddress">Address</Label>
-                            <Input type="text" name="street" placeholder="street"
-                                // pattern='[A-Za-z\\s]*'
-                                value={inputField.street}
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <Input type="text" name="city" placeholder="city"
-                                // pattern='[A-Za-z\\s]*'
-                                onChange={event => handleInputChange(index, event)}
-                            />
+                            <AvField     
+
+                                validate={{
+                                required: { value: true, errorMessage: 'Please enter Address ' },
+
+                            }}
+
+                            
+                             type="text" placeholder="address" name='area' value={fromValue} onChange={event => handlefromValueChange(event)} list="from" style={{ border: alert.type === 'error' && !address.area && '1px red solid' }} />
                             <datalist id="from">
-                                <option key="source" value={city} />
+                                <option key="source" value={address.area} />
                             </datalist>
-                            <Input type="text" name="area" placeholder="area"
-                                // pattern='[A-Za-z\\s]*'
-                                // {...bindaddress}
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <datalist id="from">
-                                <option key="source" value={area} />
-                            </datalist>
-                            <Input type="number" name="latitude" placeholder="latitude"
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <Input type="number" name="longitude" placeholder="longitude"
-                                onChange={event => handleInputChange(index, event)}
-                            />
+
+
+                            <AvField     
+
+validate={{
+required: { value: true, errorMessage: 'Please enter Street ' },
+
+}}
+type="text" placeholder="street" name='street' value={Street} onChange={event => handleStreet(event)} style={{ border: alert.type === 'error' && !Street && '1px red solid' }} />
+
 
                         </FormGroup>
 
-                        <div className="form-group col-sm-2">
-                            <button
-                                className="btn btn-link"
-                                type="button"
-                                onClick={() => handleRemoveFields(index)}
-                            >
-                                removeAddress
-                </button>
-                        
-                        </div>
-                    </Fragment>
-                ))}
-
-                    <button
-                                className="btn btn-link"
-                                type="button"
-                                onClick={() => handleAddFields()}
-                                // style={{height: '1px', width : '110px',padding:"0px"}}
-
-                            >
-                                Add Address
-                </button>
+            
 
                 <FormGroup >
-<ImageIcon/>
+                    <ImageIcon />
 
                     <Input style={{ display: "block" }} type="file" name="files" onChange={handleAvatarChange}
 

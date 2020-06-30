@@ -499,6 +499,9 @@ userController.removeFromCart = (req, res) => {
         { new: true },
         (err, userInfo) => {
             let cart = userInfo.cart;
+            console.log('====================================');
+            console.log(cart[0],cart[0]&&cart[0].amount);
+            console.log('====================================');
             let array = cart.map(item => {
                 return item.id
             })
@@ -506,6 +509,9 @@ userController.removeFromCart = (req, res) => {
             Product.find({ '_id': { $in: array } })
                 .populate('user')
                 .exec((err, cartDetail) => {
+                    console.log('===================cart  detail=================');
+                    console.log(cartDetail);
+                    console.log('====================================');
                     return res.status(200).json({
                         cartDetail,
                         cart
