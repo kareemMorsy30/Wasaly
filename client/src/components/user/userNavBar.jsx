@@ -118,7 +118,7 @@ const NavBar = (props) => {
                             <a className="nav-link" href="/service">Services</a>
                         </NavItem>
                         <NavItem className="nav-item" style={{backgroundColor: path.includes('/about-us') && 'red'}}>
-                            <a className="nav-link" href="/users">About Us</a>
+                            <a className="nav-link" href="/about-us">About Us</a>
                         </NavItem>
                         {/* <NavItem>
                             <Link className="nav-link" to="/serviceownerprofile">My profile</Link>

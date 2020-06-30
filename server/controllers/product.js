@@ -69,8 +69,9 @@ exports.updateProduct = async (req, res, next) => {
         const productID = req.params.id
         const owner_id = req.user._id
         const product = await Product.findById(productID).exec()
+        const productOwn= await productOwner.findOne({user:owner_id}).exec()
 
-        String(product.owner) != String(owner_id)  && res.status(401).send({ message: "You are not Authorized for this action" })
+        String(product.owner) != String(productOwn._id)  && res.status(401).send({ message: "You are not Authorized for this action" })
 
         console.log(req.body.name)
         req.body.name && (product.name = req.body.name)
@@ -91,16 +92,19 @@ exports.deleteProduct = async (req, res, next) => {
     try {
         const productID = req.params.id
         const userId = req.user._id
-
+        const productOw= await productOwner.findOne({user:userId}).exec()
         const product = await Product.findOneAndDelete({
             _id: productID,
-            owner: userId
+            owner: productOw._id
         });
 
         if (!product) {
             res.status(403).json('Product NOT_FOUND with id: ' + productID);
         }
-        res.status(200).json("Deleted Successfully")
+        else{
+            res.status(200).json("Deleted Successfully")
+
+        }
     } catch (err) {
         next(err)
     }
@@ -122,14 +126,20 @@ exports.deleteImage = async (req, res, next) => {
     const { productID, id } = req.params
     const userId = req.user._id
     const pathToFile = `./public/${req.params.id}`
-    Product.updateOne({ _id: productID, owner: userId }, { "$pull": { "images_path": id } }, { safe: true, multi: true }, function (err, obj) {
+    const productOw= await productOwner.findOne({user:userId}).exec()
+
+    Product.updateOne({ _id: productID, owner: productOw._id }, { "$pull": { "images_path": id } }, { safe: true, multi: true }, function (err, obj) {
         if (obj.nModified === 0) res.status(404).json("Product NOT_FOUND with id: ' + productID")
         else {
+            console.log("seconddd")
             fs.unlink(pathToFile, function (err) {
                 if (err) {
                     console.log(err)
+                    console.log('jooooooooooooooooooooooooooo')
                     res.status(404).json("image not found")
                 } else {
+                    console.log('jooooooooooooooooooooooooooo')
+
                     console.log("deleted")
                     res.status(200).send("Deleted Successfully")
                 }
