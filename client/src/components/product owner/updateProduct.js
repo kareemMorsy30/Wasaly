@@ -22,6 +22,7 @@ const UpdateProduct = (props) => {
 
     const {id}= props
     useEffect(() => {
+        console.log(id)
         axios.get(`${domain}/product/${id}`,authHeader)
             .then(res => {
                 if (res.data.name) {
@@ -50,6 +51,8 @@ const UpdateProduct = (props) => {
 
         axios.patch(`${domain}/product/${id}`, data, authHeader).then((res, err) => {
             toast.success('Updated successfully')
+            setTimeout(function(){ props.setModalShow(false); }, 2000);
+
         }).catch(err => {
             console.log(err)
             toast.error('Error Submiting the form')
