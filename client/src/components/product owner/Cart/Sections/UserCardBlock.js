@@ -43,16 +43,16 @@ const [owner, setowner] = useState()
                 </td>
                 <td style={{
                     backgroundColor: "initial"
-                }}>{product.amount} EA</td>
+                }}>{product.amount} </td>
 
 <td style={{
                     backgroundColor: "initial"
-                }}>$ {product.price} </td>
+                }}> {product.price} EG</td>
 
               
                 <td style={{
                     backgroundColor: "initial"
-                }}>$ {product.name} </td>
+                }}> {product.name} </td>
 
 
                 {/* <td style={{

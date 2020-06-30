@@ -7,7 +7,7 @@ import Info from './alerts/info';
 import { Link } from 'react-router-dom';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Details from './product owner/productOwnerDetails/details';
-
+const domain= process.env.REACT_APP_BACKEND_DOMAIN
 const Table = ({ cols, data, editUrl, delUrl, del, options, Button, details, children }) => {
     const [modal, setModal] = useState(false);
     const [record, setRecord] = useState(null);
@@ -42,8 +42,8 @@ const Table = ({ cols, data, editUrl, delUrl, del, options, Button, details, chi
                                         { col === "image"?
                                             <img style={{width: "50px", height: "50px"}} src= {typeof record[col] == 'object' && record[col] != null
                                                 ? 
-                                                "http://localhost:5000/"+record[col]                                               :
-                                                record[col] == 0 ? "-" : "http://localhost:5000/"+record[col]
+                                                domain+record[col]                                               :
+                                                record[col] == 0 ? "-" : domain+record[col]
                                             }/>
                                             : 
                                             col === "rating" ?

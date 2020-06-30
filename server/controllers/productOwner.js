@@ -167,9 +167,8 @@ const updateProducteOwner = async (req, res) => {
 }
 //get all orders for the product owner
 const getProductOwnerOrders = async (req, res) => {
-    console.log("jooooooooo")
     try {
-        const orders = await Order.find({ 'productOwners.productOwner': req.user._id }).populate('customer', 'name').exec()
+        const orders = await Order.find({ 'productOwners.productOwner': req.user._id }).sort({createdAt: 'desc'}).populate('customer', 'name').exec()
         res.status(200).json(orders)
     } catch (e) {
         console.log(e)
