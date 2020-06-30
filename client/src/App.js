@@ -44,6 +44,7 @@ import CartPage from "./components/product owner/Cart/CartPage";
 
 // import MainCart  from './components/product owner/Cart/AddCart';
 import LandingPage from "./pages/landingPage";
+import AboutUs from "./components/content/aboutUs";
 
 // import user cart info(AUTH)
 import UserCart from './components/product owner/Cart/UserCart';
@@ -201,7 +202,8 @@ function App() {
                 "/login",
                 "/table",
                 "/welcome",
-                "/notifications"
+                "/notifications",
+                "/about-us"
               ]}
             >
               <SiteLayout>
@@ -242,6 +244,7 @@ function App() {
                 <Route exact path="/service" component={Delivery} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/table" component={table} />
+                <Route exact path="/about-us" component={AboutUs} />
                 </div>
                 </div>
               </SiteLayout>
