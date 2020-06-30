@@ -397,6 +397,7 @@ userController.getAllUsers = async (req, res) => {
         res.send(err);
     }
 }
+
 userController.getUser = async (req, res) => {
     if(req.user){
         return res.send(req.user)

@@ -161,7 +161,7 @@ const CustomerProfile = (props)=>{
             </div>
             <div className="child2 col-6" >
             <form onSubmit={submitForm}>
-            <input type="text" placeholder="From" value={fromValue} onChange={updateAddress} list="from" style={{border: alert.type === 'error' && !address.area && '1px red solid'}}/>
+            <input type="text" placeholder="address" value={fromValue} onChange={updateAddress} list="from" style={{border: alert.type === 'error' && !address.area && '1px red solid'}}/>
                     <datalist id="from">
                         <option key="source" value={address.area}/>
                     </datalist>
