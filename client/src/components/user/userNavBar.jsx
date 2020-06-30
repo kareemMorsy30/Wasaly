@@ -114,6 +114,7 @@ const NavBar = (props) => {
                                 <a className="nav-link" href="/products">Products</a>
                             </NavItem>
                         }
+                        <NavItem className="nav-item" style={{backgroundColor: path.includes('/customerprofile') && 'red'}}><a className="nav-link" href="/customerprofile">my profile</a></NavItem>
                         <NavItem className="nav-item" style={{backgroundColor: path.includes('/service') && 'red'}}>
                             <a className="nav-link" href="/service">Services</a>
                         </NavItem>

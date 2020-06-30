@@ -7,6 +7,8 @@ import { getGeoLocation } from '../../endpoints/geocoding';
 import '../../styles/delivery-section.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../styles/form.scss';
+import NavBar from "../user/userNavBar";
+
 const CustomerProfile = (props)=>{
     const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
     const API_SERVICEOWNER_URL = `${domain}/users/one`;
@@ -120,8 +122,10 @@ const CustomerProfile = (props)=>{
     }
     // console.log(user.address[0]);
     return(
-        <div className="container  vh-100">
-        <div className="d-flex vh-100">
+        <>
+        {/* <NavBar /> */}
+        <div className="container  vh-100" >
+        <div className="d-flex vh-100" style={{marginTop:100}}>
         <div  className="child1 col-6">
             <Card key={user._id} >
             <table>
@@ -196,6 +200,7 @@ const CustomerProfile = (props)=>{
 </form>
 </Modal>
         </div>
+    </>
     );
 }
 export default CustomerProfile;
