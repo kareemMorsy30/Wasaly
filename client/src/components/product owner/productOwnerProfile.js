@@ -3,6 +3,10 @@ import axios from 'axios';
 import { Table, Input, Button, Modal, Form, ModalHeader, ModalBody, FormGroup, ModalFooter, Card, CardText, CardBody, CardTitle, CardImg } from 'reactstrap';
 import { authHeader } from '../config/config';
 import { objectToFormData } from 'object-to-formdata';
+import { getGeoLocation } from '../../endpoints/geocoding';
+import '../../styles/delivery-section.scss';
+import 'react-toastify/dist/ReactToastify.css';
+import '../../styles/form.scss';
 const ProductOwnerProfile = (props)=>{
     const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
     const API_SERVICEOWNER_URL = `${domain}/product-owners/one`;
@@ -13,6 +17,16 @@ const ProductOwnerProfile = (props)=>{
     const [serviceObj, setServiceObj] = useState({
         marketName: "", ownerName: "", marketPhone: "", avatar: null
     })
+    const [address, setAddress] = useState({
+        area: '',
+        street: '',
+        city: '',
+        longitude: 0,
+        latitude: 0,
+    });
+const [fromValue, setFromValue] = useState('');
+const [toValue, setToValue] = useState('');
+const [suggested, setSuggested] = useState([]);    
     const toggle = () => setModal(!modal);
     useEffect(() => {
         axios.get(API_SERVICEOWNER_URL, authHeader)
@@ -35,6 +49,52 @@ const ProductOwnerProfile = (props)=>{
             })
     }, [loading]);
 
+    const updateAddress = event => {
+        const input = event.target.value;
+
+        setFromValue(event.target.value);
+
+        if(input.length >= 3 && input[input.length-1] !== ' '){
+            getGeoLocation(input).then(data => {
+                console.log(data);
+
+                if(data.area) setAddress({
+                    
+                    ...address,
+                    area: data.fullArea,
+                    city: data.city,
+                    longitude: data.longitude,
+                    latitude: data.latitude,
+                });
+                console.log(data.area);
+                console.log(address);
+                if(input > toValue && data.area && !suggested.includes(data.area) && data.area.toLowerCase().includes(input)){
+                    console.log('====================================');
+                    console.log(data.area);
+                    console.log('====================================');
+                    setSuggested([...suggested, data.area]);
+                    setFromValue(data.area);
+                }
+            })
+        }
+    }
+    const submitForm = async(e)=>{
+        e.preventDefault();
+        try {
+            // console.log(serviceObj);
+            // console.log(objectToFormData(serviceObj))
+            // console.log(forum.get('image_path'));
+            console.log("hello from submit");
+            console.log(address)
+            const res = await axios.patch(`${API_SERVICEOWNER_URL}/modify/address`,{address}, authHeader)
+            // console.log()
+            console.log("address",res.data);
+            setAddress(res.data);
+            setLoading(!loading);
+            // toggle();
+            console.log(serviceObj);
+        } catch (error) { console.log(error) }
+    }
     const statusChange = async (e) => {
         e.preventDefault();
         try {
@@ -74,29 +134,70 @@ const ProductOwnerProfile = (props)=>{
         } catch (error) { console.log(error) }
     }
     return(
-        <div>
+        <div className="container  vh-100">
+        <div className="d-flex vh-100">
+        <div className="child1 col-6">
             <Card key={productOwner._id} >
+            <table>
                 <CardBody>
-                    <CardImg src={serviceObj?.user?.avatar} alt="productOwner Pic" style={{ width: "100px", height: "100px" }} />
-                    <CardTitle>
-                        Product Owner Profile
+                <CardTitle>
+                       <h3> {user.name}'s Profile</h3>
                 </CardTitle>
-                    <CardText>
-                        marketName:{productOwner.marketName}
-                    </CardText>
-                    <CardText>
-                        ownerName:{productOwner.ownerName}
-                    </CardText>
-                    <CardText>
-                    marketPhone:{productOwner.marketPhone}
-                    </CardText>
-                    <CardText>
-                        Status:{user.status}
-                    </CardText>
+                    <CardImg src={serviceObj?.user?.avatar} alt="productOwner Pic" style={{ width: "200px", height: "300px" }} />
+                    <tr><h3>
+                    <th>userName:</th>
+                    <td><CardText> {user.username}</CardText></td></h3>
+                    </tr>
+                    <tr>
+                    <h3><th>Status:</th>
+                        <td><CardText>{user.status} </CardText></td></h3>
+                        </tr>
+                        <tr>
+                        <h3><th>Email:</th>
+                            <td><CardText>{user.email} </CardText></td></h3>
+                        </tr>
+                        {user.address &&
+                    <tr>
+                        <h3><th>address:</th>
+                    <td><CardText>{user.address[0].area}, {user.address[0].city} </CardText></td></h3>
+                    </tr>
+                }
+                {user.phones && user.phones.length > 1 && user.phones.map((phone,index)=>{
+                       return( 
+                           <tr><h3>
+                        <th>phone{index+1}:</th>
+                       <td><CardText>{phone} </CardText></td></h3></tr> ) })
+                              
+                    }
+                    <tr><h3><th> marketName:</th>
+                    <td><CardText>
+                       {productOwner.marketName}
+                    </CardText></td></h3></tr>
+                    <tr><h3><th> ownerName:</th>
+                    <td><CardText>
+                       {productOwner.ownerName}
+                    </CardText></td></h3></tr>
+                    <tr><h3><th> marketPhone:</th>
+                    <td><CardText>
+                       {productOwner.marketPhone}
+                    </CardText></td></h3></tr>
+                    
                 </CardBody>
                 <button onClick={toggle} className="btn btn-primary"> Update</button>
                 <button onClick={toggle} className="btn btn-success" onClick={statusChange}> Change Status</button>
+                </table>
             </Card>
+            </div>
+            <div className="child2 col-6" >
+            <form onSubmit={submitForm}>
+            <input type="text" placeholder="address" value={fromValue} onChange={updateAddress} list="from" style={{border: alert.type === 'error' && !address.area && '1px red solid'}}/>
+                    <datalist id="from">
+                        <option key="source" value={address.area}/>
+                    </datalist>
+                    <button type="submit"  className="btn btn-success" >Update Address</button>
+            </form>
+            </div>
+            </div>
             <Modal isOpen={modal} toggle={toggle}>
 
                 <form encType="multipart/form-data" onSubmit={(e) => { updateProductOwner(e) }}>

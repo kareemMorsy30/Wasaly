@@ -44,6 +44,7 @@ import CartPage from "./components/product owner/Cart/CartPage";
 
 // import MainCart  from './components/product owner/Cart/AddCart';
 import LandingPage from "./pages/landingPage";
+import AboutUs from "./components/content/aboutUs";
 
 // import user cart info(AUTH)
 import UserCart from './components/product owner/Cart/UserCart';
@@ -92,7 +93,9 @@ function App() {
           "/product-owner/orders",
           "/service-owner/notifications",
           "/product-owner/notifications",
-          "/admin/notifications"
+          "/admin/notifications",
+          "/serviceownerprofile",
+          "/productownerprofile"
         ]}
       >
         <Layout>
@@ -109,12 +112,15 @@ function App() {
             path="/service-owner/orders"
             component={ServiceOwnerOrders}
           />
+          <Route exact path="/serviceownerprofile" component={ServiceOwnerProfile}/>
           <Route
             exact
             path="/service-owner/connection"
             component={ProductOwnerDetails}
           />
           {/* Product owner routes */}
+          
+        <Route exact path="/productownerprofile" component={ProductOwnerProfile}/>
           <Route
             exact
             path="/product-owner/connections"
@@ -165,8 +171,7 @@ function App() {
 
         <Switch>
          
-        <Route exact path="/serviceownerprofile" component={ServiceOwnerProfile}/>
-        <Route exact path="/productownerprofile" component={ProductOwnerProfile}/>
+       
         <Route exact path="/customerprofile" component={CustomerProfile}/>
 
 
@@ -188,6 +193,7 @@ function App() {
                 "/register",
                 "/",
                 "/search/:id",
+                "/service",
                 "/categoryproducts/:id",
                 "/products/create",
                 "/products/:id/edit",
@@ -200,7 +206,8 @@ function App() {
                 "/login",
                 "/table",
                 "/welcome",
-                "/notifications"
+                "/notifications",
+                "/about-us"
               ]}
             >
               <SiteLayout>
@@ -238,9 +245,10 @@ function App() {
                 {/* http://localhost:3000/5ef231d4a5a9572baa78364f/ownerinfo */}
                 <Route exact path="/:id/ownerinfo" component={ProductDetails} />
                 <Route exact path="/cart" component={Auth(CartPage, true)} />
-
+                <Route exact path="/service" component={Delivery} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/table" component={table} />
+                <Route exact path="/about-us" component={AboutUs} />
                 </div>
                 </div>
               </SiteLayout>

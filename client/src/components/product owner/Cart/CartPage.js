@@ -5,11 +5,12 @@ import {
     removeCartItem,
 } from '../Cart/actions/user_actions';
 import UserCardBlock from './Sections/UserCardBlock';
-import { Result, Empty } from 'antd';
+
+import { Result, Empty,Button } from 'antd';
 import Axios from 'axios';
 import OrderForm from '../../customer/orderForm';
 import ReactLoading from 'react-loading';
-
+import {Link} from 'react-router-dom'
 
 function CartPage(props) {
     const dispatch = useDispatch();
@@ -116,10 +117,20 @@ console.log('====================================');
 
                     ShowSuccess ?
 
+                        // <Result
+                        //     status="success"
+                        //     title="Successfully Purchased Items"
+
+                        // /> 
                         <Result
-                            status="success"
-                            title="Successfully Purchased Items"
-                        /> 
+                        status="success"
+                        title="Successfully Purchased Order!"
+                        extra={[
+                          <Link to={'/'}>
+                              <Button type="primary" key="console">  Buy Again</Button>
+                            </Link>                              
+                        ]}
+                      />
                         
                         :
                         <div style={{

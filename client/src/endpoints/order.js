@@ -16,7 +16,6 @@ export const getAvailableTransportations = () => {
 
 export const getAvailableServiceOwners = (order, owner) => {
     const url = `${domain}/services/available/owners`;
-    console.log(localStorage.getItem("token"));
 
     return axios.post(url, {
         ...order

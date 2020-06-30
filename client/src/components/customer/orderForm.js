@@ -21,9 +21,9 @@ import SaveIcon from '@material-ui/icons/Save';
 import { AvForm, AvField, AvGroup, AvInput, AvFeedback, AvRadioGroup, AvRadio, AvCheckboxGroup, AvCheckbox } from 'availity-reactstrap-validation';
 
 const useStyles = makeStyles((theme) => ({
-  button: {
-    margin: theme.spacing(1),
-  },
+    button: {
+        margin: theme.spacing(1),
+    },
 }));
 
 
@@ -103,7 +103,7 @@ const OrderForm = ({ props, setShowSuccess, ShowTotals }) => {
 
     }
 
-      const from = {
+    const from = {
         // from: {
         area: '',
         city: '',
@@ -152,67 +152,67 @@ const OrderForm = ({ props, setShowSuccess, ShowTotals }) => {
         event.preventDefault();
         // setTo(toValue);
 
-        if (to.area == "" && props.user.userData.address.length>0) {
+        if (to.area == "" && props.user.userData.address.length > 0) {
             setTo(props.user.userData.address[0] && props.user.userData.address[0])
         }
-        else if(to.area == "" || !to || !phone){
+        else if (to.area == "" || !to || !phone) {
             setAlert({
                 message: 'Check required inputs',
                 type: 'error'
             })
         }
-        else{
-        if (show || props.user.userData.address.length==0) {
-            if (!phone || !description || !to) {
-                setAlert({
-                    message: 'Check required inputs',
-                    type: 'error'
-                })
+        else {
+            if (show || props.user.userData.address.length == 0) {
+                if (!phone || !description || !to) {
+                    setAlert({
+                        message: 'Check required inputs',
+                        type: 'error'
+                    })
+                }
+                else {
+                    const order = { to, phone, description };
+                    // setOrder(order);
+                    MakeOrder(order).then(data => {
+                        console.log(authHeader)
+                        Axios.delete(`${domain}/users/removeCart`, authHeader())
+                        setShowSuccess(true);
+                        ShowTotals(false);
+                    }
+
+                    ).catch(err => console.log(err)
+                    )
+                }
+
             }
             else {
-                const order = {to, phone, description };
-                // setOrder(order);
-                MakeOrder(order).then(data => {
-                    console.log(authHeader)
-                    Axios.delete(`${domain}/users/removeCart`, authHeader())
-                    setShowSuccess(true);
-                    ShowTotals(false);
+                if ((props.user.userData.address[0] && props.user.userData.address[0].area) || (props.user.userData.address[0].location && props.user.userData.address[0].location)) {
+                    const order = {
+                        to:
+                        {
+                            area: props.user.userData.address[0].area,
+                            street: props.user.userData.address[0].street || "",
+                            city: props.user.userData.address[0].city,
+                            longitude: props.user.address && props.user.address.length > 0 && props.user.userData.address[0].location.longitude || 0,
+                            latitude: props.user.address && props.user.address.length > 0 && props.user.userData.address[0].location.latitude || 0
+
+                        }, phone, description
+                    };
+
+                    // setOrder(order);
+
+                    MakeOrder(order).then(data => {
+                        console.log('hiiiiiiiiiiiiiiiiiiiiiii')
+                        Axios.delete(`${domain}/users/removeCart`, authHeader)
+                        setShowSuccess(true);
+                        ShowTotals(false);
+                    }
+
+                    ).catch(err => console.log(err)
+                    )
                 }
-
-                ).catch(err => console.log(err)
-                )
             }
-
+            console.log(typeof (to))
         }
-        else {
-            if ((props.user.userData.address[0] && props.user.userData.address[0].area) || (props.user.userData.address[0].location && props.user.userData.address[0].location)) {
-                const order = {
-                    to:
-                    {
-                        area: props.user.userData.address[0].area,
-                        street: props.user.userData.address[0].street || "",
-                        city: props.user.userData.address[0].city,
-                        longitude: props.user.address && props.user.address.length > 0 && props.user.userData.address[0].location.longitude || 0,
-                        latitude: props.user.address && props.user.address.length > 0 && props.user.userData.address[0].location.latitude || 0
-
-                    }, phone, description
-                };
-
-                // setOrder(order);
-
-                MakeOrder(order).then(data => {   
-                    console.log('hiiiiiiiiiiiiiiiiiiiiiii')                 
-                    Axios.delete(`${domain}/users/removeCart`, authHeader)
-                    setShowSuccess(true);
-                    ShowTotals(false);
-                }
-
-                ).catch(err => console.log(err)
-                )
-            }
-        }
-        console.log(typeof (to))
-    }
         // getAvailableServiceOwners(order)
         // .then(owners => {
         //     setServiceOwners(owners);
@@ -243,14 +243,14 @@ const OrderForm = ({ props, setShowSuccess, ShowTotals }) => {
                             <AvForm onSubmit={handleSubmit}>
                                 <div className="form_container">
 
-                                    <input type="text" placeholder="To" value={toValue} onChange={insertTo} list="to-list" style={{ border: alert.type === 'error' && !to.area && '1px red solid' }} />
+                                    <AvField name="to" type="text" placeholder="To" value={toValue} onChange={insertTo} list="to-list" style={{ border: alert.type === 'error' && !to.area && '1px red solid' }} />
                                     <datalist id="to-list">
                                         <option key="destination" value={to.area} />
                                     </datalist>
 
-                                    <input type="text" placeholder="phone" value={phone} onChange={event => setPhone(event.target.value)} style={{ border: alert.type === 'error' && !phone && '1px red solid' }} />
+                                    <AvField name="phone" type="text" placeholder="phone" value={phone} onChange={event => setPhone(event.target.value)} style={{ border: alert.type === 'error' && !phone && '1px red solid' }} />
                                     <textarea placeholder="More info" value={description} onChange={event => setDescription(event.target.value)} style={{ border: alert.type === 'error' && !description && '1px red solid' }} />
-                                    <button type="submit" onSubmit={handleSubmit} className="submit-btn">SubmitChooseAnotherAddrress</button>
+                                    <button type="submit" onSubmit={handleSubmit} className="submit-btn">Purchase Product</button>
                                 </div>
                             </AvForm>
                             :
@@ -261,54 +261,55 @@ const OrderForm = ({ props, setShowSuccess, ShowTotals }) => {
 
                                     }
                                     <AvField
-                                     type="text" 
-                                     placeholder="phone"
-                                      value={phone} 
-                                      onChange={event => setPhone(event.target.value)} 
-                                      style={{ border: alert.type === 'error' && !phone && '1px red solid' }} 
-                                      validate={{
-                                        pattern:{value:'^(012|011|010|015)[0-9]{8}$',errorMessage: 'You phpne must be a valid number'}
+                                        type="text"
+                                        placeholder="phone"
+                                        name="phone1"
+                                        value={phone}
+                                        onChange={event => setPhone(event.target.value)}
+                                        style={{ border: alert.type === 'error' && !phone && '1px red solid' }}
+                                        validate={{
+                                            pattern: { value: '^(012|011|010|015)[0-9]{8}$', errorMessage: 'Your phone must be a valid number' }
 
-                       }}
+                                        }}
 
-                                      />
+                                    />
                                     <textarea placeholder="More info" value={description} onChange={event => setDescription(event.target.value)} style={{ border: alert.type === 'error' && !description && '1px red solid' }} />
                                     <button type="submit" onSubmit={handleSubmit} className="submit-btn">Purchase product</button>
                                 </div>
                             </AvForm>
                     }
-        
-                    <Button    
-                         variant="contained"
-        color="primary"
-        className={classes.button}
-        endIcon={<Icon>send</Icon>}  
-        onClick={() => { setShow((prevstate) => !prevstate) }}>{show ? "Choose my address" : "Choose Another Address"}</Button>
+
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        endIcon={<Icon></Icon>}
+                        onClick={() => { setShow((prevstate) => !prevstate) }}>{show ? "Choose my address" : "Choose Another Address"}</Button>
                 </>
 
                 :
-                
+
                 <AvForm onSubmit={handleSubmit}>
                     <div className="form_container">
 
-                        <input type="text" placeholder="To" value={toValue} onChange={insertTo} list="to-list" style={{ border: alert.type === 'error' && !to.area && '1px red solid' }} />
+                        <AvField name="to" type="text" placeholder="To" value={toValue} onChange={insertTo} list="to-list" style={{ border: alert.type === 'error' && !to.area && '1px red solid' }} />
                         <datalist id="to-list">
-                            <option key="destination" value={to?to.area:''} />
+                            <option key="destination" value={to ? to.area : ''} />
                         </datalist>
 
                         <AvField
-                                     type="text" 
-                                     placeholder="phone"
-                                     name="phone"
-                                      value={phone} 
-                                      onChange={event => setPhone(event.target.value)} 
-                                      style={{ border: alert.type === 'error' && !phone && '1px red solid' }} 
-                                      validate={{
-                                        pattern:{value:'^(012|011|010|015)[0-9]{8}$',errorMessage: 'You phpne must be a valid number'}
+                            type="text"
+                            placeholder="phone"
+                            name="phone"
+                            value={phone}
+                            onChange={event => setPhone(event.target.value)}
+                            style={{ border: alert.type === 'error' && !phone && '1px red solid' }}
+                            validate={{
+                                pattern: { value: '^(012|011|010|015)[0-9]{8}$', errorMessage: 'You phpne must be a valid number' }
 
-                       }}
+                            }}
 
-                                      />                        <textarea placeholder="More info" value={description} onChange={event => setDescription(event.target.value)} style={{ border: alert.type === 'error' && !description && '1px red solid' }} />
+                        />                        <textarea placeholder="More info" value={description} onChange={event => setDescription(event.target.value)} style={{ border: alert.type === 'error' && !description && '1px red solid' }} />
                         <button type="submit" onSubmit={handleSubmit} className="submit-btn">Purchase Product</button>
                     </div>
                 </AvForm>

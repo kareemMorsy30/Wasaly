@@ -56,6 +56,9 @@ router.get('/one', productOwnerController.getProductOwner);
 //changing status of product owners
 router.get('/one/status',productOwnerController.changeStatus);
 
+//update address
+router.patch('/one/modify/address',productOwnerController.updateAddress);
+
 //update data of product owner
 router.patch('/one/modify',upload.single('avatar'),productOwnerController.updateProducteOwner);
 

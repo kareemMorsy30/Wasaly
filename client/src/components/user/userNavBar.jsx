@@ -23,6 +23,7 @@ import { ShoppingCartOutlined } from '@ant-design/icons';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import IconButton from '@material-ui/core/IconButton';
 import MatBadge from '@material-ui/core/Badge';
+import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 
 // import ShoppingCart from "@bit/mui-org.material-ui-icons.shopping-cart";
 
@@ -64,8 +65,8 @@ const NavBar = (props) => {
 
     // const [isLoggedIn, setIsLoggedIn] = useState(false);
     const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
-
-
+    const path = window.location.pathname;
+    console.log(path);
     // useEffect(() => {
     //     (async function () {
     //         try {
@@ -96,65 +97,68 @@ const NavBar = (props) => {
 
 
     return (
-        <Navbar color="light" light expand="md" >
+        <Navbar className="site-navbar" color="light" light expand="md" >
             <div className="container">
-                <NavbarBrand href="/">wasaly</NavbarBrand>
+                <NavbarBrand style={{paddingLeft: '2%'}} href="/">Wasaly</NavbarBrand>
                 <NavbarToggler onClick={toggle} />
                 <Collapse isOpen={isOpen} navbar>
 
                     <Nav navbar>
 
 
-                        <NavItem>
-                            <Link className="nav-link" to="/">Home</Link>
+                        <NavItem className="nav-item" style={{backgroundColor: path === '/' && 'red'}}>
+                            <a style={{marginBottom: '2px'}} className="nav-link" href="/">Home</a>
                         </NavItem>
                         {isProductOwner() &&
-                            <NavItem>
-                                <Link className="nav-link" to="/products">Products</Link>
+                            <NavItem className="nav-item">
+                                <a className="nav-link" href="/products">Products</a>
                             </NavItem>
                         }
-                        <NavItem>
-                            <Link className="nav-link" to="/services">Services</Link>
+                        <NavItem className="nav-item" style={{backgroundColor: path.includes('/service') && 'red'}}>
+                            <a className="nav-link" href="/service">Services</a>
                         </NavItem>
-                        <NavItem>
-                            <Link className="nav-link" to="/users">users</Link>
+                        <NavItem className="nav-item" style={{backgroundColor: path.includes('/about-us') && 'red'}}>
+                            <a className="nav-link" href="/about-us">About Us</a>
                         </NavItem>
                         {/* <NavItem>
                             <Link className="nav-link" to="/serviceownerprofile">My profile</Link>
                         </NavItem> */}
                         {console.log(isLoggedIn())}
-
-
-                        <NavItem>
-                            {
-                                isLoggedIn()&&
-                                <Link style={{
-                                    marginRight: -9
-                                    , color: '#667777'
-                                }} className="nav-link" to="/cart">
-
-                                    <ShoppingCartOutlined type="shopping-cart" style={{ fontSize: 30, marginBottom: 3 }} />
-
-                                </Link>
-                            }
-                        </NavItem>
-                        {
-                            isLoggedIn() == false ? (
-                                <NavItem>
-                                    {/* <Login /> */}
-                                </NavItem>
-                            ) : <Logout />
-                        }
                     </Nav>
                 </Collapse>
 
                 <Search />
                 {!isLoggedIn() &&( <div style={{fontSize:'14px', fontWeight:500, marginLeft:'15px'}}>  <Link to="/login">Login</Link> <Link to="/register">Register</Link></div> )}
-                <IconButton color="inherit" onClick={notifications}>
-                    <MatBadge badgeContent={props.notificationsNo} color="error">
-                    <NotificationsIcon/>
-                    </MatBadge>
+                <IconButton>
+                    {
+                        isLoggedIn()&&
+                        <Link style={{
+                            marginRight: -9
+                            , color: '#667777'
+                        }} className="nav-link" to="/cart">
+
+                            <ShoppingCartOutlinedIcon type="shopping-cart" style={{ fontSize: 30, marginBottom: 3 }} />
+
+                        </Link>
+                    }
                 </IconButton>
+                {
+                    isLoggedIn() 
+                    &&
+                    <IconButton color="inherit" onClick={notifications}>
+                        <MatBadge badgeContent={props.notificationsNo} color="error">
+                            <NotificationsIcon/>
+                        </MatBadge>
+                    </IconButton>
+                }
+                {
+                    isLoggedIn() == false ? (
+                        <NavItem>
+                            {/* <Login /> */}
+                        </NavItem>
+                    ) : <Logout />
+                }
+                
             </div>
         </Navbar>
     );
