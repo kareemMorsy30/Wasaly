@@ -12,7 +12,6 @@ import OrderForm from '../../customer/orderForm';
 import ReactLoading from 'react-loading';
 import Payment from '../../payment';
 import {Link} from 'react-router-dom'
-import Payment from '../../payment';
 import Checkout from '../../checkout';
 
 function CartPage(props) {
@@ -112,7 +111,6 @@ console.log('====================================');
                     <div style={{ marginTop: '3rem' }}>
                         <h2>Total amount: ${Total} </h2>
                     </div>
-<<<<<<< HEAD
                     <div>
             payment method by strip
             <p className="App-intro">
@@ -123,9 +121,6 @@ console.log('====================================');
           />
         </p>
         </div>
-=======
-<Payment  props={props} ShowTotals={setShowTotal}  setShowSuccess={setShowSuccess} />
->>>>>>> 680c613edf2e975379770aad03b30e49218768a2
 <OrderForm    props={props} ShowTotals={setShowTotal}  setShowSuccess={setShowSuccess} />
 {/* <h1>sdsdsdsdsdsd</h1> */}
 </>
