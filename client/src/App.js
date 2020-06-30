@@ -99,6 +99,7 @@ function App() {
         ]}
       >
         <Layout>
+        <Route exact path="/customerprofile" component={CustomerProfile}/>
           <Route exact path={[
             "/service-owner/landing",
             "/product-owner/landing",
@@ -170,9 +171,6 @@ function App() {
       </Route>
 
         <Switch>
-         
-       
-        <Route exact path="/customerprofile" component={CustomerProfile}/>
 
 
           <Route
@@ -214,6 +212,7 @@ function App() {
               <SiteLayout>
 
               <div style={{ flex: "1 0 auto", marginTop: "12vh" }}>
+              <Route exact path="/customerprofile" component={CustomerProfile}/>
               <Route exact path="/welcome" component={Welcome} />
 
               <Route exact path="/notifications">
