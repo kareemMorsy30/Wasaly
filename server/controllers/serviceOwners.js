@@ -306,7 +306,7 @@ const getOrdersOfConnectedProductOwner = async (req, res) => {
                 }
 
             ]
-        })
+        }).sort({createdAt: 'desc'})
             .select('to customer status').exec()
 
         res.status(200).json(orders)

@@ -576,10 +576,10 @@ userController.test = async (req, res) => {
     await new Order(
         {
             products: [{
-                product: "5ee39ad707d185258b6b4696",
+                product: "5ee39afd07d185258b6b4697",
                 amount: 3
             },{
-                product: "5ee39ad707d185258b6b4696",
+                product: "5ee39afd07d185258b6b4697",
                 amount: 3
             }],
             status: "Pending",
@@ -599,7 +599,7 @@ userController.test = async (req, res) => {
                 longitude: 1.25,
                 latitude: 1.25
             },
-            item: "adidas shoessssss",
+            item: "test555555",
             amount: 5,
             rate: {
                 rating: 1,

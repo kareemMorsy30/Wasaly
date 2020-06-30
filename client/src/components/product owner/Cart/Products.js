@@ -74,8 +74,11 @@ function ProductInfo(props) {
                   {images}
             </Carousel>
           </div>
-          <div className="col-3">
-              <h4>{Product[0].name}</h4>
+          <div style={{margin:'auto',marginBottom:'200px'}} >
+
+              <h4 style={{fontSize:"40px", fontWeight:'800'}}>{Product[0].name}</h4>
+              <hr></hr>
+          <div className="col-3" >
               <h4>{Product[0].quantity}</h4>
               <h4 style={{color:"blue"}}>{Product[0].price}<span style={{fontSize:"10px", color:"blue"}}>EGP</span></h4>
              <p>{Product[0].description}</p>
@@ -85,6 +88,8 @@ function ProductInfo(props) {
              {/* <Button variant="danger"  onClick={addToCarthandler}   className="btn-card">Add to Cart</Button> */}
              <p style={{marginTop:'10px'}}>Sold by:    <span style={{fontSize:'13px', fontWeight:400}}>{Product[0].owner&&Product[0].owner.ownerName}</span></p>
              <h4>{showStock(Product[0])}</h4>
+
+          </div>
 
           </div>
       
