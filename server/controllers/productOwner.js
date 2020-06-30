@@ -129,6 +129,21 @@ const changeStatus = async (req, res) => {
     }
 
 }
+const updateAddress = async(req,res)=>{
+    try{
+        // let productUser = await productOwner.findOneAndUpdate({ user: req.user._id }, { $set: req.body }, { new: true }).populate('user')
+        await User.findOneAndUpdate({ _id: req.user._id }, {address:req.body.address},{new:true})
+        let newServiceObj = await productOwner.findOne({ user: req.user._id }).populate('user')
+            res.status(200).json({ "data": newServiceObj });
+            console.log("body",req.body)
+            console.log("2ndadres",req.user.address);
+            console.log("user",req.user._id);
+            console.log("address",newServiceObj.user.address);
+        }catch (err) {
+            console.log(err);
+            res.status(400).json({ "error": err });
+        }
+}
 const updateProducteOwner = async (req, res) => {
     // productOwner.findOneAndUpdate({_id: req.params.id},req.body,{new: true},(error,user)=>{
     //     res.status(200).json({"data": user});
@@ -197,5 +212,6 @@ module.exports = {
     changeStatus,
     updateProducteOwner,
     getProductOwnerOrders,
-    changeProductsStatus
+    changeProductsStatus,
+    updateAddress
 }

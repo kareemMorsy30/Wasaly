@@ -22,6 +22,7 @@ const ServiceOwnerProfile = (props) => {
     const [serviceObj, setServiceObj] = useState({
         distance: 0, region: 0, transportation: "", rating: 0, avatar: null,phones:[]
     })
+    const [price,setPrice] = useState("")
     const [address, setAddress] = useState({
         area: '',
         street: '',
@@ -153,6 +154,15 @@ const [suggested, setSuggested] = useState([]);
         } catch (error) { console.log(error) }
     }
 console.log("phone",user.phones);
+const handleInput =(e)=>{
+    e.preventDefault();
+    setPrice(e.target.value);
+    console.log(price);
+}
+const submitInput = (e)=>{
+    setPrice(e.target.value);
+}
+console.log(price);
     return (
         <div className="container vh-100">
         <div className="d-flex vh-100">
@@ -171,11 +181,11 @@ console.log("phone",user.phones);
                     </tr>
                     <tr><h3><th> Distance:</th>
                    <td> <CardText>
-                       {serviceOwner.distance}
+                       {serviceOwner.distance}  km
                     </CardText></td></h3></tr>
                     <tr><h3><th> Region:</th>
                     <td><CardText>
-                        {serviceOwner.region}
+                        {serviceOwner.region}  km
                     </CardText></td></h3></tr>
                     <tr><h3><th>Transportation:</th>
                    <td> <CardText>
@@ -201,8 +211,9 @@ console.log("phone",user.phones);
                            <tr><h3>
                         <th>phone{index+1}:</th>
                        <td><CardText>{phone} </CardText></td></h3></tr> ) })
-                              
                     }
+                    <tr><h3><th>price per distance:</th>
+                    <td><CardText>{price}</CardText></td></h3></tr>
 
                 </CardBody>
                 <button onClick={toggle} className="btn btn-primary"> Update</button>
@@ -216,7 +227,11 @@ console.log("phone",user.phones);
                     <datalist id="from">
                         <option key="source" value={address.area}/>
                     </datalist>
-                    <button type="submit"  className="btn btn-success" >Update Address</button>
+                    <button type="submit" className="btn btn-success" >Update Address</button>
+            </form>
+            <form onSubmit={submitInput}>
+                <input type="text" placeholder="price per distance" onChange={handleInput} />
+                <button type="submit" className="btn btn-secondary">type your price per distance</button>
             </form>
             </div>
             </div>
