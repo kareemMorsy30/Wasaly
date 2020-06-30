@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { authHeader } from './config/config';
 import Checkout from './checkout';
-const Payment =(props)=>{
-    
+const Payment =(props,setShowTotal,Total)=>{
+    console.log('====================================');
+    // setShowTotal(true);
+    console.log(Total);
+    console.log('====================================');
     return(
         <div>
             payment method by strip
@@ -11,7 +14,7 @@ const Payment =(props)=>{
           <Checkout
             name={'Your Company Name'}
             description={'Item that you sold'}
-            amount={4.99}
+            amount={{ Total }}
           />
         </p>
         </div>

@@ -11,6 +11,8 @@ import Axios from 'axios';
 import OrderForm from '../../customer/orderForm';
 import ReactLoading from 'react-loading';
 import {Link} from 'react-router-dom'
+import Payment from '../../payment';
+import Checkout from '../../checkout';
 
 function CartPage(props) {
     const dispatch = useDispatch();
@@ -109,6 +111,16 @@ console.log('====================================');
                     <div style={{ marginTop: '3rem' }}>
                         <h2>Total amount: ${Total} </h2>
                     </div>
+                    <div>
+            payment method by strip
+            <p className="App-intro">
+          <Checkout
+            name={'Your Company Name'}
+            description={'Item that you sold'}
+            amount={ Total }
+          />
+        </p>
+        </div>
 <OrderForm    props={props} ShowTotals={setShowTotal}  setShowSuccess={setShowSuccess} />
 {/* <h1>sdsdsdsdsdsd</h1> */}
 </>
