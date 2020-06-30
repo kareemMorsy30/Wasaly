@@ -5,6 +5,10 @@ import { authHeader } from '../config/config';
 import { objectToFormData } from 'object-to-formdata';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getGeoLocation } from '../../endpoints/geocoding';
+import '../../styles/delivery-section.scss';
+import 'react-toastify/dist/ReactToastify.css';
+import '../../styles/form.scss';
 const ServiceOwnerProfile = (props) => {
     // console.log("hello");
     // const serviceOwnerId = props.match.params.id
@@ -16,8 +20,18 @@ const ServiceOwnerProfile = (props) => {
     const [modal, setModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [serviceObj, setServiceObj] = useState({
-        distance: 0, region: 0, transportation: "", rating: 0, avatar: null
+        distance: 0, region: 0, transportation: "", rating: 0, avatar: null,phones:[]
     })
+    const [address, setAddress] = useState({
+        area: '',
+        street: '',
+        city: '',
+        longitude: 0,
+        latitude: 0,
+    });
+const [fromValue, setFromValue] = useState('');
+const [toValue, setToValue] = useState('');
+const [suggested, setSuggested] = useState([]);    
     const toggle = () => setModal(!modal);
     // console.log(serviceOwnerId);
     useEffect(() => {
@@ -25,6 +39,7 @@ const ServiceOwnerProfile = (props) => {
             .then(response => {
                 console.log("success");
                 console.log("serviceO", response.data);
+                console.log("status",response.data.user)
                 setServiceOwner(response.data);
                 setUser(response.data.user);
                 setServiceObj(response.data);
@@ -91,35 +106,120 @@ const ServiceOwnerProfile = (props) => {
     const imageChange = (e) => {
         setServiceObj({ ...serviceObj, avatar: e.target.files[0] });
     }
+    const updateAddress = event => {
+        const input = event.target.value;
 
+        setFromValue(event.target.value);
+
+        if(input.length >= 3 && input[input.length-1] !== ' '){
+            getGeoLocation(input).then(data => {
+                console.log(data);
+
+                if(data.area) setAddress({
+                    
+                    ...address,
+                    area: data.fullArea,
+                    city: data.city,
+                    longitude: data.longitude,
+                    latitude: data.latitude,
+                });
+                console.log(data.area);
+                console.log(address);
+                if(input > toValue && data.area && !suggested.includes(data.area) && data.area.toLowerCase().includes(input)){
+                    console.log('====================================');
+                    console.log(data.area);
+                    console.log('====================================');
+                    setSuggested([...suggested, data.area]);
+                    setFromValue(data.area);
+                }
+            })
+        }
+    }
+    const submitForm = async(e)=>{
+        e.preventDefault();
+        try {
+            // console.log(serviceObj);
+            // console.log(objectToFormData(serviceObj))
+            // console.log(forum.get('image_path'));
+            console.log("hello from submit");
+            const res = await axios.patch(`${API_SERVICEOWNER_URL}/modify/address`,{address}, authHeader)
+            // console.log()
+            
+            console.log(res.data);
+            setAddress(res.data);
+            setLoading(!loading);
+            // toggle();
+            console.log(serviceObj);
+        } catch (error) { console.log(error) }
+    }
+console.log("phone",user.phones);
     return (
-        <div>
+        <div className="container vh-100">
+        <div className="d-flex vh-100">
+        <div className="child1 col-6">
             <Card key={serviceOwner._id} >
+            <table>
                 <CardBody>
-                    <CardImg src={serviceObj?.user?.avatar} alt="serviceOwner Pic" style={{ width: "100px", height: "100px" }} />
-                    <CardTitle>
-                        Service Owner Profile
-                </CardTitle>
-                    <CardText>
-                        Distance:{serviceOwner.distance}
-                    </CardText>
-                    <CardText>
-                        Region:{serviceOwner.region}
-                    </CardText>
-                    <CardText>
-                        Transportation:{serviceOwner.transportation}
-                    </CardText>
-                    <CardText>
-                        Ratings:{serviceOwner.rating}
-                    </CardText>
-                    <CardText>
-                        Status:{user.status}
-                    </CardText>
+                <CardTitle>
+                        <h2>{user.name}'s Profile</h2>
+                    </CardTitle>
+                    <CardImg src={serviceObj?.user?.avatar} alt="serviceOwner Pic" style={{ width: "200px", height: "300px" }} />
+                   
+                    <tr><h3>
+                    <th>userName:</th>
+                    <td><CardText> {user.username}</CardText></td></h3>
+                    </tr>
+                    <tr><h3><th> Distance:</th>
+                   <td> <CardText>
+                       {serviceOwner.distance}
+                    </CardText></td></h3></tr>
+                    <tr><h3><th> Region:</th>
+                    <td><CardText>
+                        {serviceOwner.region}
+                    </CardText></td></h3></tr>
+                    <tr><h3><th>Transportation:</th>
+                   <td> <CardText>
+                        {serviceOwner.transportation}
+                    </CardText></td></h3></tr>
+                   <tr>
+                   <h3><th>Ratings:</th>
+                   <td><CardText>
+                        {serviceOwner.rating}
+                    </CardText></td></h3> </tr>
+                    {user.address &&
+                    <tr>
+                        <h3><th>address:</th>
+                    <td><CardText>{user.address[0].area}, {user.address[0].city} </CardText></td></h3>
+                    </tr>
+                }
+                    <tr>
+                    <h3><th>Status:</th>
+                        <td><CardText>{user.status} </CardText></td></h3>
+                        </tr>
+                        {user.phones && user.phones.length > 0 && user.phones.map((phone,index)=>{
+                       return( 
+                           <tr><h3>
+                        <th>phone{index+1}:</th>
+                       <td><CardText>{phone} </CardText></td></h3></tr> ) })
+                              
+                    }
 
                 </CardBody>
                 <button onClick={toggle} className="btn btn-primary"> Update</button>
                 <button onClick={toggle} className="btn btn-success" onClick={statusChange}> Change Status</button>
+            </table>
             </Card>
+            </div>
+            <div className="child2 col-6" >
+            <form onSubmit={submitForm}>
+            <input type="text" placeholder="address" value={fromValue} onChange={updateAddress} list="from" style={{border: alert.type === 'error' && !address.area && '1px red solid'}}/>
+                    <datalist id="from">
+                        <option key="source" value={address.area}/>
+                    </datalist>
+                    <button type="submit"  className="btn btn-success" >Update Address</button>
+            </form>
+            </div>
+            </div>
             <Modal isOpen={modal} toggle={toggle}>
 
                 <form encType="multipart/form-data" onSubmit={(e) => { updateServiceOwner(e) }}>

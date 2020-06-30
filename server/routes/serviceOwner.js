@@ -32,7 +32,11 @@ const upload = multer({
     storage,
     fileFilter
 });
+//get specific service owner by id
+router.get('/',serviceOwnerController.getServiceOwner);
 
+//update address
+router.patch('/modify/address',serviceOwnerController.updateAddress);
 
 // Check all incoming requests of customers
 router.get('/orders', serviceOwnerController.allIncomingOrders);
@@ -46,8 +50,6 @@ router.get('/reviews', serviceOwnerController.reviews);
 // Retrieve product owners request details
 router.get('/product-owner', productOwnerController.productOwnerDetails);
 
-//get specific service owner by id
-router.get('/',serviceOwnerController.getServiceOwner);
 
 //update service owner data
 router.patch('/modify', upload.single('avatar'),serviceOwnerController.updateServiceOwner);

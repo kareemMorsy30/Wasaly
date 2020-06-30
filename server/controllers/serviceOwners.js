@@ -33,15 +33,30 @@ const changeStatus = async (req, res) => {
 
 const getServiceOwner = async (req, res) => {
     try {
-        console.log(req.user._id);
+        console.log("body",req.body)
+        console.log("user",req.user)
+        console.log("id",req.user._id);
         let user = await ServiceOwner.findOne({ user: req.user._id })
             .populate('user');
+            console.log("users",user)
         res.send(user)
     }
     catch (err) {
         res.send(err);
         console.log(err);
     }
+}
+const updateAddress = async(req,res)=>{
+   try{
+    let serviceUser = await ServiceOwner.findOneAndUpdate({ user: req.user._id }, { $set: req.body }, { new: true }).populate('user')
+    await User.findOneAndUpdate({ _id: serviceUser.user._id }, {address:req.user.address},{new:true})
+    let newServiceObj = await ServiceOwner.findOne({ user: req.user._id }).populate('user')
+        res.status(200).json({ "data": newServiceObj });
+    }catch (err) {
+        console.log(err);
+        res.status(400).json({ "error": err });
+    }
+
 }
 const updateServiceOwner = async (req, res) => {
 
@@ -372,5 +387,6 @@ module.exports = {
     filteredServiceOwners,
     deliverNewProduct,
     getOrdersOfConnectedProductOwner,
-    changeStatusOfOrderToDelieverForProductOwner
+    changeStatusOfOrderToDelieverForProductOwner,
+    updateAddress
 }

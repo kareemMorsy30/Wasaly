@@ -44,6 +44,8 @@ const CreateProduct = (props) => {
         data.set("category", category)
         axios.post(`${domain}/product`, data, authHeader).then((res) => {
             toast.success('upload success')
+            setTimeout(function(){ props.setModalShow(false); }, 2000);
+
         }).catch(err => {
             console.log(err.message)
             toast.error('Error Submiting the form')

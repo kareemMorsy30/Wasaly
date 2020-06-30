@@ -176,7 +176,13 @@ function Dashboard({children}) {
   };
   const [popoverOpen, setPopoverOpen] = useState(false);
   const history = useHistory();
-
+  const handleProfile = ()=>{
+    // let history = useHistory();
+    let path = window.location.pathname;
+    if (path.includes('users/')) history.push("/customerprofile");
+    else if (path.includes('service-owner/')) history.push("/serviceownerprofile");
+    else if (path.includes('product-owner/')) history.push("/productownerprofile");
+  }
   const toggle = () => setPopoverOpen(!popoverOpen);
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
@@ -218,7 +224,7 @@ function Dashboard({children}) {
               <NotificationsIcon/>
             </Badge>
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton color="inherit" onClick={handleProfile}>
               <AccountCircleIcon />
           </IconButton>
           <IconButton color="inherit" onClick={handleLogout}>
