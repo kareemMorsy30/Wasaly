@@ -147,7 +147,7 @@ const CustomerProfile = (props)=>{
                     {user.address &&
                     <tr>
                         <h3><th>address:</th>
-                    <td><CardText>{user.address[0].area}, {user.address[0].city} </CardText></td></h3>
+                    <td><CardText>{user.address.length > 0 && user.address[0].area}, {user.address.length > 0 && user.address[0].city} </CardText></td></h3>
                     </tr>
                 }
                     {user.phones && user.phones.length > 1 && user.phones.map((phone,index)=>{
