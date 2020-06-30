@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, Fragment } from 'react';
 import { useInput } from './hooks/input-hooks';
 import axios from 'axios';
@@ -49,11 +50,25 @@ const Authentication = (props) => {
     // const [phone, setphone] = useState('');
     const registerUrl = `${domain}/users/register`;
     const avatarUrl = `${domain}/users/profile/avatar`;
-    const [address, setInputFields] = useState([ ]);
-    const [phones, setphones] = useState([])
+    const [toValue, setToValue] = useState('');
+
+    const [address, setAddress] = useState({
+        area: '',
+        street: '',
+        city: '',
+        longitude: 0,
+        latitude: 0,
+    });
+    const [addressFields ,setInputFields] = useState([]);
+
+    const [fromValue, setFromValue] = useState('');
+    const [suggested, setSuggested] = useState([]);
+
+        const [phones, setphones] = useState([])
     const [validate, setvalidate] = useState({})
     const [state, setState] = useState({validate})
 	const [errorsRegister,setErrorsRegister]=useState("");
+    const [serviceObj, setServiceObj] = useState({address:[]})
 
 
     const removePhone = (id) => {
@@ -92,44 +107,64 @@ const Authentication = (props) => {
 
   
     const handleAddFields = () => {
-        const values = [...address];
-        values.push({ street: '', city: '', area: '', location: { latitude, longitude } });
+        const values = [...addressFields];
+        values.push({  area: '' });
         setInputFields(values);
     };
     const handleRemoveFields = index => {
-        const values = [...address];
+        const values = [...addressFields];
         values.splice(index, 1);
         setInputFields(values);
     };
-    const [suggested, setSuggested] = useState([]);
 
     const handleInputChange = (index, event) => {
         /**
          * address is same as values so it dosn;t make sense 
          */
-        const values = [...address];
+        const values = [...addressFields];
         console.log('====================================');
         console.log("address ::   ", address);
         console.log('====================================');
         console.log('====================================');
         console.log("Values", values);
         console.log('====================================');
-        if (event.target.name === "street") {
-            values[index].street = event.target.value;
-        } else if (event.target.name === "city") {
-            values[index].city = event.target.value;
-        }
-        else if (event.target.name === "area") {
+    
+         if (event.target.name === "area") {
             values[index].area = event.target.value;
         }
-        else {
-            values[index].location.latitude = event.target.value;
-            values[index].location.longitude = event.target.value;
-        }
+        
         console.log('====================================');
         console.log("setInputFields", setInputFields);
         console.log('====================================');
         setInputFields(values);
+        const input = event.target.value;
+
+        setFromValue(event.target.value);
+
+        if(input.length >= 3 && input[input.length-1] !== ' '){
+            getGeoLocation(input).then(data => {
+                console.log(data);
+
+                if(data.area) setAddress({
+                    
+                    ...address,
+                    area: data.fullArea,
+                    city: data.city,
+                    longitude: data.longitude,
+                    latitude: data.latitude,
+                });
+                console.log(data.area);
+                console.log(address);
+                if(input > toValue && data.area && !suggested.includes(data.area) && data.area.toLowerCase().includes(input)){
+                    console.log('====================================');
+                    console.log(data.area);
+                    console.log('====================================');
+                    setSuggested([...suggested, data.area]);
+                    setFromValue(data.area);
+                }
+            })
+        }
+
         // const input = event.target.value;
         // if (input.length >= 3 && input[input.length - 1] !== ' ') {
 
@@ -174,6 +209,37 @@ const Authentication = (props) => {
         // }
 
     };
+    // const FromAddress = event => {
+    //     const input = event.target.value;
+
+    //     setFromValue(event.target.value);
+
+    //     if(input.length >= 3 && input[input.length-1] !== ' '){
+    //         getGeoLocation(input).then(data => {
+    //             console.log(data);
+
+    //             if(data.area) setAddress({
+                    
+    //                 ...address,
+    //                 area: data.fullArea,
+    //                 city: data.city,
+    //                 longitude: data.longitude,
+    //                 latitude: data.latitude,
+    //             });
+    //             console.log(data.area);
+    //             console.log(address);
+    //             if(input > toValue && data.area && !suggested.includes(data.area) && data.area.toLowerCase().includes(input)){
+    //                 console.log('====================================');
+    //                 console.log(data.area);
+    //                 console.log('====================================');
+    //                 setSuggested([...suggested, data.area]);
+    //                 setFromValue(data.area);
+    //             }
+    //         })
+    //     }
+    // }
+
+
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
@@ -216,6 +282,10 @@ const Authentication = (props) => {
 
 
                     .then((response) => {
+                        // setServiceObj(response.data);
+
+                        setAddress(response.data);
+
                         console.log('====================================');
                         console.log("response then ",response.data);
                         console.log('====================================');
@@ -309,7 +379,9 @@ const Authentication = (props) => {
                     withCredentials: true,
 
                 }).then( (response) => {
+                    setServiceObj(response.data);
 
+                    // setAddress(response.data);
                     console.log('====================================');
                     console.log(response.data.user);
                     console.log('====================================');
@@ -370,6 +442,9 @@ const Authentication = (props) => {
 
             }
             if (passwordRegister === passConfRegister && role === "serviceowner") {
+                console.log('====================================');
+                console.log("SERVICE OWENr");
+                console.log('====================================');
 
                 const registerResult = await axios.post(registerUrl,
 
@@ -396,6 +471,9 @@ const Authentication = (props) => {
                     withCredentials: true,
 
                 }).then((response) => {
+                    setServiceObj(response.data);
+
+                    // setAddress(response.data);
                     console.log('====================================');
                     console.log(response);
                     console.log('====================================');
@@ -683,7 +761,7 @@ validate={{
                         }
                 </FormGroup>
              
-                {address.length>0 && address.map((inputField, index) => (
+                {addressFields.length>0 && addressFields.map((inputField, index) => (
 
                     <Fragment key={`${inputField}~${index}`
                     }>
@@ -691,32 +769,11 @@ validate={{
 
                         <FormGroup >
                             <Label for="exampleAddress">Address</Label>
-                            <Input type="text" name="street" placeholder="street"
-                                // pattern='[A-Za-z\\s]*'
-                                value={inputField.street}
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <Input type="text" name="city" placeholder="city"
-                                // pattern='[A-Za-z\\s]*'
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <datalist id="from">
-                                <option key="source" value={city} />
-                            </datalist>
-                            <Input type="text" name="area" placeholder="area"
-                                // pattern='[A-Za-z\\s]*'
-                                // {...bindaddress}
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <datalist id="from">
-                                <option key="source" value={area} />
-                            </datalist>
-                            <Input type="number" name="latitude" placeholder="latitude"
-                                onChange={event => handleInputChange(index, event)}
-                            />
-                            <Input type="number" name="longitude" placeholder="longitude"
-                                onChange={event => handleInputChange(index, event)}
-                            />
+                            <input type="text" placeholder="address" name='area' value={fromValue} onChange={event=>handleInputChange(index,event)} list="from" style={{border: alert.type === 'error' && !address.area && '1px red solid'}}/>
+                    <datalist id="from">
+                        <option key="source" value={address.area}/>
+                    </datalist>
+
 
                         </FormGroup>
 

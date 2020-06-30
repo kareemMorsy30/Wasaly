@@ -9,7 +9,7 @@ import { Result, Empty } from 'antd';
 import Axios from 'axios';
 import OrderForm from '../../customer/orderForm';
 import ReactLoading from 'react-loading';
-
+import Payment from '../../payment';
 
 function CartPage(props) {
     const dispatch = useDispatch();
@@ -108,6 +108,7 @@ console.log('====================================');
                     <div style={{ marginTop: '3rem' }}>
                         <h2>Total amount: ${Total} </h2>
                     </div>
+<Payment  props={props} ShowTotals={setShowTotal}  setShowSuccess={setShowSuccess} />
 <OrderForm    props={props} ShowTotals={setShowTotal}  setShowSuccess={setShowSuccess} />
 {/* <h1>sdsdsdsdsdsd</h1> */}
 </>

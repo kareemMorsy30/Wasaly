@@ -207,7 +207,8 @@ function App() {
                 "/table",
                 "/welcome",
                 "/notifications",
-                "/about-us"
+                "/about-us",
+                "/customerprofile"
               ]}
             >
               <SiteLayout>
