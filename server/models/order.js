@@ -69,9 +69,8 @@ const orderSchema = new mongoose.Schema({
 })
 
 orderSchema.pre('save', function (next) {
-    console.log('hi1')
-    if (this.productOwners.length < 1 &&this.products>0) {
-        console.log('hiii3')
+   
+    if (this.productOwners.length < 1 &&this.products.length>0) {
         let productInf
         let serviceOwners
         let services = []
@@ -132,7 +131,6 @@ orderSchema.pre('save', function (next) {
             productOwners = []
 
         } catch (e) {
-            console.log('hiiiiiiiiiiiiiiiiiiiii')
             console.log(e)
         }
     }
