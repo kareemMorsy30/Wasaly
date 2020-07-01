@@ -173,7 +173,7 @@ console.log(price);
                 <CardTitle>
                         <h2>{user.name}'s Profile</h2>
                     </CardTitle>
-                    <CardImg src={serviceObj?.user?.avatar} alt="serviceOwner Pic" style={{ width: "200px", height: "300px" }} />
+                    <CardImg src={serviceObj?.user?.avatar =='/'? `http://localhost:8000/${serviceObj?.user?.avatar}`:`http://localhost:8000${serviceObj?.user?.avatar}`} alt="user Pic" style={{ width: "200px", height: "300px" }} /> 
                    
                     <tr><h3>
                     <th>userName:</th>

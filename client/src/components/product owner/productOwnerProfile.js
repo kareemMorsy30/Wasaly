@@ -143,7 +143,7 @@ const [suggested, setSuggested] = useState([]);
                 <CardTitle>
                        <h3> {user.name}'s Profile</h3>
                 </CardTitle>
-                    <CardImg src={serviceObj?.user?.avatar} alt="productOwner Pic" style={{ width: "200px", height: "300px" }} />
+                    <CardImg src={serviceObj?.user?.avatar =='/'? `http://localhost:8000/${serviceObj?.user?.avatar}`:`http://localhost:8000${serviceObj?.user?.avatar}`} alt="user Pic" style={{ width: "200px", height: "300px" }} />
                     <tr><h3>
                     <th>userName:</th>
                     <td><CardText> {user.username}</CardText></td></h3>

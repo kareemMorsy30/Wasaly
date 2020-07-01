@@ -9,21 +9,24 @@ const ObjectId = mongoose.Types.ObjectId;
 const availableServiceOwners = async ({ body }) => {
     const transportation = body.transportation;
     const { from, to } = body;
-
-    const owners = await ServiceOwner.find({ transportation }).populate({
-        path: 'user',
-        match: { status: 'online' }
-    });
-
-    return await asyncFilter(owners, async owner => {
-        if (owner.user != null) {
-            console.log(owner);
-            const location = owner.user.address.length != 0 ? owner.user.address[0].location : null;
-            const distance = await getDistance(from, to, location);
-            console.log(distance);
-            return owner.distance >= distance;
-        }
-    });
+    try{
+        const owners = await ServiceOwner.find({ transportation }).populate({
+            path: 'user',
+            match: { status: 'online' }
+        });
+    
+        return await asyncFilter(owners, async owner => {
+            if (owner.user != null) {
+                console.log(owner);
+                const location = owner.user.address.length != 0 ? owner.user.address[0].location : null;
+                const distance = await getDistance(from, to, location);
+                console.log(distance);
+                return owner.distance >= distance;
+            }
+        });
+    }catch(e){
+        console.log(e)
+    }
 };
 
 const filteredServiceOwners = (req, res) => {

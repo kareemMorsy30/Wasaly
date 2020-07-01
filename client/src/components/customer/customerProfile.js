@@ -131,7 +131,7 @@ const CustomerProfile = (props)=>{
             <table>
                 <CardBody>
                 <CardTitle><h2>{user.name}'s Profile</h2></CardTitle>
-                    <CardImg src={serviceObj?.avatar =='/'? `http://localhost:5000/${serviceObj?.avatar}`:`http://localhost:5000${serviceObj?.avatar}`} alt="user Pic" style={{ width: "200px", height: "300px" }} />
+                    <CardImg src={serviceObj?.avatar =='/'? `http://localhost:8000/${serviceObj?.avatar}`:`http://localhost:8000${serviceObj?.avatar}`} alt="user Pic" style={{ width: "200px", height: "300px" }} />
                         <tr><h3>
                     <th>userName:</th>
                     <td><CardText> {user.username}</CardText></td></h3>

@@ -21,7 +21,7 @@ const rate = new mongoose.Schema({
 const serviceOwnerSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref:"User"},
     distance: { type: Number, required: true },
-    region: { type: Number, required: true },
+    region: { type: String, required: true },
     transportation: { type: String, required: true},
     rating: {type: Number, default: 0},
     rates: [rate],

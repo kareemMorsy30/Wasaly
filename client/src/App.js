@@ -94,8 +94,8 @@ function App() {
           "/service-owner/notifications",
           "/product-owner/notifications",
           "/admin/notifications",
-          "/serviceownerprofile",
-          "/productownerprofile"
+          "/service-owner/profile",
+          "/product-owner/profile"
         ]}
       >
         <Layout>
@@ -113,7 +113,7 @@ function App() {
             path="/service-owner/orders"
             component={ServiceOwnerOrders}
           />
-          <Route exact path="/serviceownerprofile" component={ServiceOwnerProfile}/>
+          <Route exact path="/service-owner/profile" component={ServiceOwnerProfile}/>
           <Route
             exact
             path="/service-owner/connection"
@@ -121,7 +121,7 @@ function App() {
           />
           {/* Product owner routes */}
           
-        <Route exact path="/productownerprofile" component={ProductOwnerProfile}/>
+        <Route exact path="/product-owner/profile" component={ProductOwnerProfile}/>
           <Route
             exact
             path="/product-owner/connections"

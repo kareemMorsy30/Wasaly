@@ -180,8 +180,8 @@ function Dashboard({children}) {
     // let history = useHistory();
     let path = window.location.pathname;
     if (path.includes('users/')) history.push("/customerprofile");
-    else if (path.includes('service-owner/')) history.push("/serviceownerprofile");
-    else if (path.includes('product-owner/')) history.push("/productownerprofile");
+    else if (path.includes('service-owner/')) history.push("/service-owner/profile");
+    else if (path.includes('product-owner/')) history.push("/product-owner/profile");
   }
   const toggle = () => setPopoverOpen(!popoverOpen);
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);

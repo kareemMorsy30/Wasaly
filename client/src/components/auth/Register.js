@@ -40,7 +40,7 @@ const Authentication = (props) => {
      * Service Owner
      */
     const { value: distance, bind: bindD, reset: resetD } = useInput(0);
-    const { value: region, bind: bindR, reset: resetR } = useInput(0);
+    const { value: region, bind: bindR, reset: resetR } = useInput('');
     const { value: transportation, bind: bindT, reset: resetT } = useInput('');
     const [city, setcity] = useState('');
     const [area, setarea] = useState('');
@@ -613,7 +613,7 @@ console.log(Street);
                             {...bindD}
 
                         />
-                        <AvField type="number" name="region" placeholder="region"
+                        <AvField type="text" name="region" placeholder="region"
                             validate={{
                                 required: { value: true, errorMessage: 'Please enter region' },
 
@@ -687,7 +687,7 @@ console.log(Street);
                             
                              type="text" placeholder="address" name='area' value={fromValue} onChange={event => handlefromValueChange(event)} list="from" style={{ border: alert.type === 'error' && !address.area && '1px red solid' }} />
                             <datalist id="from">
-                                <option key="source" value={address.area} />
+                                <option key="source" value={address[0].area} />
                             </datalist>
 
 
