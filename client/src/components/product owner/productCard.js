@@ -8,11 +8,12 @@ import {
     CardText,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 
 const ProductCard = ({ product ,match,handleClick}) => {
-        
-    console.log(product)
+    
     return (
         <div>
             <Card width="318px" height="180px">
@@ -47,10 +48,11 @@ const ProductCard = ({ product ,match,handleClick}) => {
                     phonne: {product.owner.marketPhone}
                     </CardText>
                     <Link className="btn btn-primary" to={`/products/${product._id}`}>
+                        <VisibilityIcon />
                         View
                     </Link>
                     <Link className="btn btn-primary" to={`/products/cart`}>
-                    <button onClick={()=>{handleClick(product)}}>Add to cart</button>
+                    <button onClick={()=>{handleClick(product)}}><ShoppingCartOutlinedIcon type="shopping-cart" /> Add to cart</button>
                     </Link>
 
                 </CardBody>

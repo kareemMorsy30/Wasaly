@@ -2,6 +2,10 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { Card, Button, Spinner } from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 import {isLoggedIn} from '../services/authServices'
+import { ToastContainer, toast } from 'react-toastify';
+import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+
 const domain = `${process.env.REACT_APP_BACKEND_DOMAIN}`
 
 const ShowProducts = ({ products, setProducts, lastProductElementRef, showAddToCartButton = true, addToCart }) => {
@@ -93,6 +97,7 @@ const ShowProducts = ({ products, setProducts, lastProductElementRef, showAddToC
 
   return (
     <>
+    <ToastContainer />
       <div className="container" style={{ width: '60%', marginTop: "50px" }}>
         {products.length > 0 ?
           <div className='row'>
@@ -130,10 +135,10 @@ const ShowProducts = ({ products, setProducts, lastProductElementRef, showAddToC
                     </Card.Text>
 
                     <div style={{ display: 'flex',flexDirection:'column', 'justifyContent': 'space-around', flexShrink: 0 }}>
-                    <Link to={`/${product._id}/ownerinfo`}> <Button variant="danger" className="btn-card" style={{width:'100%',  margin:'2px 0px'}} >View</Button></Link>
+                    <Link to={`/${product._id}/ownerinfo`}> <Button variant="danger" className="btn-card" style={{width:'100%', margin:'2px 0px'}} ><VisibilityIcon /> View</Button></Link>
                       {product.quantity > 0&&isLoggedIn()&&<Button variant="danger"style={{width:'100%', margin:'2px 0px'}} onClick={() => {
                         addToCarthandler(product)
-                      }} className="btn-card">Add to Cart</Button>
+                      }} className="btn-card"><ShoppingCartOutlinedIcon type="shopping-cart" /> Add to Cart</Button>
                     }
                     </div>
                   </Card.Body>
@@ -160,6 +165,7 @@ const ShowProducts = ({ products, setProducts, lastProductElementRef, showAddToC
                     <Link to={`/${product._id}/ownerinfo`}> <Button variant="danger" className="btn-card" style={{width:'100%',  margin:'2px 0px'}} >View</Button></Link>
                       {product.quantity> 0&&isLoggedIn()&&<Button variant="danger"style={{width:'100%', margin:'2px 0px'}} onClick={() => {
                         addToCarthandler(product)
+                        toast('Product added to your cart successfully!');
                       }} className="btn-card">Add to Cart</Button>
                     }
                     </div>
