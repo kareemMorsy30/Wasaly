@@ -1,0 +1,16 @@
+.modal-footer{
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+}
+.modal-footer form{
+    width: 80%;
+}
+
+.modal-title {
+    display: flex;
+    width: 100%;
+}
+.modal-content{
+    z-index: 2 !important;
+}

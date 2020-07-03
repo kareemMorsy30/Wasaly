@@ -1,0 +1,93 @@
+@import "./src/styles/main";
+
+.delivery-form {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 3;
+  justify-content: center;
+}
+
+.react-datepicker__input-container {
+  width: 100%;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: white;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Add padding to containers */
+.form_container {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    background-color: white;
+    width: 100%;
+}
+
+/* Full-width input fields */
+input[type=text], input[type=number], textarea, select{
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 10px 0;
+  display: inline-block;
+  border: none;
+  background: $color_accent-lightest;
+  border-radius: 15px;
+}
+
+select {
+    color: #938A8B;
+}
+
+input[type=text]:focus, textarea:focus, select:focus{
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit button */
+.submit-btn {
+  background-color: $color_primary_dark;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+  font-size: x-large;
+  font-weight: bolder;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.registerbtn:hover {
+  opacity: 1;
+}
+
+textarea {
+  height: 100px;
+}
+
+input[type=file] {
+  display: none;
+}
+
+.file-label {
+  color: #938A8B;
+  width: 100%;
+  background-color: #f1f1f1;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 15px;
+  font-family: "Montserrat", sans-serif;
+}
+// .form-control{
+//   width: 98% !important;
+//   display: inline-block !important;
+// }

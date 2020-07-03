@@ -1,0 +1,19 @@
+@import "./src/styles/main";
+
+.table-striped>tbody>tr:nth-child(odd)>td, 
+.table-striped>tbody>tr:nth-child(odd)>th {
+   background-color: $color_accent_sky; // Choose your own color here
+
+}
+
+.table-striped>tbody>tr {
+    font-size: large;
+    color: $color_accent_lighter;
+    padding: 50%;
+    margin: 50%;
+}
+
+.request-del-btn {
+    padding: 10px;
+    font-size: large;
+}

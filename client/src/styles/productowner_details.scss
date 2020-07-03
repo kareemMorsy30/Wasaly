@@ -1,0 +1,46 @@
+@import "./src/styles/main";
+
+.right-card {
+    display: flex;
+    flex-direction: column;
+    justify-items: start;
+    flex-grow: 3;
+    padding: 0 5% 0 5%;
+}
+
+.left-card {
+    display: flex;
+    justify-content: space-between;
+}
+
+.book-rating {
+    display: flex;
+    flex-direction: column;
+}
+
+.book-rating > input {
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+.book-rating > h4 {
+    margin-left: 2%;
+}
+
+.ratings-number {
+    color: $color_success;
+}
+
+.section-title {
+    color: $color_primary;
+    margin: 0px;
+}
+
+.author-name, .category-name{
+    color: #3498db;
+}
+
+.author-section {
+    margin: 0px;
+}

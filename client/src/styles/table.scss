@@ -1,0 +1,86 @@
+@import "src/styles/main";
+#table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+  
+#table td,#table th {
+    border: 1px solid #ddd;
+    text-align: center;
+}
+  
+#table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+  
+#table tr:hover {
+    background-color: $color_primary;
+    color: white;
+    cursor: pointer;
+}
+
+.delete-record:hover {
+    cursor: pointer;
+}
+  
+#table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: $color_accent;
+    color: white;
+}
+
+#table tr > td {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.actions {
+    padding: 0px;
+}
+
+.edit-icon {
+    padding: 0px;
+    margin: 0 10px 0 10px;
+}
+
+.delete-icon {
+    padding: 0px;
+    margin: 0 10px 0 10px;
+}
+
+.rating {
+    margin: auto;
+}
+
+.body-section {
+    display: flex;
+    flex-direction: row;
+}
+
+.image-section {
+    display: flex;
+    flex-grow: 1;
+    width: 30%;
+    height: 60%;
+}
+
+.details-section {
+    display: flex;
+    flex-grow: 4;
+    flex-direction: column;
+}
+
+.user-profile {
+    height: 100%;
+    width: 100%;
+}
+
+.modal-layout {
+    margin-top: 6%;
+}
+
+.modal-product-layout {
+    margin-top: 3%;
+}
