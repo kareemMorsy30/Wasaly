@@ -3,6 +3,9 @@ import './Product.css';
 import { Link, Switch, Route, Redirect } from 'react-router-dom'
 import { Card, Button, Spinner } from 'react-bootstrap'
 import { Carousel } from 'react-responsive-carousel';
+import IconButton from '@material-ui/core/IconButton';
+import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
+import { ToastContainer, toast } from 'react-toastify';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 
 import ProductDetails from './ProductDetails'
@@ -27,15 +30,17 @@ function ProductInfo(props) {
       return [{...prevProduct[0],quantity:prevProduct[0].quantity-1}]
     });
     props.addToCart(props.detail[0]._id)
+    toast('Product added to your cart successfully!');
   }
 
   const showStock = product => {
     return product.quantity > 0 ? (
-     <>
-     <span className="badge badge-primary badge-pill mb-2">In Stock</span>
-     <br></br>
-        <Button variant="danger"  onClick={addToCarthandler}   className="btn-card">Add to Cart</Button>
-      </>
+      <div className="to-cart-section">
+        <span className="in-stock-badge badge badge-primary badge-pill mb-4">In Stock</span>
+        <IconButton onClick={addToCarthandler}>
+          <ShoppingCartOutlinedIcon type="shopping-cart" style={{ fontSize: 30, marginBottom: 3, color: 'red' }} />
+        </IconButton>
+      </div>
       )
      : (
         <span className="badge badge-primary badge-pill mb-2">Out of Stock</span>
@@ -67,6 +72,7 @@ function ProductInfo(props) {
   return (
       Product[0]?
     <>
+    <ToastContainer />
       <div className="container">
         <div className="row">
           <div className="col-6">
@@ -74,14 +80,19 @@ function ProductInfo(props) {
                   {images}
             </Carousel>
           </div>
-          <div style={{margin:'auto',marginBottom:'200px'}} >
+          <div style={{margin:'auto', marginTop: '15px',marginBottom:'200px'}} >
 
               <h4 style={{fontSize:"40px", fontWeight:'800'}}>{Product[0].name}</h4>
               <hr></hr>
-          <div className="col-3" >
-              <h4>{Product[0].quantity}</h4>
-              <h4 style={{color:"blue"}}>{Product[0].price}<span style={{fontSize:"10px", color:"blue"}}>EGP</span></h4>
-             <p>{Product[0].description}</p>
+          <div className="col-8" >
+            <div className="row">
+            <h4>Quantity: {Product[0].quantity}</h4>
+            </div>
+            <div className="row">
+            <h4>Price: </h4><h4 style={{color:"blue"}}> {Product[0].price}<span style={{fontSize:"10px", color:"blue"}}>EGP</span></h4>
+            </div>
+            
+            <p>{Product[0].description}</p>
              
              {/* {showAddToCart(showAddToCartButton)} */}
 
