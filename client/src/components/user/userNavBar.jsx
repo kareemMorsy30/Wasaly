@@ -24,6 +24,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import IconButton from '@material-ui/core/IconButton';
 import MatBadge from '@material-ui/core/Badge';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 // import ShoppingCart from "@bit/mui-org.material-ui-icons.shopping-cart";
 
@@ -114,10 +115,6 @@ const NavBar = (props) => {
                                 <a className="nav-link" href="/products">Products</a>
                             </NavItem>
                         }
-                        {isLoggedIn()&&
-                        
-                        <NavItem className="nav-item" style={{backgroundColor: path.includes('/customerprofile') && 'red'}}><a className="nav-link" href="/customerprofile">my profile</a></NavItem>
-                        }
                         <NavItem className="nav-item" style={{backgroundColor: path.includes('/service') && 'red'}}>
                             <a className="nav-link" href="/service">Services</a>
                         </NavItem>
@@ -149,11 +146,18 @@ const NavBar = (props) => {
                 {
                     isLoggedIn() 
                     &&
+                    <>
                     <IconButton color="inherit" onClick={notifications}>
                         <MatBadge badgeContent={props.notificationsNo} color="error">
                             <NotificationsIcon/>
                         </MatBadge>
                     </IconButton>
+                    <Link to="/customerprofile">
+                        <IconButton color="inherit">
+                            <AccountCircleIcon />
+                        </IconButton>
+                    </Link>
+                    </>
                 }
                 {
                     isLoggedIn() == false ? (
